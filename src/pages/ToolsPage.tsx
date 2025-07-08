@@ -1,3 +1,4 @@
+
 import React from 'react';
 import PageWrapper from '@/components/layout/PageWrapper';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -237,45 +238,12 @@ const allTools = [
     icon: CalendarDays
   },
   { 
-    id: 'join-photo-sign', 
-    name: 'Join Photo & Sign', 
+    id: 'qr-scanner', 
+    name: 'QR Scanner', 
     category: 'Image Tools', 
-    description: 'Combine photo and signature for online application forms.',
-    path: '/tools/join-photo-sign',
-    icon: Share2
-  },
-  { 
-    id: 'front-back-joiner', 
-    name: 'Front & Back Side Joiner', 
-    category: 'Image Tools', 
-    description: 'Join front and back sides of Aadhaar Card, Voter Card, Driving License, etc.',
-    keywords: 'join images, combine sides, document joiner, aadhaar card, voter card',
-    path: '/tools/front-back-joiner',
-    icon: Copy
-  },
-  { 
-    id: 'single-image-to-pdf', 
-    name: 'Single Image to PDF', 
-    category: 'Image Tools', 
-    description: 'Convert any single JPG file to PDF format.',
-    path: '/tools/single-image-to-pdf',
-    icon: FileArchive
-  },
-  { 
-    id: 'multiple-image-to-pdf', 
-    name: 'Multiple Image to PDF', 
-    category: 'Image Tools', 
-    description: 'Convert multiple JPG files to a single PDF document.',
-    path: '/tools/multiple-image-to-pdf',
-    icon: FileArchive
-  },
-  { 
-    id: 'blur-to-clear', 
-    name: 'Blur to Clear', 
-    category: 'Image Tools', 
-    description: 'AI-powered image enhancer and upscaler to clean blur images and photos.',
-    path: '/tools/blur-to-clear',
-    icon: Zap
+    description: 'Scan QR codes using camera or upload image to decode QR codes.',
+    path: '/tools/qr-scanner',
+    icon: QrCode
   },
 
   // Typing Tools
@@ -377,14 +345,6 @@ const allTools = [
     path: '/url-wrapper',
     icon: Smartphone
   },
-  { 
-    id: 'qr-scanner', 
-    name: 'QR Scanner', 
-    category: 'Utility Tools', 
-    description: 'Scan QR codes using camera or upload image to generate links.',
-    path: '/tools/qr-scanner',
-    icon: QrCode
-  },
 
   // Number Tools
   { 
@@ -410,6 +370,14 @@ const allTools = [
     description: 'Calculate the difference between two dates.',
     path: '/date-difference-calculator',
     icon: CalendarDays
+  },
+  { 
+    id: 'future-date-calculator', 
+    name: 'Future Date Calculator', 
+    category: 'Number Tools', 
+    description: 'Calculate future or past dates by adding or subtracting days, months, or years.',
+    path: '/future-date-calculator',
+    icon: CalendarSchedule
   },
   { 
     id: 'bmi-calculator', 
@@ -501,6 +469,14 @@ const allTools = [
     path: '/unit-converter',
     icon: Palette
   },
+  { 
+    id: 'enhanced-unit-converter', 
+    name: 'Enhanced Unit Converter', 
+    category: 'Converter Tools', 
+    description: 'Convert between various units including length, weight, temperature, time, data size, and speed.',
+    path: '/enhanced-unit-converter',
+    icon: ArrowLeftRight
+  },
 
   // Developer Tools
   { 
@@ -528,12 +504,28 @@ const allTools = [
     icon: Eye
   },
   { 
-    id: 'enhanced-unit-converter', 
-    name: 'Enhanced Unit Converter', 
-    category: 'Converter Tools', 
-    description: 'Convert between various units including length, weight, temperature, time, data size, and speed.',
-    path: '/enhanced-unit-converter',
-    icon: ArrowLeftRight
+    id: 'live-preview', 
+    name: 'HTML/CSS/JS Live Preview', 
+    category: 'Development Tools', 
+    description: 'Live preview HTML, CSS, and JavaScript code in real-time.',
+    path: '/live-preview',
+    icon: FileCode
+  },
+  { 
+    id: 'javascript-minifier', 
+    name: 'JavaScript Minifier', 
+    category: 'Development Tools', 
+    description: 'Minify JavaScript code to reduce file size.',
+    path: '/javascript-minifier',
+    icon: Code
+  },
+  { 
+    id: 'table-to-json-converter', 
+    name: 'Table to JSON Converter', 
+    category: 'Development Tools', 
+    description: 'Convert HTML tables to JSON format.',
+    path: '/table-to-json-converter',
+    icon: Table
   },
 
   // Timer Tools
@@ -563,6 +555,7 @@ const allTools = [
     path: '/ip-lookup',
     icon: Globe 
   },
+
   // Video & Social Media Tools
   { 
     id: 'social-media-db-viewer', 
@@ -681,44 +674,47 @@ const ToolsPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold mb-4">All Tools</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+    <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+      <div className="mb-6 sm:mb-8 text-center">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">All Tools</h1>
+        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
           Explore a variety of free online tools for various tasks.
         </p>
       </div>
       
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6 px-2 sm:px-0">
         <Input
           type="search"
           placeholder="Search tools by name, description, or keywords..."
           value={searchTerm}
           onChange={handleSearchChange}
+          className="w-full"
         />
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 px-2 sm:px-0">
         {filteredTools.map((tool) => (
-          <Card key={tool.id} className="h-full flex flex-col hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-3">
-                <div className={`p-3 rounded-xl ${getBackgroundColor(tool.category)}`}>
+          <Card key={tool.id} className="h-full flex flex-col hover:shadow-lg transition-all duration-200 hover:scale-105 w-full">
+            <CardHeader className="pb-3 sm:pb-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className={`p-2 sm:p-3 rounded-xl ${getBackgroundColor(tool.category)} shrink-0`}>
                   {React.createElement(tool.icon, { 
-                    className: `h-8 w-8 ${getIconColor(tool.category)}` 
+                    className: `h-6 w-6 sm:h-8 sm:w-8 ${getIconColor(tool.category)}` 
                   })}
                 </div>
-                <div>
-                  <CardTitle className="text-lg leading-tight">{tool.name}</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1">{tool.category}</p>
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="text-sm sm:text-lg leading-tight line-clamp-2">{tool.name}</CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1 truncate">{tool.category}</p>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="flex-grow pt-0">
-              <CardDescription className="text-sm leading-relaxed">{tool.description}</CardDescription>
+            <CardContent className="flex-grow pt-0 pb-3 sm:pb-4">
+              <CardDescription className="text-xs sm:text-sm leading-relaxed line-clamp-3 mb-3 sm:mb-4">
+                {tool.description}
+              </CardDescription>
               <Button 
                 onClick={() => navigate(tool.path)} 
-                className="w-full mt-4"
+                className="w-full text-xs sm:text-sm"
                 variant="outline"
               >
                 Use Tool
@@ -727,6 +723,14 @@ const ToolsPage = () => {
           </Card>
         ))}
       </div>
+
+      {filteredTools.length === 0 && (
+        <div className="text-center py-8 sm:py-12">
+          <p className="text-muted-foreground text-sm sm:text-base">
+            No tools found matching your search criteria.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
