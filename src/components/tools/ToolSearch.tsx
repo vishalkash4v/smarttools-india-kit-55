@@ -3,19 +3,11 @@ import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-interface Tool {
-  name: string;
-  description: string;
-  href: string;
-  category: string;
-  keywords: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
+import { Tool } from '@/data/toolsData';
 
 interface ToolSearchProps {
   tools: Tool[];
@@ -35,7 +27,7 @@ const ToolSearch: React.FC<ToolSearchProps> = ({ tools, className }) => {
       tool.description.toLowerCase().includes(query) ||
       tool.category.toLowerCase().includes(query) ||
       tool.keywords.toLowerCase().includes(query)
-    ).slice(0, 6); // Limit to 6 results
+    ).slice(0, 8); // Increased to 8 results
   }, [searchTerm, tools]);
 
   const handleClear = () => {
@@ -44,7 +36,7 @@ const ToolSearch: React.FC<ToolSearchProps> = ({ tools, className }) => {
   };
 
   return (
-    <div className={cn("relative w-full max-w-md mx-auto", className)}>
+    <div className={cn("relative w-full", className)}>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
@@ -56,7 +48,7 @@ const ToolSearch: React.FC<ToolSearchProps> = ({ tools, className }) => {
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          className="pl-10 pr-10 h-12 text-base border-2 rounded-xl"
+          className="pl-10 pr-10 h-10 md:h-12 text-sm md:text-base border-2 rounded-xl"
         />
         {searchTerm && (
           <Button
@@ -80,21 +72,21 @@ const ToolSearch: React.FC<ToolSearchProps> = ({ tools, className }) => {
             <CardContent className="p-0">
               {filteredTools.length > 0 ? (
                 <div className="space-y-1">
-                  {filteredTools.map((tool, index) => (
+                  {filteredTools.map((tool) => (
                     <Link
-                      key={index}
-                      to={tool.href}
+                      key={tool.id}
+                      to={tool.path}
                       onClick={() => setIsOpen(false)}
-                      className="block p-4 hover:bg-muted/50 transition-colors border-b border-border/50 last:border-b-0"
+                      className="block p-3 md:p-4 hover:bg-muted/50 transition-colors border-b border-border/50 last:border-b-0"
                     >
                       <div className="flex items-center gap-3">
-                        <tool.icon className="h-5 w-5 text-primary" />
+                        <tool.icon className="h-5 w-5 text-primary shrink-0" />
                         <div className="flex-1 min-w-0">
                           <div className="font-semibold text-sm truncate">{tool.name}</div>
                           <div className="text-xs text-muted-foreground truncate">{tool.description}</div>
                         </div>
-                        <Badge variant="secondary" className="text-xs">
-                          {tool.category}
+                        <Badge variant="secondary" className="text-xs shrink-0">
+                          {tool.category.split(' ')[0]}
                         </Badge>
                       </div>
                     </Link>

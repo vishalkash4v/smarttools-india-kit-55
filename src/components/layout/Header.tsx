@@ -1,13 +1,16 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Menu, X, Zap, Sparkles } from 'lucide-react';
+import { Menu, X, Zap, Sparkles, Search } from 'lucide-react';
 import { useState } from 'react';
+import ToolSearch from '@/components/tools/ToolSearch';
+import { allTools } from '@/data/toolsData';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -19,14 +22,24 @@ const Header = () => {
   return (
     <header className="glass-card border-b border-white/10 dark:border-white/5 sticky top-0 z-50 backdrop-blur-xl">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 gap-4">
           {/* Logo */}
           <Link 
             to="/" 
-            className="flex items-center space-x-3 hover:scale-105 transition-transform duration-300"
+            className="flex items-center space-x-3 hover:scale-105 transition-transform duration-300 shrink-0"
           >
             <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center shadow-lg animate-glow-pulse">
+              <img 
+                src="/logo.png" 
+                alt="SmartTools Logo" 
+                className="w-10 h-10 rounded-xl object-contain"
+                onError={(e) => {
+                  // Fallback to icon if image fails to load
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling.style.display = 'flex';
+                }}
+              />
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center shadow-lg animate-glow-pulse" style={{ display: 'none' }}>
                 <Zap className="h-6 w-6 text-white" />
               </div>
               <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-primary animate-pulse" />
@@ -36,6 +49,11 @@ const Header = () => {
               <span className="text-xs text-muted-foreground hidden sm:block">Your Digital Toolkit</span>
             </div>
           </Link>
+
+          {/* Desktop Search Bar */}
+          <div className="hidden md:flex flex-1 max-w-md mx-4">
+            <ToolSearch tools={allTools} className="w-full" />
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
@@ -56,7 +74,7 @@ const Header = () => {
             <Button 
               variant="glass" 
               size="sm" 
-              className="hidden sm:flex"
+              className="hidden sm:flex whitespace-nowrap"
               asChild
             >
               <Link to="/tools">
@@ -79,6 +97,11 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden border-t border-white/10 dark:border-white/5 py-4 animate-fade-in">
+            {/* Mobile Search Bar */}
+            <div className="mb-4 px-2">
+              <ToolSearch tools={allTools} className="w-full" />
+            </div>
+            
             <nav className="flex flex-col space-y-2">
               {navigation.map((item) => (
                 <Link

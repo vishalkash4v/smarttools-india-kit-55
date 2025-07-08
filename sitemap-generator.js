@@ -3,7 +3,7 @@ require('babel-register')();
 const fs = require('fs');
 const path = require('path');
 
-// All tool routes from the application
+// All tool routes from the application - comprehensive list
 const toolRoutes = [
   // Text & Writing Tools
   '/word-counter',

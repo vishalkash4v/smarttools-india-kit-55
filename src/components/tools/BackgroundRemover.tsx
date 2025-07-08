@@ -37,7 +37,6 @@ const BackgroundRemover = () => {
     setProgress(0);
 
     try {
-      // Simulate processing progress with more realistic timing
       const progressSteps = [10, 25, 40, 55, 70, 85, 95];
       let currentStep = 0;
 
@@ -50,7 +49,6 @@ const BackgroundRemover = () => {
         }
       }, 300);
 
-      // Create a canvas to process the image
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
@@ -65,11 +63,9 @@ const BackgroundRemover = () => {
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
 
-        // Get image data
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
-        // Simple background removal algorithm (edge detection + color similarity)
         const threshold = 30;
         const backgroundColor = detectBackgroundColor(data, canvas.width, canvas.height);
 
@@ -78,20 +74,17 @@ const BackgroundRemover = () => {
           const g = data[i + 1];
           const b = data[i + 2];
 
-          // Calculate color difference from background
           const colorDiff = Math.sqrt(
             Math.pow(r - backgroundColor.r, 2) +
             Math.pow(g - backgroundColor.g, 2) +
             Math.pow(b - backgroundColor.b, 2)
           );
 
-          // If color is similar to background, make it transparent
           if (colorDiff < threshold) {
-            data[i + 3] = 0; // Set alpha to 0 (transparent)
+            data[i + 3] = 0;
           }
         }
 
-        // Apply processed image data
         ctx.putImageData(imageData, 0, 0);
         const processedDataUrl = canvas.toDataURL('image/png');
         
@@ -99,7 +92,6 @@ const BackgroundRemover = () => {
         setProgress(100);
         setProcessedImage(processedDataUrl);
         
-        // Complete processing after a short delay
         setTimeout(() => {
           setIsProcessing(false);
           toast.success('Background removed successfully!');
@@ -116,12 +108,11 @@ const BackgroundRemover = () => {
   }, [originalImage]);
 
   const detectBackgroundColor = (data: Uint8ClampedArray, width: number, height: number) => {
-    // Sample colors from the corners to detect background color
     const corners = [
-      { x: 0, y: 0 }, // Top-left
-      { x: width - 1, y: 0 }, // Top-right
-      { x: 0, y: height - 1 }, // Bottom-left
-      { x: width - 1, y: height - 1 } // Bottom-right
+      { x: 0, y: 0 },
+      { x: width - 1, y: 0 },
+      { x: 0, y: height - 1 },
+      { x: width - 1, y: height - 1 }
     ];
 
     let totalR = 0, totalG = 0, totalB = 0;
@@ -162,7 +153,7 @@ const BackgroundRemover = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-2 sm:px-4">
+    <div className="w-full">
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-lg sm:text-xl">Background Remover</CardTitle>
@@ -170,16 +161,15 @@ const BackgroundRemover = () => {
             Remove background from your photos automatically
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4 sm:space-y-6">
-          {/* Upload Section */}
-          <div>
+        <CardContent className="space-y-4 sm:space-y-6 w-full">
+          <div className="w-full">
             <Button
               onClick={() => fileInputRef.current?.click()}
-              className="w-full"
+              className="w-full h-12 text-sm sm:text-base"
               variant="outline"
             >
               <Upload className="mr-2 h-4 w-4" />
-              Upload Image
+              <span>Upload Image</span>
             </Button>
             <input
               ref={fileInputRef}
@@ -190,21 +180,21 @@ const BackgroundRemover = () => {
             />
           </div>
 
-          {/* Processing Progress */}
           {isProcessing && (
-            <ProgressWithTime
-              progress={progress}
-              estimatedTime={8} // 8 seconds estimated
-              label="Removing background"
-            />
+            <div className="w-full">
+              <ProgressWithTime
+                progress={progress}
+                estimatedTime={8}
+                label="Removing background"
+              />
+            </div>
           )}
 
-          {/* Image Preview */}
           {originalImage && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-              <div className="space-y-2">
+            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+              <div className="w-full space-y-2">
                 <h3 className="font-semibold text-center text-sm sm:text-base">Original Image</h3>
-                <div className="flex justify-center">
+                <div className="w-full flex justify-center">
                   <img
                     src={originalImage}
                     alt="Original"
@@ -214,9 +204,9 @@ const BackgroundRemover = () => {
               </div>
               
               {processedImage && (
-                <div className="space-y-2">
+                <div className="w-full space-y-2">
                   <h3 className="font-semibold text-center text-sm sm:text-base">Background Removed</h3>
-                  <div className="flex justify-center">
+                  <div className="w-full flex justify-center">
                     <div 
                       className="border border-border rounded-lg p-2"
                       style={{
@@ -237,34 +227,32 @@ const BackgroundRemover = () => {
             </div>
           )}
 
-          {/* Action Buttons */}
           {originalImage && (
-            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+            <div className="w-full flex flex-col sm:flex-row gap-2 justify-center">
               <Button 
                 onClick={removeBackground} 
                 disabled={isProcessing}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto h-12 text-sm sm:text-base"
               >
-                {isProcessing ? 'Processing...' : 'Remove Background'}
+                <span>{isProcessing ? 'Processing...' : 'Remove Background'}</span>
               </Button>
               
               {processedImage && (
                 <>
-                  <Button onClick={resetImage} variant="outline" className="w-full sm:w-auto">
+                  <Button onClick={resetImage} variant="outline" className="w-full sm:w-auto h-12 text-sm sm:text-base">
                     <RotateCcw className="mr-2 h-4 w-4" />
-                    Reset
+                    <span>Reset</span>
                   </Button>
-                  <Button onClick={downloadImage} className="w-full sm:w-auto">
+                  <Button onClick={downloadImage} className="w-full sm:w-auto h-12 text-sm sm:text-base">
                     <Download className="mr-2 h-4 w-4" />
-                    Download PNG
+                    <span>Download PNG</span>
                   </Button>
                 </>
               )}
             </div>
           )}
 
-          {/* Tips */}
-          <div className="bg-muted/50 p-3 sm:p-4 rounded-lg">
+          <div className="w-full bg-muted/50 p-3 sm:p-4 rounded-lg">
             <h4 className="font-semibold mb-2 text-sm sm:text-base">Tips for best results:</h4>
             <ul className="text-xs sm:text-sm space-y-1 text-muted-foreground">
               <li>• Use images with clear contrast between subject and background</li>
