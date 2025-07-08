@@ -19,6 +19,10 @@ const Header = () => {
     { name: 'Contact', href: '/contact' },
   ];
 
+  const handleMobileMenuClose = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="glass-card border-b border-white/10 dark:border-white/5 sticky top-0 z-50 backdrop-blur-xl">
       <div className="container mx-auto px-4">
@@ -34,7 +38,6 @@ const Header = () => {
                 alt="SmartTools Logo" 
                 className="w-10 h-10 rounded-xl object-contain"
                 onError={(e) => {
-                  // Fallback to icon if image fails to load
                   e.currentTarget.style.display = 'none';
                   const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
                   if (fallbackDiv) {
@@ -102,7 +105,7 @@ const Header = () => {
           <div className="md:hidden border-t border-white/10 dark:border-white/5 py-4 animate-fade-in">
             {/* Mobile Search Bar */}
             <div className="mb-4 px-2">
-              <ToolSearch tools={allTools} className="w-full" />
+              <ToolSearch tools={allTools} className="w-full" onResultClick={handleMobileMenuClose} />
             </div>
             
             <nav className="flex flex-col space-y-2">

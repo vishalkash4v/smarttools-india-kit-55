@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,11 +12,13 @@ import { Tool } from '@/data/toolsData';
 interface ToolSearchProps {
   tools: Tool[];
   className?: string;
+  onResultClick?: () => void;
 }
 
-const ToolSearch: React.FC<ToolSearchProps> = ({ tools, className }) => {
+const ToolSearch: React.FC<ToolSearchProps> = ({ tools, className, onResultClick }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const filteredTools = useMemo(() => {
     if (!searchTerm.trim()) return [];
@@ -27,12 +29,21 @@ const ToolSearch: React.FC<ToolSearchProps> = ({ tools, className }) => {
       tool.description.toLowerCase().includes(query) ||
       tool.category.toLowerCase().includes(query) ||
       tool.keywords.toLowerCase().includes(query)
-    ).slice(0, 8); // Increased to 8 results
+    ).slice(0, 8);
   }, [searchTerm, tools]);
 
   const handleClear = () => {
     setSearchTerm('');
     setIsOpen(false);
+  };
+
+  const handleResultClick = (toolPath: string) => {
+    setIsOpen(false);
+    setSearchTerm('');
+    navigate(toolPath);
+    if (onResultClick) {
+      onResultClick();
+    }
   };
 
   return (
@@ -73,11 +84,10 @@ const ToolSearch: React.FC<ToolSearchProps> = ({ tools, className }) => {
               {filteredTools.length > 0 ? (
                 <div className="space-y-1">
                   {filteredTools.map((tool) => (
-                    <Link
+                    <button
                       key={tool.id}
-                      to={tool.path}
-                      onClick={() => setIsOpen(false)}
-                      className="block p-3 md:p-4 hover:bg-muted/50 transition-colors border-b border-border/50 last:border-b-0"
+                      onClick={() => handleResultClick(tool.path)}
+                      className="w-full text-left block p-3 md:p-4 hover:bg-muted/50 transition-colors border-b border-border/50 last:border-b-0"
                     >
                       <div className="flex items-center gap-3">
                         <tool.icon className="h-5 w-5 text-primary shrink-0" />
@@ -89,7 +99,7 @@ const ToolSearch: React.FC<ToolSearchProps> = ({ tools, className }) => {
                           {tool.category.split(' ')[0]}
                         </Badge>
                       </div>
-                    </Link>
+                    </button>
                   ))}
                 </div>
               ) : (
