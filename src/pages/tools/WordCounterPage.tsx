@@ -7,7 +7,7 @@ const WordCounterPage = () => {
   const toolData = {
     title: "Free Word Counter Tool Online",
     description: "Count words, characters, paragraphs, and sentences in your text instantly. Free online word counter with real-time statistics, reading time estimation, and character analysis.",
-    keywords: "word counter, character counter, text analysis, word count tool, sentence counter, paragraph counter",
+    category: "Text Tools",
     
     howToUse: [
       "Paste or type your text in the input area",
@@ -50,17 +50,24 @@ const WordCounterPage = () => {
     ],
     
     relatedTools: [
-      { name: "Text Reverser", href: "/text-reverser" },
-      { name: "Lorem Ipsum Generator", href: "/lorem-ipsum-generator" },
-      { name: "Text Font Changer", href: "/text-font-changer" },
-      { name: "AI Text Rewriter", href: "/ai-text-rewriter" }
+      { name: "Text Reverser", href: "/text-reverser", description: "Reverse your text" },
+      { name: "Lorem Ipsum Generator", href: "/lorem-ipsum-generator", description: "Generate placeholder text" },
+      { name: "Text Font Changer", href: "/text-font-changer", description: "Change text fonts" },
+      { name: "AI Text Rewriter", href: "/ai-text-rewriter", description: "Rewrite text with AI" }
     ]
   };
 
   return (
-    <ToolPageLayout {...toolData}>
-      <WordCounter />
-    </ToolPageLayout>
+    <ToolPageLayout
+      title={toolData.title}
+      description={toolData.description}
+      toolInterface={<WordCounter />}
+      howToUse={toolData.howToUse}
+      features={toolData.features}
+      faqs={toolData.faqs}
+      relatedTools={toolData.relatedTools}
+      category={toolData.category}
+    />
   );
 };
 

@@ -7,7 +7,7 @@ const MarkdownEditorPage = () => {
   const toolData = {
     title: "Online Markdown Editor & Previewer",
     description: "Write and preview Markdown with our free online editor. Real-time preview, syntax highlighting, and export options. Perfect for documentation, README files, and content creation.",
-    keywords: "markdown editor, markdown preview, md editor, markdown converter, online markdown, documentation editor",
+    category: "Text Tools",
     
     howToUse: [
       "Type your Markdown text in the left editor panel",
@@ -50,17 +50,24 @@ const MarkdownEditorPage = () => {
     ],
     
     relatedTools: [
-      { name: "HTML to Markdown", href: "/html-to-markdown" },
-      { name: "Text Editor", href: "/text-editor" },
-      { name: "Code Formatter", href: "/code-formatter" },
-      { name: "Documentation Generator", href: "/documentation-generator" }
+      { name: "HTML to Markdown", href: "/html-to-markdown", description: "Convert HTML to Markdown" },
+      { name: "Text Editor", href: "/text-editor", description: "Simple text editor" },
+      { name: "Code Formatter", href: "/code-formatter", description: "Format code snippets" },
+      { name: "Documentation Generator", href: "/documentation-generator", description: "Generate documentation" }
     ]
   };
 
   return (
-    <ToolPageLayout {...toolData}>
-      <MarkdownEditor />
-    </ToolPageLayout>
+    <ToolPageLayout
+      title={toolData.title}
+      description={toolData.description}
+      toolInterface={<MarkdownEditor />}
+      howToUse={toolData.howToUse}
+      features={toolData.features}
+      faqs={toolData.faqs}
+      relatedTools={toolData.relatedTools}
+      category={toolData.category}
+    />
   );
 };
 

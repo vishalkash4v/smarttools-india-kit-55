@@ -5,62 +5,69 @@ import ToolPageLayout from '@/components/tools/ToolPageLayout';
 
 const ColorPaletteGeneratorPage = () => {
   const toolData = {
-    title: "Color Palette Generator Tool",
-    description: "Generate beautiful color palettes for your designs. Create harmonious color schemes, extract colors from images, and find perfect color combinations. Free online color palette generator.",
-    keywords: "color palette generator, color scheme, color combinations, design colors, color picker, hex colors",
+    title: "Free Color Palette Generator Online",
+    description: "Generate beautiful color palettes and schemes for your designs. Create harmonious color combinations with our free online color palette generator tool.",
+    category: "Design Tools",
     
     howToUse: [
-      "Choose a base color using the color picker",
-      "Select a color harmony type (complementary, triadic, etc.)",
-      "Click 'Generate Palette' to create your color scheme",
-      "Copy hex codes by clicking on any color",
-      "Save or export your favorite palettes"
+      "Select or enter a base color using the color picker",
+      "Click 'Generate Palette' to create color combinations",
+      "View the generated palette with color codes",
+      "Click on any color to copy its hex code",
+      "Use the colors in your design projects"
     ],
     
     features: [
-      "Multiple color harmony algorithms",
-      "Random palette generation",
-      "Extract colors from uploaded images",
-      "Copy hex, RGB, and HSL values",
-      "Export palettes in various formats",
-      "Mobile-friendly color picker interface"
+      "Generate complementary and analogous colors",
+      "Color picker and hex code input",
+      "One-click color code copying",
+      "Visual color palette display",
+      "Harmonious color combinations",
+      "Perfect for web and graphic design"
     ],
     
     faqs: [
       {
-        question: "What color harmony types are available?",
-        answer: "We offer complementary, triadic, tetradic, analogous, monochromatic, and split-complementary color harmonies. Each creates different visual effects and moods."
+        question: "What types of color palettes can I generate?",
+        answer: "Our generator creates complementary, analogous, and triadic color schemes based on your base color, providing harmonious combinations perfect for design projects."
       },
       {
-        question: "Can I extract colors from my own images?",
-        answer: "Yes, you can upload an image and our tool will automatically extract the dominant colors to create a palette based on your image."
+        question: "How do I use the generated colors in my designs?",
+        answer: "Click on any color in the palette to copy its hex code to your clipboard. You can then paste these codes into your design software, CSS, or any application that accepts hex colors."
       },
       {
-        question: "What color formats are supported?",
-        answer: "We support HEX, RGB, HSL, and HSV color formats. You can copy colors in any of these formats for use in your design tools."
+        question: "What's the difference between color harmony types?",
+        answer: "Complementary colors are opposite on the color wheel and create contrast. Analogous colors are adjacent and create harmony. Our generator provides balanced combinations for various design needs."
       },
       {
-        question: "How do I use these palettes in my designs?",
-        answer: "Copy the hex codes and use them in any design software like Photoshop, Illustrator, Figma, or CSS for web development. The colors are ready to use in any application."
+        question: "Can I start with any base color?",
+        answer: "Yes, you can use the color picker to select any color or enter a specific hex code. The generator will create a palette based on your chosen base color."
       },
       {
-        question: "Are the generated palettes copyright-free?",
-        answer: "Yes, color palettes cannot be copyrighted. All generated palettes are free to use for personal and commercial projects without any restrictions."
+        question: "Are these colors suitable for web design?",
+        answer: "Absolutely! All generated colors are web-safe and provided in hex format, making them perfect for websites, apps, and digital designs."
       }
     ],
     
     relatedTools: [
-      { name: "Image Color Picker", href: "/image-color-picker" },
-      { name: "Gradient Generator", href: "/gradient-generator" },
-      { name: "Logo Designer", href: "/logo-designer" },
-      { name: "CSS Generator", href: "/css-generator" }
+      { name: "Color Converter", href: "/color-converter", description: "Convert between color formats" },
+      { name: "Gradient Generator", href: "/gradient-generator", description: "Create CSS gradients" },
+      { name: "Color Picker", href: "/color-picker", description: "Pick colors from images" },
+      { name: "Contrast Checker", href: "/contrast-checker", description: "Check color contrast ratios" }
     ]
   };
 
   return (
-    <ToolPageLayout {...toolData}>
-      <ColorPaletteGenerator />
-    </ToolPageLayout>
+    <ToolPageLayout
+      title={toolData.title}
+      description={toolData.description}
+      toolInterface={<ColorPaletteGenerator />}
+      howToUse={toolData.howToUse}
+      features={toolData.features}
+      faqs={toolData.faqs}
+      relatedTools={toolData.relatedTools}
+      category={toolData.category}
+    />
   );
 };
 

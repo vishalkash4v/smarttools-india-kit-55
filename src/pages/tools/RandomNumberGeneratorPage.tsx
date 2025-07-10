@@ -7,7 +7,7 @@ const RandomNumberGeneratorPage = () => {
   const toolData = {
     title: "Random Number Generator Online",
     description: "Generate random numbers within any range with our free online random number generator. Perfect for games, lotteries, research, and decision making. Truly random number generation.",
-    keywords: "random number generator, random numbers, number picker, lottery numbers, random generator",
+    category: "Generator Tools",
     
     howToUse: [
       "Set your minimum number (can be negative)",
@@ -50,17 +50,24 @@ const RandomNumberGeneratorPage = () => {
     ],
     
     relatedTools: [
-      { name: "Password Generator", href: "/password-generator" },
-      { name: "Dice Roller", href: "/dice-roller" },
-      { name: "Color Palette Generator", href: "/color-palette-generator" },
-      { name: "Lorem Ipsum Generator", href: "/lorem-ipsum-generator" }
+      { name: "Password Generator", href: "/password-generator", description: "Generate secure passwords" },
+      { name: "Dice Roller", href: "/dice-roller", description: "Roll virtual dice" },
+      { name: "Color Palette Generator", href: "/color-palette-generator", description: "Generate color palettes" },
+      { name: "Lorem Ipsum Generator", href: "/lorem-ipsum-generator", description: "Generate placeholder text" }
     ]
   };
 
   return (
-    <ToolPageLayout {...toolData}>
-      <RandomNumberGenerator />
-    </ToolPageLayout>
+    <ToolPageLayout
+      title={toolData.title}
+      description={toolData.description}
+      toolInterface={<RandomNumberGenerator />}
+      howToUse={toolData.howToUse}
+      features={toolData.features}
+      faqs={toolData.faqs}
+      relatedTools={toolData.relatedTools}
+      category={toolData.category}
+    />
   );
 };
 

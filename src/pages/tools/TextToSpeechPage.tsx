@@ -7,7 +7,7 @@ const TextToSpeechPage = () => {
   const toolData = {
     title: "Free Text to Speech Converter Online",
     description: "Convert text to speech with natural voices. Free online text-to-speech tool with multiple languages, voice options, and speed controls. Perfect for accessibility and content creation.",
-    keywords: "text to speech, TTS, voice generator, speech synthesis, text reader, audio converter",
+    category: "Audio Tools",
     
     howToUse: [
       "Enter or paste your text in the input area",
@@ -50,17 +50,24 @@ const TextToSpeechPage = () => {
     ],
     
     relatedTools: [
-      { name: "Speech to Text", href: "/speech-to-text" },
-      { name: "Audio Converter", href: "/audio-converter" },
-      { name: "Voice Recorder", href: "/voice-recorder" },
-      { name: "Text Editor", href: "/text-editor" }
+      { name: "Speech to Text", href: "/speech-to-text", description: "Convert speech to text" },
+      { name: "Audio Converter", href: "/audio-converter", description: "Convert audio formats" },
+      { name: "Voice Recorder", href: "/voice-recorder", description: "Record voice audio" },
+      { name: "Text Editor", href: "/text-editor", description: "Edit and format text" }
     ]
   };
 
   return (
-    <ToolPageLayout {...toolData}>
-      <TextToSpeech />
-    </ToolPageLayout>
+    <ToolPageLayout
+      title={toolData.title}
+      description={toolData.description}
+      toolInterface={<TextToSpeech />}
+      howToUse={toolData.howToUse}
+      features={toolData.features}
+      faqs={toolData.faqs}
+      relatedTools={toolData.relatedTools}
+      category={toolData.category}
+    />
   );
 };
 

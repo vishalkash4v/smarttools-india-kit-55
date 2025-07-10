@@ -9,12 +9,12 @@ import { Share2, Star, Users, Shield, Clock, Zap } from 'lucide-react';
 interface ToolPageLayoutProps {
   title: string;
   description: string;
-  toolInterface: React.ReactNode;
+  toolInterface?: React.ReactNode;
   howToUse: string[];
   features: string[];
   faqs: { question: string; answer: string }[];
   relatedTools: { name: string; href: string; description?: string }[];
-  category: string;
+  category?: string;
   rating?: number;
   userCount?: string;
   children?: React.ReactNode;
@@ -28,12 +28,12 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
   features,
   faqs,
   relatedTools,
-  category,
+  category = "Online Tools",
   rating = 4.8,
   userCount = "10,000+",
   children
 }) => {
-  const shareUrl = window.location.href;
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
   const shareText = `Check out this amazing ${title} tool!`;
 
   const handleShare = (platform: string) => {
@@ -106,7 +106,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
               </CardDescription>
             </CardHeader>
             <CardContent className="p-8">
-              {toolInterface}
+              {toolInterface || children}
             </CardContent>
           </Card>
         </section>
@@ -257,8 +257,6 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
             </div>
           </CardContent>
         </Card>
-
-        {children}
       </div>
     </div>
   );

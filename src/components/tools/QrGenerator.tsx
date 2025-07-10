@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import QRCode from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 import { Download } from 'lucide-react';
 
 const QrGenerator: React.FC = () => {
@@ -23,17 +23,31 @@ const QrGenerator: React.FC = () => {
       return;
     }
 
-    const canvas = document.querySelector('canvas');
-    if (canvas) {
-      const url = canvas.toDataURL();
-      const a = document.createElement('a');
-      a.download = 'qrcode.png';
-      a.href = url;
-      a.click();
-      toast({
-        title: 'Downloaded!',
-        description: 'QR code saved successfully.',
-      });
+    const svg = document.querySelector('svg');
+    if (svg) {
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      canvas.width = size;
+      canvas.height = size;
+      
+      img.onload = () => {
+        ctx?.drawImage(img, 0, 0);
+        const url = canvas.toDataURL();
+        const a = document.createElement('a');
+        a.download = 'qrcode.png';
+        a.href = url;
+        a.click();
+        
+        toast({
+          title: 'Downloaded!',
+          description: 'QR code saved successfully.',
+        });
+      };
+      
+      img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
     }
   };
 
@@ -65,7 +79,7 @@ const QrGenerator: React.FC = () => {
       {text && (
         <div className="space-y-4 text-center">
           <div className="flex justify-center">
-            <QRCode value={text} size={size} />
+            <QRCodeSVG value={text} size={size} />
           </div>
           <Button onClick={downloadQR}>
             <Download className="mr-2 h-4 w-4" /> Download QR Code

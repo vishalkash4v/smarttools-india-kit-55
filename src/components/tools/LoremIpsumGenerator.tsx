@@ -1,20 +1,17 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { FileText, Copy, RefreshCw } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useToast } from '@/components/ui/use-toast';
+import { Copy, RefreshCw } from 'lucide-react';
 
-const LoremIpsumGenerator = () => {
-  const [copiedStyle, setCopiedStyle] = useState(false);
-  const [paragraphs, setParagraphs] = useState('3');
-  const [wordsPerParagraph, setWordsPerParagraph] = useState('50');
-  const [randomWords, setRandomWords] = useState('false');
-  const [startWithLorem, setStartWithLorem] = useState('true');
+const LoremIpsumGenerator: React.FC = () => {
+  const [type, setType] = useState('paragraphs');
+  const [count, setCount] = useState(3);
+  const [startWithLorem, setStartWithLorem] = useState(true);
   const [generatedText, setGeneratedText] = useState('');
   const { toast } = useToast();
 
@@ -26,181 +23,127 @@ const LoremIpsumGenerator = () => {
     'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
     'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
     'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
-    'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum', 'at', 'vero', 'eos',
-    'accusamus', 'accusantium', 'doloremque', 'laudantium', 'totam', 'rem',
-    'aperiam', 'eaque', 'ipsa', 'quae', 'ab', 'illo', 'inventore', 'veritatis',
-    'quasi', 'architecto', 'beatae', 'vitae', 'dicta', 'explicabo', 'nemo',
-    'ipsam', 'quia', 'voluptas', 'aspernatur', 'aut', 'odit', 'fugit'
+    'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum'
   ];
 
-  const generateParagraph = (baseWordCount: number, isFirst: boolean) => {
-    let words = [];
-    let actualWordCount = baseWordCount;
-
-    // If random words is enabled, vary the word count by ±30%
-    if (randomWords === 'true') {
-      const variation = Math.floor(baseWordCount * 0.3);
-      const minWords = Math.max(10, baseWordCount - variation);
-      const maxWords = baseWordCount + variation;
-      actualWordCount = Math.floor(Math.random() * (maxWords - minWords + 1)) + minWords;
+  const generateWords = (wordCount: number) => {
+    const words = [];
+    for (let i = 0; i < wordCount; i++) {
+      words.push(loremWords[Math.floor(Math.random() * loremWords.length)]);
     }
-
-    if (isFirst && startWithLorem === 'true') {
-      words = ['Lorem', 'ipsum', 'dolor', 'sit', 'amet'];
-      actualWordCount -= 5;
-    }
-
-    for (let i = 0; i < actualWordCount; i++) {
-      const randomWord = loremWords[Math.floor(Math.random() * loremWords.length)];
-      words.push(randomWord);
-    }
-
-    let paragraph = words.join(' ');
-    paragraph = paragraph.charAt(0).toUpperCase() + paragraph.slice(1);
-    return paragraph + '.';
+    return words.join(' ');
   };
 
-  const generateLorem = () => {
-    const numParagraphs = parseInt(paragraphs);
-    const wordsPerPar = parseInt(wordsPerParagraph);
+  const generateSentence = () => {
+    const sentenceLength = Math.floor(Math.random() * 10) + 5;
+    const sentence = generateWords(sentenceLength);
+    return sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
+  };
 
-    if (numParagraphs <= 0 || wordsPerPar <= 0) {
+  const generateParagraph = () => {
+    const sentenceCount = Math.floor(Math.random() * 4) + 3;
+    const sentences = [];
+    for (let i = 0; i < sentenceCount; i++) {
+      sentences.push(generateSentence());
+    }
+    return sentences.join(' ');
+  };
+
+  const generateText = () => {
+    let result = '';
+    
+    if (type === 'words') {
+      result = generateWords(count);
+    } else if (type === 'sentences') {
+      const sentences = [];
+      for (let i = 0; i < count; i++) {
+        sentences.push(generateSentence());
+      }
+      result = sentences.join(' ');
+    } else {
+      const paragraphs = [];
+      for (let i = 0; i < count; i++) {
+        if (i === 0 && startWithLorem) {
+          paragraphs.push('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' + generateParagraph());
+        } else {
+          paragraphs.push(generateParagraph());
+        }
+      }
+      result = paragraphs.join('\n\n');
+    }
+    
+    setGeneratedText(result);
+  };
+
+  const copyText = () => {
+    navigator.clipboard.writeText(generatedText).then(() => {
       toast({
-        title: "Invalid Input",
-        description: "Please enter valid numbers for paragraphs and words.",
-        variant: "destructive",
+        title: 'Copied!',
+        description: 'Lorem Ipsum text copied to clipboard.',
       });
-      return;
-    }
-
-    const paragraphsArray = [];
-    for (let i = 0; i < numParagraphs; i++) {
-      paragraphsArray.push(generateParagraph(wordsPerPar, i === 0));
-    }
-
-    setGeneratedText(paragraphsArray.join('\n\n'));
-  };
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedText);
-    setCopiedStyle(true); // Set copied state
-    toast({
-      title: "Copied!",
-      description: "Lorem ipsum text copied to clipboard.",
     });
-    setTimeout(() => setCopiedStyle(false), 2000); // Reset after 2 seconds
   };
 
-  const clearText = () => {
-    setGeneratedText('');
-    setCopiedStyle(false); // Reset copied state
-  };
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-6 w-6" />
-            Lorem Ipsum Generator
-          </CardTitle>
-          <CardDescription>
-            Generate Lorem Ipsum placeholder text for your designs and layouts.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="paragraphs">Number of Paragraphs</Label>
-              <Input
-                id="paragraphs"
-                type="number"
-                min="1"
-                max="10"
-                value={paragraphs}
-                onChange={(e) => setParagraphs(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="wordsPerParagraph">Words per Paragraph</Label>
-              <Input
-                id="wordsPerParagraph"
-                type="number"
-                min="10"
-                max="200"
-                value={wordsPerParagraph}
-                onChange={(e) => setWordsPerParagraph(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label>Random Words per Paragraph</Label>
-              <Select value={randomWords} onValueChange={setRandomWords}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="false">Fixed Count</SelectItem>
-                  <SelectItem value="true">Random (±30%)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Start with "Lorem ipsum"</Label>
-              <Select value={startWithLorem} onValueChange={setStartWithLorem}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="true">Yes</SelectItem>
-                  <SelectItem value="false">No</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="type">Generate</Label>
+          <Select value={type} onValueChange={setType}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="paragraphs">Paragraphs</SelectItem>
+              <SelectItem value="sentences">Sentences</SelectItem>
+              <SelectItem value="words">Words</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="count">Count</Label>
+          <Input
+            id="count"
+            type="number"
+            min="1"
+            max="50"
+            value={count}
+            onChange={(e) => setCount(parseInt(e.target.value) || 1)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Options</Label>
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="startWithLorem"
+              checked={startWithLorem}
+              onChange={(e) => setStartWithLorem(e.target.checked)}
+            />
+            <Label htmlFor="startWithLorem" className="text-sm">Start with "Lorem ipsum"</Label>
           </div>
+        </div>
+      </div>
 
-          <div className="flex gap-2">
-            <Button onClick={generateLorem} className="flex-1">
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Generate Lorem Ipsum
+      <Button onClick={generateText} className="w-full">
+        <RefreshCw className="mr-2 h-4 w-4" /> Generate Lorem Ipsum
+      </Button>
+
+      {generatedText && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold">Generated Text</h3>
+            <Button variant="outline" size="sm" onClick={copyText}>
+              <Copy className="mr-2 h-4 w-4" /> Copy
             </Button>
           </div>
-
-          {generatedText && (
-            <Card className="bg-muted/50">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">Generated Text</CardTitle>
-                  <div className="flex gap-2">
-                    <Button
-                      variant={copiedStyle ? "default" : "outline"}
-                      size="sm"
-                      onClick={copyToClipboard}
-                    >
-                      <Copy className="h-4 w-4 mr-2" />
-                      {copiedStyle ? "Copied" : "Copy"}
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={clearText}>
-                      Clear
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  value={generatedText}
-                  readOnly
-                  className="min-h-[300px] resize-none"
-                />
-                <div className="mt-4 text-sm text-muted-foreground">
-                  Characters: {generatedText.length} | Words: {generatedText.split(' ').length}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </CardContent>
-      </Card>
+          <Textarea
+            value={generatedText}
+            readOnly
+            className="min-h-[200px] bg-muted"
+          />
+        </div>
+      )}
     </div>
   );
 };

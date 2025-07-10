@@ -6,54 +6,54 @@ import ToolPageLayout from '@/components/tools/ToolPageLayout';
 const UrlShortenerPage = () => {
   const toolData = {
     title: "Free URL Shortener Online",
-    description: "Shorten long URLs instantly with our free URL shortener. Create custom short links, track clicks, and manage your shortened URLs. Perfect for social media and marketing campaigns.",
+    description: "Create short, shareable URLs from long links. Free online URL shortener with custom aliases, click tracking, and QR codes. Perfect for social media and marketing.",
     category: "Utility Tools",
     
     howToUse: [
       "Paste your long URL in the input field",
-      "Optionally customize the short URL suffix",
-      "Click 'Shorten URL' to generate the short link",
-      "Copy the shortened URL for sharing",
-      "Track clicks and analytics (if available)"
+      "Optionally add a custom alias for branding",
+      "Click 'Shorten URL' to create a short link",
+      "Copy the shortened URL to your clipboard",
+      "Share your short link anywhere online"
     ],
     
     features: [
-      "Instant URL shortening",
-      "Custom short URL aliases",
+      "Create short, memorable URLs",
+      "Custom aliases for branding",
+      "QR code generation for mobile sharing",
       "Click tracking and analytics",
-      "QR code generation for short URLs",
       "Bulk URL shortening",
       "No registration required"
     ],
     
     faqs: [
       {
-        question: "How long do shortened URLs last?",
-        answer: "Our shortened URLs are permanent and don't expire. However, if the original URL becomes unavailable, the short link will also stop working."
+        question: "Why should I use a URL shortener?",
+        answer: "URL shorteners make long links more manageable for social media, emails, and printed materials. They also provide click tracking and can include your brand in the shortened URL."
       },
       {
-        question: "Can I customize my short URLs?",
-        answer: "Yes, you can create custom aliases for your short URLs to make them more memorable and brand-friendly."
+        question: "Do shortened URLs expire?",
+        answer: "Our shortened URLs don't have an expiration date and will continue to work indefinitely. However, if the original URL becomes unavailable, the shortened link won't work either."
       },
       {
-        question: "Do you track clicks on shortened URLs?",
-        answer: "We provide basic click analytics including total clicks, geographic data, and referrer information to help you understand your link performance."
+        question: "Can I customize my shortened URLs?",
+        answer: "Yes, you can create custom aliases to make your shortened URLs more memorable and brand-friendly. Custom aliases help with recognition and trust."
       },
       {
-        question: "Is there a limit on how many URLs I can shorten?",
-        answer: "No, there's no limit on the number of URLs you can shorten. Our service is completely free with unlimited usage."
+        question: "Are shortened URLs safe to click?",
+        answer: "Our service doesn't modify the destination of your URLs. However, always be cautious when clicking shortened links from unknown sources, as they can hide the actual destination."
       },
       {
-        question: "Are shortened URLs safe?",
-        answer: "We scan all URLs for malicious content before shortening. However, always be cautious when clicking shortened URLs from unknown sources."
+        question: "Can I track clicks on my shortened URLs?",
+        answer: "Yes, our service provides basic click tracking so you can see how many people have clicked on your shortened links and when they were clicked."
       }
     ],
     
     relatedTools: [
-      { name: "QR Code Generator", href: "/qr-generator", description: "Create QR codes for your URLs" },
-      { name: "URL Slug Generator", href: "/url-slug-generator", description: "Generate SEO-friendly URL slugs" },
-      { name: "Link Analyzer", href: "/link-analyzer", description: "Analyze and check URLs" },
-      { name: "Meta Tag Previewer", href: "/meta-tag-previewer", description: "Preview social media link cards" }
+      { name: "QR Code Generator", href: "/qr-generator", description: "Generate QR codes for URLs" },
+      { name: "Link Analytics", href: "/link-analytics", description: "Analyze link performance" },
+      { name: "Social Media Tools", href: "/social-media-tools", description: "Tools for social media" },
+      { name: "Marketing Tools", href: "/marketing-tools", description: "Digital marketing utilities" }
     ]
   };
 

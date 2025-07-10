@@ -7,7 +7,7 @@ const PasswordGeneratorPage = () => {
   const toolData = {
     title: "Secure Password Generator Online",
     description: "Generate strong, secure passwords with customizable length and character sets. Create random passwords with uppercase, lowercase, numbers, and special characters. Free password generator tool.",
-    keywords: "password generator, secure password, random password, strong password generator, password maker",
+    category: "Security Tools",
     
     howToUse: [
       "Set your desired password length (8-128 characters)",
@@ -50,17 +50,24 @@ const PasswordGeneratorPage = () => {
     ],
     
     relatedTools: [
-      { name: "Hash Generator", href: "/hash-generator" },
-      { name: "Base64 Converter", href: "/base64-converter" },
-      { name: "Text Encryptor", href: "/text-encryptor" },
-      { name: "Random Number Generator", href: "/random-number-generator" }
+      { name: "Hash Generator", href: "/hash-generator", description: "Generate hash values" },
+      { name: "Base64 Converter", href: "/base64-converter", description: "Encode/decode Base64" },
+      { name: "Text Encryptor", href: "/text-encryptor", description: "Encrypt text data" },
+      { name: "Random Number Generator", href: "/random-number-generator", description: "Generate random numbers" }
     ]
   };
 
   return (
-    <ToolPageLayout {...toolData}>
-      <PasswordGenerator />
-    </ToolPageLayout>
+    <ToolPageLayout
+      title={toolData.title}
+      description={toolData.description}
+      toolInterface={<PasswordGenerator />}
+      howToUse={toolData.howToUse}
+      features={toolData.features}
+      faqs={toolData.faqs}
+      relatedTools={toolData.relatedTools}
+      category={toolData.category}
+    />
   );
 };
 

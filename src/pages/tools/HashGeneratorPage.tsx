@@ -6,54 +6,54 @@ import ToolPageLayout from '@/components/tools/ToolPageLayout';
 const HashGeneratorPage = () => {
   const toolData = {
     title: "Free Hash Generator Online",
-    description: "Generate MD5, SHA-1, SHA-256, and other hash values from text or files. Free online hash generator for data integrity verification, password hashing, and security purposes.",
+    description: "Generate MD5, SHA-1, SHA-256, and SHA-512 hash values from any text. Free online hash generator for password hashing, data integrity, and security applications.",
     category: "Security Tools",
     
     howToUse: [
-      "Enter your text in the input field or upload a file",
-      "Select the hash algorithm (MD5, SHA-1, SHA-256, etc.)",
+      "Enter your text in the input field",
+      "Select the hash algorithm (MD5, SHA-1, SHA-256, SHA-512)",
       "Click 'Generate Hash' to create the hash value",
-      "Copy the generated hash for your use",
-      "Compare hashes to verify data integrity"
+      "Copy the generated hash using the copy button",
+      "Use the hash for your security or verification needs"
     ],
     
     features: [
-      "Support for multiple hash algorithms",
-      "Text and file hash generation",
-      "Instant hash computation",
-      "Copy hash values with one click",
-      "Hash comparison tools",
-      "Secure client-side processing"
+      "Multiple hash algorithms supported",
+      "Instant hash generation",
+      "Copy hash values to clipboard",
+      "Secure client-side processing",
+      "Support for any text input",
+      "Hash length information display"
     ],
     
     faqs: [
       {
         question: "What is a hash function?",
-        answer: "A hash function is a mathematical algorithm that converts input data into a fixed-size string of characters. It's used for data integrity, password storage, and digital signatures."
+        answer: "A hash function is a mathematical algorithm that converts input data of any size into a fixed-size string of characters. It's commonly used for data integrity verification and password storage."
       },
       {
         question: "Which hash algorithm should I use?",
-        answer: "For security purposes, use SHA-256 or higher. MD5 and SHA-1 are considered weak for security but still useful for data integrity checks."
+        answer: "For security purposes, use SHA-256 or SHA-512. MD5 and SHA-1 are faster but less secure. SHA-256 is widely adopted and offers good security for most applications."
       },
       {
-        question: "Can I reverse a hash to get the original data?",
-        answer: "No, hash functions are one-way. You cannot reverse a hash to get the original data. This is why they're secure for password storage."
+        question: "Can I reverse a hash to get the original text?",
+        answer: "No, hash functions are one-way operations. You cannot reverse a hash to get the original input. This is what makes them suitable for password storage and data integrity checks."
       },
       {
-        question: "Are the hash calculations secure?",
-        answer: "Yes, all hash calculations are performed locally in your browser. Your data never leaves your device, ensuring complete privacy."
+        question: "Are identical inputs guaranteed to produce identical hashes?",
+        answer: "Yes, the same input will always produce the same hash value with the same algorithm. This property makes hashes useful for data verification and duplicate detection."
       },
       {
-        question: "What's the difference between MD5 and SHA-256?",
-        answer: "SHA-256 is more secure and produces longer hashes (256 bits vs 128 bits for MD5). MD5 is faster but has known vulnerabilities for security applications."
+        question: "Is my data secure when generating hashes?",
+        answer: "Yes, all hash generation happens locally in your browser. Your input data is never transmitted to our servers, ensuring complete privacy and security."
       }
     ],
     
     relatedTools: [
       { name: "Password Generator", href: "/password-generator", description: "Generate secure passwords" },
-      { name: "Base64 Converter", href: "/base64-converter", description: "Encode and decode Base64 data" },
+      { name: "Base64 Converter", href: "/base64-converter", description: "Encode and decode Base64" },
       { name: "Text Encryptor", href: "/text-encryptor", description: "Encrypt and decrypt text" },
-      { name: "JWT Decoder", href: "/jwt-decoder", description: "Decode JSON Web Tokens" }
+      { name: "Checksum Generator", href: "/checksum-generator", description: "Generate file checksums" }
     ]
   };
 
