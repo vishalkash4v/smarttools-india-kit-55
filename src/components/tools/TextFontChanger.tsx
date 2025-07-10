@@ -14,9 +14,15 @@ interface FontStyle {
 }
 
 const TextFontChanger = () => {
+  const [copiedStyle, setCopiedStyle] = useState<string | null>(null);
   const [inputText, setInputText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const { toast } = useToast();
+
+
+
+
+
 
   const fontStyles: FontStyle[] = [
     // Unicode Styles
@@ -185,6 +191,7 @@ const TextFontChanger = () => {
         return monoMap[char] || char;
       })
     },
+    
     // Special Styles
     {
       name: 'Upside Down',
@@ -331,7 +338,7 @@ const TextFontChanger = () => {
       name: 'aLtErNaTiNg CaSe',
       description: 'Alternating Upper and Lower Case',
       category: 'Case',
-      transform: (text) => text.split('').map((char, index) => 
+      transform: (text) => text.split('').map((char, index) =>
         index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()
       ).join('')
     },
@@ -339,7 +346,7 @@ const TextFontChanger = () => {
       name: 'InVeRsE cAsE',
       description: 'Inverse Alternating Case',
       category: 'Case',
-      transform: (text) => text.split('').map((char, index) => 
+      transform: (text) => text.split('').map((char, index) =>
         index % 2 === 1 ? char.toLowerCase() : char.toUpperCase()
       ).join('')
     },
@@ -347,7 +354,7 @@ const TextFontChanger = () => {
       name: 'RaNdOm CaSe',
       description: 'Random Upper and Lower Case',
       category: 'Case',
-      transform: (text) => text.split('').map(char => 
+      transform: (text) => text.split('').map(char =>
         Math.random() > 0.5 ? char.toUpperCase() : char.toLowerCase()
       ).join('')
     },
@@ -367,7 +374,7 @@ const TextFontChanger = () => {
       name: 'Title Case',
       description: 'First Letter of Each Word Capitalized',
       category: 'Case',
-      transform: (text) => text.replace(/\w\S*/g, (txt) => 
+      transform: (text) => text.replace(/\w\S*/g, (txt) =>
         txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
       )
     },
@@ -395,13 +402,14 @@ const TextFontChanger = () => {
 
   const categories = ['All', ...Array.from(new Set(fontStyles.map(style => style.category)))];
 
-  const filteredStyles = selectedCategory === 'All' 
-    ? fontStyles 
+  const filteredStyles = selectedCategory === 'All'
+    ? fontStyles
     : fontStyles.filter(style => style.category === selectedCategory);
 
   const copyToClipboard = useCallback(async (text: string, styleName: string) => {
     try {
       await navigator.clipboard.writeText(text);
+      setCopiedStyle(styleName); // Set the copied style
       toast({
         title: "Copied!",
         description: `${styleName} text copied to clipboard`,
@@ -425,7 +433,7 @@ const TextFontChanger = () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     toast({
       title: "Downloaded!",
       description: `${styleName} text downloaded as file`,
@@ -434,12 +442,12 @@ const TextFontChanger = () => {
 
   const clearText = useCallback(() => {
     setInputText('');
+    setCopiedStyle(null); // Reset copied style
     toast({
       title: "Cleared!",
       description: "Input text has been cleared",
     });
   }, [toast]);
-
   return (
     <div className="w-full max-w-6xl mx-auto space-y-6">
       <Card>
@@ -517,11 +525,11 @@ const TextFontChanger = () => {
                   <div className="flex gap-2">
                     <Button
                       onClick={() => copyToClipboard(transformedText, style.name)}
-                      variant="outline"
+                      variant={copiedStyle === style.name ? "default" : "outline"}
                       size="sm"
                     >
                       <Copy className="h-4 w-4 mr-2" />
-                      Copy
+                      {copiedStyle === style.name ? "Copied" : "Copy"}
                     </Button>
                     <Button
                       onClick={() => downloadText(transformedText, style.name)}

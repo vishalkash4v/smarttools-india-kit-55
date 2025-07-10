@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,8 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Copy } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
+import { Copy, Check } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const RegexTester = () => {
   const [pattern, setPattern] = useState('\\d+');
@@ -16,17 +15,20 @@ const RegexTester = () => {
   const [flags, setFlags] = useState({
     global: true,
     ignoreCase: false,
-    multiline: false
+    multiline: false,
   });
   const [matches, setMatches] = useState<RegExpMatchArray[]>([]);
   const [isValid, setIsValid] = useState(true);
   const [error, setError] = useState('');
+  const [copiedPattern, setCopiedPattern] = useState<boolean>(false);
+  const [copiedMatches, setCopiedMatches] = useState<boolean>(false);
+  const { toast } = useToast();
 
   const testRegex = () => {
     try {
       const flagString = `${flags.global ? 'g' : ''}${flags.ignoreCase ? 'i' : ''}${flags.multiline ? 'm' : ''}`;
       const regex = new RegExp(pattern, flagString);
-      
+
       if (flags.global) {
         const allMatches = [];
         let match;
@@ -40,7 +42,7 @@ const RegexTester = () => {
         const match = regex.exec(testString);
         setMatches(match ? [match] : []);
       }
-      
+
       setIsValid(true);
       setError('');
     } catch (err) {
@@ -67,9 +69,12 @@ const RegexTester = () => {
         const before = result.substring(0, start);
         const matched = result.substring(start, end);
         const after = result.substring(end);
-        
-        result = before + `<mark class="bg-yellow-200 px-1 rounded">${matched}</mark>` + after;
-        offset += '<mark class="bg-yellow-200 px-1 rounded"></mark>'.length;
+
+        result =
+          before +
+          `<mark class="bg-yellow-200 dark:bg-yellow-600 px-1 rounded">${matched}</mark>` +
+          after;
+        offset += '<mark class="bg-yellow-200 dark:bg-yellow-600 px-1 rounded"></mark>'.length;
       }
     });
 
@@ -77,10 +82,47 @@ const RegexTester = () => {
   };
 
   const copyPattern = () => {
-    navigator.clipboard.writeText(pattern);
-    toast({
-      title: 'Pattern Copied',
-      description: 'Regex pattern copied to clipboard.',
+    navigator.clipboard.writeText(pattern).then(() => {
+      setCopiedPattern(true);
+      toast({
+        title: 'Pattern Copied',
+        description: 'Regex pattern copied to clipboard.',
+      });
+      setTimeout(() => setCopiedPattern(false), 2000); // Reset after 2 seconds
+    }).catch(err => {
+      console.error('Failed to copy pattern: ', err);
+      toast({
+        title: 'Error',
+        description: 'Failed to copy pattern to clipboard.',
+        variant: 'destructive',
+      });
+    });
+  };
+
+  const copyMatches = () => {
+    if (matches.length === 0) {
+      toast({
+        title: 'Nothing to copy',
+        description: 'No matches found to copy.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    const matchesText = matches.map((match, index) => `Match ${index + 1}: "${match[0]}"`).join('\n');
+    navigator.clipboard.writeText(matchesText).then(() => {
+      setCopiedMatches(true);
+      toast({
+        title: 'Matches Copied',
+        description: 'Match results copied to clipboard.',
+      });
+      setTimeout(() => setCopiedMatches(false), 2000); // Reset after 2 seconds
+    }).catch(err => {
+      console.error('Failed to copy matches: ', err);
+      toast({
+        title: 'Error',
+        description: 'Failed to copy matches to clipboard.',
+        variant: 'destructive',
+      });
     });
   };
 
@@ -90,15 +132,24 @@ const RegexTester = () => {
     { name: 'URL', pattern: 'https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)' },
     { name: 'IP Address', pattern: '\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b' },
     { name: 'Date (MM/DD/YYYY)', pattern: '\\b\\d{1,2}\\/\\d{1,2}\\/\\d{4}\\b' },
-    { name: 'Hexadecimal Color', pattern: '#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}' }
+    { name: 'Hex Color', pattern: '#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}' },
+    { name: 'Credit Card', pattern: '\\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})\\b' },
+    { name: 'Time (HH:MM)', pattern: '\\b([0-1]?[0-9]|2[0-3]):[0-5][0-9]\\b' },
+    { name: 'UUID', pattern: '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}' },
+    { name: 'Username', pattern: '\\b[a-zA-Z0-9_]{3,16}\\b' },
+    { name: 'Password', pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}' },
+    { name: 'HTML Tag', pattern: '<([a-zA-Z][a-zA-Z0-9]*)\\b[^>]*>(.*?)</\\1>' },
+    { name: 'IPv6', pattern: '([0-9a-fA-F]{1,4}:){7}([0-9a-fA-F]{1,4}|:)' },
+    { name: 'Postal Code', pattern: '\\b\\d{5}(-\\d{4})?\\b' },
+    { name: 'SSN', pattern: '\\b\\d{3}-\\d{2}-\\d{4}\\b' },
+    { name: 'Currency', pattern: '\\$[0-9]+(\\.[0-9]{2})?\\b' }
   ];
-
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <Card>
+    <div className="max-w-4xl mx-auto space-y-6 p-4">
+      <Card className="bg-white dark:bg-gray-800">
         <CardHeader>
-          <CardTitle>Regex Tester</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-gray-900 dark:text-gray-100">Regex Tester</CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-300">
             Test and validate regular expressions with live matching and highlighting.
           </CardDescription>
         </CardHeader>
@@ -107,10 +158,17 @@ const RegexTester = () => {
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Label htmlFor="pattern">Regular Expression Pattern</Label>
-                  <Button onClick={copyPattern} variant="outline" size="sm" className="gap-2">
-                    <Copy className="h-4 w-4" />
-                    Copy
+                  <Label htmlFor="pattern" className="text-gray-700 dark:text-gray-200">
+                    Regular Expression Pattern
+                  </Label>
+                  <Button
+                    onClick={copyPattern}
+                    variant={copiedPattern ? "default" : "outline"}
+                    size="sm"
+                    className="gap-2 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+                  >
+                    {copiedPattern ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copiedPattern ? 'Copied' : 'Copy'}
                   </Button>
                 </div>
                 <Input
@@ -118,23 +176,25 @@ const RegexTester = () => {
                   value={pattern}
                   onChange={(e) => setPattern(e.target.value)}
                   placeholder="Enter regex pattern..."
-                  className={`font-mono ${!isValid ? 'border-red-500' : ''}`}
+                  className={`font-mono ${!isValid ? 'border-red-500' : ''} bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600`}
                 />
                 {!isValid && (
-                  <p className="text-sm text-red-500 mt-1">{error}</p>
+                  <p className="text-sm text-red-500 dark:text-red-400 mt-1">{error}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label>Flags</Label>
-                <div className="flex gap-4">
+                <Label className="text-gray-700 dark:text-gray-200">Flags</Label>
+                <div className="flex flex-wrap gap-4">
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="global"
                       checked={flags.global}
                       onCheckedChange={(checked) => setFlags(prev => ({ ...prev, global: !!checked }))}
                     />
-                    <Label htmlFor="global" className="text-sm">Global (g)</Label>
+                    <Label htmlFor="global" className="text-sm text-gray-700 dark:text-gray-200">
+                      Global (g)
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -142,7 +202,9 @@ const RegexTester = () => {
                       checked={flags.ignoreCase}
                       onCheckedChange={(checked) => setFlags(prev => ({ ...prev, ignoreCase: !!checked }))}
                     />
-                    <Label htmlFor="ignoreCase" className="text-sm">Ignore Case (i)</Label>
+                    <Label htmlFor="ignoreCase" className="text-sm text-gray-700 dark:text-gray-200">
+                      Ignore Case (i)
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -150,54 +212,69 @@ const RegexTester = () => {
                       checked={flags.multiline}
                       onCheckedChange={(checked) => setFlags(prev => ({ ...prev, multiline: !!checked }))}
                     />
-                    <Label htmlFor="multiline" className="text-sm">Multiline (m)</Label>
+                    <Label htmlFor="multiline" className="text-sm text-gray-700 dark:text-gray-200">
+                      Multiline (m)
+                    </Label>
                   </div>
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="testString">Test String</Label>
+                <Label htmlFor="testString" className="text-gray-700 dark:text-gray-200">
+                  Test String
+                </Label>
                 <Textarea
                   id="testString"
                   value={testString}
                   onChange={(e) => setTestString(e.target.value)}
                   placeholder="Enter text to test against..."
-                  className="min-h-[120px]"
+                  className="min-h-[120px] bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                 />
               </div>
             </div>
 
             <div className="space-y-4">
               <div>
-                <Label>Preview with Matches Highlighted</Label>
-                <div 
-                  className="border rounded-md p-3 min-h-[120px] whitespace-pre-wrap bg-gray-50"
+                <Label className="text-gray-700 dark:text-gray-200">Preview with Matches Highlighted</Label>
+                <div
+                  className="border rounded-md p-3 min-h-[120px] whitespace-pre-wrap bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                   dangerouslySetInnerHTML={{ __html: highlightMatches(testString) }}
                 />
               </div>
 
               <div>
-                <Label>Match Results</Label>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-gray-700 dark:text-gray-200">Match Results</Label>
+                  <Button
+                    onClick={copyMatches}
+                    variant={copiedMatches ? "default" : "outline"}
+                    size="sm"
+                    className="gap-2 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+                  >
+                    {copiedMatches ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copiedMatches ? 'Copied' : 'Copy'}
+                  </Button>
+                </div>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Badge variant={matches.length > 0 ? "default" : "secondary"}>
+                    <Badge variant={matches.length > 0 ? "default" : "secondary"} className="bg-blue-500 dark:bg-blue-600">
                       {matches.length} match{matches.length !== 1 ? 'es' : ''} found
                     </Badge>
                   </div>
                   {matches.length > 0 && (
                     <div className="space-y-2 max-h-[200px] overflow-y-auto">
                       {matches.map((match, index) => (
-                        <div key={index} className="border rounded-md p-2 bg-gray-50">
+                        <div key={index} className="border rounded-md p-2 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600">
                           <div className="text-sm">
                             <strong>Match {index + 1}:</strong> "{match[0]}"
                           </div>
                           {match.index !== undefined && (
-                            <div className="text-xs text-gray-600">
+                            <div className="text-xs text-gray-600 dark:text-gray-400">
                               Position: {match.index} - {match.index + match[0].length - 1}
                             </div>
                           )}
                           {match.length > 1 && (
-                            <div className="text-xs text-gray-600">
+                            <div className="text-xs text-gray-600 dark:text-gray-400">
                               Groups: {match.slice(1).map((group, i) => `$${i + 1}: "${group}"`).join(', ')}
                             </div>
                           )}
@@ -211,15 +288,15 @@ const RegexTester = () => {
           </div>
 
           <div>
-            <Label>Common Patterns</Label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+            <Label className="text-gray-700 dark:text-gray-200">Common Patterns</Label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-2">
               {commonPatterns.map((item) => (
                 <Button
                   key={item.name}
                   variant="outline"
                   size="sm"
                   onClick={() => setPattern(item.pattern)}
-                  className="text-left justify-start"
+                  className="text-left justify-start truncate min-h-[48px] px-3 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
                 >
                   {item.name}
                 </Button>

@@ -3,8 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Copy, Binary, ArrowUpDown, Upload, FileText, Image, Music } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Copy, Binary, ArrowUpDown, Upload, FileText, Image, Music, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Base64Converter = () => {
@@ -12,6 +12,7 @@ const Base64Converter = () => {
   const [outputText, setOutputText] = useState('');
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [fileType, setFileType] = useState<'text' | 'image' | 'audio'>('text');
+  const [copied, setCopied] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -21,6 +22,7 @@ const Base64Converter = () => {
     try {
       const encoded = btoa(inputText);
       setOutputText(encoded);
+      setCopied(false);
     } catch (error) {
       toast({
         title: "Encoding Error",
@@ -34,6 +36,7 @@ const Base64Converter = () => {
     try {
       const decoded = atob(inputText);
       setOutputText(decoded);
+      setCopied(false);
     } catch (error) {
       toast({
         title: "Decoding Error",
@@ -62,6 +65,7 @@ const Base64Converter = () => {
       const base64 = result.split(',')[1]; // Remove data URL prefix
       setOutputText(result); // Keep full data URL for images
       setInputText(base64); // Just base64 for text area
+      setCopied(false);
     };
     reader.readAsDataURL(file);
   };
@@ -76,6 +80,7 @@ const Base64Converter = () => {
         (fileType === 'audio' && inputText.startsWith('data:audio'))
       ) {
         setOutputText(inputText);
+        setCopied(false);
       } else {
         toast({
           title: 'Invalid Data URL',
@@ -96,6 +101,7 @@ const Base64Converter = () => {
 
     if (mimeType) {
       setOutputText(`data:${mimeType};base64,${inputText}`);
+      setCopied(false);
       toast({
         title: 'Preview Generated',
         description: `Assuming mime type is ${mimeType}. For other types, please provide a full Data URL.`,
@@ -125,10 +131,12 @@ const Base64Converter = () => {
     }
     try {
       await navigator.clipboard.writeText(textToCopy);
+      setCopied(true);
       toast({
         title: 'Copied!',
         description: 'Result copied to clipboard.',
       });
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
     } catch (error) {
       toast({
         title: 'Copy Failed',
@@ -142,11 +150,16 @@ const Base64Converter = () => {
     setMode(mode === 'encode' ? 'decode' : 'encode');
     setInputText(''); // Clear input on swap for simplicity
     setOutputText('');
+    setCopied(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleClear = () => {
     setInputText('');
     setOutputText('');
+    setCopied(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -164,14 +177,14 @@ const Base64Converter = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <Card>
+    <div className="max-w-4xl mx-auto space-y-6 p-4">
+      <Card className="bg-white dark:bg-gray-800">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
             <Binary className="h-6 w-6" />
             Base64 Encoder/Decoder
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-gray-600 dark:text-gray-300">
             Encode text/files to Base64, or decode Base64 strings to preview images and audio (up to 2MB).
           </CardDescription>
         </CardHeader>
@@ -180,31 +193,30 @@ const Base64Converter = () => {
             defaultValue="text"
             onValueChange={(value) => {
               setFileType(value as 'text' | 'image' | 'audio');
-              // Reset state on tab change to avoid conflicts
               handleClear();
             }}
           >
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="text" className="flex items-center gap-2">
+              <TabsTrigger value="text" className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
                 <FileText className="h-4 w-4" />
                 Text
               </TabsTrigger>
-              <TabsTrigger value="image" className="flex items-center gap-2">
+              <TabsTrigger value="image" className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
                 <Image className="h-4 w-4" />
                 Image
               </TabsTrigger>
-              <TabsTrigger value="audio" className="flex items-center gap-2">
+              <TabsTrigger value="audio" className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
                 <Music className="h-4 w-4" />
                 Audio
               </TabsTrigger>
             </TabsList>
 
             {/* Mode Toggle for All Tabs */}
-            <div className="flex flex-col sm:flex-row gap-2 pt-6">
+            <div className="flex flex-col sm:flex-row gap-2 pt-8">
               <Button
                 variant={mode === 'encode' ? 'default' : 'outline'}
                 onClick={() => setMode('encode')}
-                className="flex-1"
+                className="flex-1 text-gray-900 dark:text-white bg-primary dark:bg-blue-600 hover:bg-primary/90 dark:hover:bg-blue-700"
               >
                 {fileType === 'text' ? 'Encode to Base64' : 'File to Base64'}
               </Button>
@@ -213,13 +225,14 @@ const Base64Converter = () => {
                 size="icon"
                 onClick={handleSwapMode}
                 title="Swap Modes"
+                className="text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
               >
                 <ArrowUpDown className="h-4 w-4" />
               </Button>
               <Button
                 variant={mode === 'decode' ? 'default' : 'outline'}
                 onClick={() => setMode('decode')}
-                className="flex-1"
+                className="flex-1 text-gray-900 dark:text-white bg-primary dark:bg-blue-600 hover:bg-primary/90 dark:hover:bg-blue-700"
               >
                 {fileType === 'text' ? 'Decode from Base64' : 'Base64 to File'}
               </Button>
@@ -228,7 +241,7 @@ const Base64Converter = () => {
             <TabsContent value="text" className="space-y-6">
               {/* Text Input */}
               <div className="space-y-2">
-                <Label htmlFor="textInput">
+                <Label htmlFor="textInput" className="text-gray-700 dark:text-gray-200">
                   {mode === 'encode' ? 'Text to Encode' : 'Base64 to Decode'}
                 </Label>
                 <Textarea
@@ -236,16 +249,16 @@ const Base64Converter = () => {
                   placeholder={mode === 'encode' ? 'Enter text to encode...' : 'Enter Base64 string to decode...'}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  className="min-h-32"
+                  className="min-h-32 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                 />
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-2">
-                <Button onClick={handleConvert} disabled={!inputText} className="flex-1">
+                <Button onClick={handleConvert} disabled={!inputText} className="flex-1 bg-primary dark:bg-blue-600 text-gray-900 dark:text-white hover:bg-primary/90 dark:hover:bg-blue-700">
                   {mode === 'encode' ? 'Encode' : 'Decode'}
                 </Button>
-                <Button variant="outline" onClick={handleClear}>
+                <Button variant="outline" onClick={handleClear} className="text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
                   Clear
                 </Button>
               </div>
@@ -253,7 +266,7 @@ const Base64Converter = () => {
               {/* Text Output */}
               {outputText && (
                 <div className="space-y-2">
-                  <Label htmlFor="textOutput">
+                  <Label htmlFor="textOutput" className="text-gray-700 dark:text-gray-200">
                     {mode === 'encode' ? 'Base64 Encoded' : 'Decoded Text'}
                   </Label>
                   <div className="relative">
@@ -261,16 +274,16 @@ const Base64Converter = () => {
                       id="textOutput"
                       value={outputText}
                       readOnly
-                      className="min-h-32 pr-12"
+                      className="min-h-32 pr-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                     />
                     <Button
-                      variant="outline"
+                      variant={copied ? "default" : "outline"}
                       size="icon"
                       onClick={handleCopy}
-                      className="absolute top-2 right-2"
-                      title="Copy to clipboard"
+                      className="absolute top-2 right-2 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+                      title={copied ? "Copied" : "Copy to clipboard"}
                     >
-                      <Copy className="h-4 w-4" />
+                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -282,7 +295,7 @@ const Base64Converter = () => {
                 <>
                   {/* File Upload for Images */}
                   <div className="space-y-2">
-                    <Label htmlFor="imageInput">Upload Image (Max 2MB)</Label>
+                    <Label htmlFor="imageInput" className="text-gray-700 dark:text-gray-200">Upload Image (Max 2MB)</Label>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <input
                         ref={fileInputRef}
@@ -295,12 +308,12 @@ const Base64Converter = () => {
                       <Button
                         variant="outline"
                         onClick={() => fileInputRef.current?.click()}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
                       >
                         <Upload className="h-4 w-4" />
                         Choose Image
                       </Button>
-                      <Button variant="outline" onClick={handleClear}>
+                      <Button variant="outline" onClick={handleClear} className="text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
                         Clear
                       </Button>
                     </div>
@@ -310,8 +323,8 @@ const Base64Converter = () => {
                   {outputText && (
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Label>Image Preview</Label>
-                        <div className="border rounded-lg p-4 bg-muted/50">
+                        <Label className="text-gray-700 dark:text-gray-200">Image Preview</Label>
+                        <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                           <img
                             src={outputText}
                             alt="Uploaded"
@@ -321,22 +334,22 @@ const Base64Converter = () => {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label htmlFor="imageBase64">Base64 Output</Label>
+                        <Label htmlFor="imageBase64" className="text-gray-700 dark:text-gray-200">Base64 Output</Label>
                         <div className="relative">
                           <Textarea
                             id="imageBase64"
                             value={inputText}
                             readOnly
-                            className="min-h-32 pr-12 font-mono text-xs"
+                            className="min-h-32 pr-12 font-mono text-xs bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                           />
                           <Button
-                            variant="outline"
+                            variant={copied ? "default" : "outline"}
                             size="icon"
                             onClick={handleCopy}
-                            className="absolute top-2 right-2"
-                            title="Copy to clipboard"
+                            className="absolute top-2 right-2 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+                            title={copied ? "Copied" : "Copy to clipboard"}
                           >
-                            <Copy className="h-4 w-4" />
+                            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                           </Button>
                         </div>
                       </div>
@@ -347,21 +360,21 @@ const Base64Converter = () => {
                 <>
                   {/* Base64/DataURL Input for decoding */}
                   <div className="space-y-2">
-                    <Label htmlFor="base64ToImageInput">Base64 or Data URL to Preview</Label>
+                    <Label htmlFor="base64ToImageInput" className="text-gray-700 dark:text-gray-200">Base64 or Data URL to Preview</Label>
                     <Textarea
                       id="base64ToImageInput"
                       placeholder="Paste Base64 string or a full Data URL (e.g., data:image/png;base64,...)"
                       value={inputText}
                       onChange={(e) => setInputText(e.target.value)}
-                      className="min-h-32 font-mono text-xs"
+                      className="min-h-32 font-mono text-xs bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                     />
                   </div>
                   
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <Button onClick={handleGeneratePreview} disabled={!inputText} className="flex-1">
+                    <Button onClick={handleGeneratePreview} disabled={!inputText} className="flex-1 bg-primary dark:bg-blue-600 text-gray-900 dark:text-white hover:bg-primary/90 dark:hover:bg-blue-700">
                       Generate Preview
                     </Button>
-                    <Button variant="outline" onClick={handleClear}>
+                    <Button variant="outline" onClick={handleClear} className="text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
                       Clear
                     </Button>
                   </div>
@@ -369,8 +382,8 @@ const Base64Converter = () => {
                   {/* Image Preview */}
                   {outputText && (
                     <div className="space-y-2">
-                      <Label>Image Preview</Label>
-                      <div className="border rounded-lg p-4 bg-muted/50">
+                      <Label className="text-gray-700 dark:text-gray-200">Image Preview</Label>
+                      <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                         <img
                           src={outputText}
                           alt="Preview from Base64"
@@ -388,7 +401,7 @@ const Base64Converter = () => {
                 <>
                   {/* File Upload for Audio */}
                   <div className="space-y-2">
-                    <Label htmlFor="audioInput">Upload Audio File (Max 2MB)</Label>
+                    <Label htmlFor="audioInput" className="text-gray-700 dark:text-gray-200">Upload Audio File (Max 2MB)</Label>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <input
                         ref={fileInputRef}
@@ -401,12 +414,12 @@ const Base64Converter = () => {
                       <Button
                         variant="outline"
                         onClick={() => fileInputRef.current?.click()}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
                       >
                         <Upload className="h-4 w-4" />
                         Choose Audio
                       </Button>
-                      <Button variant="outline" onClick={handleClear}>
+                      <Button variant="outline" onClick={handleClear} className="text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
                         Clear
                       </Button>
                     </div>
@@ -416,8 +429,8 @@ const Base64Converter = () => {
                   {outputText && (
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Label>Audio Preview</Label>
-                        <div className="border rounded-lg p-4 bg-muted/50">
+                        <Label className="text-gray-700 dark:text-gray-200">Audio Preview</Label>
+                        <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                           <audio
                             src={outputText}
                             controls
@@ -427,22 +440,22 @@ const Base64Converter = () => {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label htmlFor="audioBase64">Base64 Output</Label>
+                        <Label htmlFor="audioBase64" className="text-gray-700 dark:text-gray-200">Base64 Output</Label>
                         <div className="relative">
                           <Textarea
                             id="audioBase64"
                             value={inputText}
                             readOnly
-                            className="min-h-32 pr-12 font-mono text-xs"
+                            className="min-h-32 pr-12 font-mono text-xs bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                           />
                           <Button
-                            variant="outline"
+                            variant={copied ? "default" : "outline"}
                             size="icon"
                             onClick={handleCopy}
-                            className="absolute top-2 right-2"
-                            title="Copy to clipboard"
+                            className="absolute top-2 right-2 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+                            title={copied ? "Copied" : "Copy to clipboard"}
                           >
-                            <Copy className="h-4 w-4" />
+                            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                           </Button>
                         </div>
                       </div>
@@ -453,21 +466,21 @@ const Base64Converter = () => {
                 <>
                   {/* Base64/DataURL Input for decoding */}
                   <div className="space-y-2">
-                    <Label htmlFor="base64ToAudioInput">Base64 or Data URL to Preview</Label>
+                    <Label htmlFor="base64ToAudioInput" className="text-gray-700 dark:text-gray-200">Base64 or Data URL to Preview</Label>
                     <Textarea
                       id="base64ToAudioInput"
                       placeholder="Paste Base64 string or a full Data URL (e.g., data:audio/mpeg;base64,...)"
                       value={inputText}
                       onChange={(e) => setInputText(e.target.value)}
-                      className="min-h-32 font-mono text-xs"
+                      className="min-h-32 font-mono text-xs bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                     />
                   </div>
                   
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <Button onClick={handleGeneratePreview} disabled={!inputText} className="flex-1">
+                    <Button onClick={handleGeneratePreview} disabled={!inputText} className="flex-1 bg-primary dark:bg-blue-600 text-gray-900 dark:text-white hover:bg-primary/90 dark:hover:bg-blue-700">
                       Generate Preview
                     </Button>
-                    <Button variant="outline" onClick={handleClear}>
+                    <Button variant="outline" onClick={handleClear} className="text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
                       Clear
                     </Button>
                   </div>
@@ -475,8 +488,8 @@ const Base64Converter = () => {
                   {/* Audio Preview */}
                   {outputText && (
                     <div className="space-y-2">
-                      <Label>Audio Preview</Label>
-                      <div className="border rounded-lg p-4 bg-muted/50">
+                      <Label className="text-gray-700 dark:text-gray-200">Audio Preview</Label>
+                      <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                         <audio
                           src={outputText}
                           controls

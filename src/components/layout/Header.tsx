@@ -34,9 +34,9 @@ const Header = () => {
           >
             <div className="relative">
               <img 
-                src="/logo.png" 
-                alt="SmartTools Logo" 
-                className="w-10 h-10 rounded-xl object-contain"
+                src="/logobeta.png" 
+                alt="FYN Tools Logo" 
+                className="w-35 h-14 rounded-xl object-contain"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
@@ -48,12 +48,9 @@ const Header = () => {
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center shadow-lg animate-glow-pulse" style={{ display: 'none' }}>
                 <Zap className="h-6 w-6 text-white" />
               </div>
-              <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-primary animate-pulse" />
+              {/* <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-primary animate-pulse" /> */}
             </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold gradient-text">SmartTools</span>
-              <span className="text-xs text-muted-foreground hidden sm:block">Your Digital Toolkit</span>
-            </div>
+            
           </Link>
 
           {/* Desktop Search Bar */}

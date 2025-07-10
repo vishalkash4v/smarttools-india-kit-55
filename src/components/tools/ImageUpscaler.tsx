@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,6 +17,8 @@ const ImageUpscaler = () => {
   const [progress, setProgress] = useState<number>(0);
   const [estimatedTime, setEstimatedTime] = useState<number>(0);
   const [originalDimensions, setOriginalDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [originalFileSize, setOriginalFileSize] = useState<number | null>(null);
+  const [upscaledFileSize, setUpscaledFileSize] = useState<number | null>(null); // State for upscaled file size
   const { toast } = useToast();
 
   const scaleOptions = [
@@ -27,6 +28,17 @@ const ImageUpscaler = () => {
     { value: '2', label: '2x (200%)' },
     { value: '3', label: '3x (300%)' }
   ];
+
+  // Function to convert bytes to KB or MB
+  const formatFileSize = (size: number) => {
+    if (size < 1024) {
+      return `${size} B`;
+    } else if (size < 1024 * 1024) {
+      return `${(size / 1024).toFixed(2)} KB`;
+    } else {
+      return `${(size / (1024 * 1024)).toFixed(2)} MB`;
+    }
+  };
 
   const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -50,9 +62,11 @@ const ImageUpscaler = () => {
       }
 
       setSelectedFile(file);
+      setOriginalFileSize(file.size);
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
       setUpscaledUrl(null);
+      setUpscaledFileSize(null);
       setProgress(0);
 
       // Get original dimensions
@@ -64,7 +78,7 @@ const ImageUpscaler = () => {
         const pixelCount = img.width * img.height;
         const scale = parseFloat(scaleFactor);
         const newPixelCount = pixelCount * scale * scale;
-        const timeEstimate = Math.max(5, Math.min(60, Math.round(newPixelCount / 500000))); // 5-60 seconds
+        const timeEstimate = Math.max(5, Math.min(60, Math.round(newPixelCount / 500000)));
         setEstimatedTime(timeEstimate);
       };
       img.src = url;
@@ -123,7 +137,6 @@ const ImageUpscaler = () => {
                 let currentHeight = originalDimensions.height;
                 let currentImage = img;
                 
-                // Progressive upscaling in smaller steps
                 while (currentWidth < newWidth || currentHeight < newHeight) {
                   const stepScale = Math.min(2, Math.min(newWidth / currentWidth, newHeight / currentHeight));
                   const stepWidth = Math.floor(currentWidth * stepScale);
@@ -131,83 +144,45 @@ const ImageUpscaler = () => {
                   
                   tempCanvas.width = stepWidth;
                   tempCanvas.height = stepHeight;
-                  
-                  // Use high-quality interpolation
                   tempCtx.imageSmoothingEnabled = true;
                   tempCtx.imageSmoothingQuality = 'high';
-                  
-                  // Apply sharpening filter for upscaling
                   tempCtx.filter = 'contrast(1.1) brightness(1.02) saturate(1.05)';
                   tempCtx.drawImage(currentImage, 0, 0, stepWidth, stepHeight);
-                  
-                  // Create new image for next iteration
                   const newImg = new Image();
                   newImg.src = tempCanvas.toDataURL();
-                  
-                  // Wait for image to load
                   await new Promise<void>(imgResolve => {
                     newImg.onload = () => imgResolve();
                   });
-                  
                   currentImage = newImg;
                   currentWidth = stepWidth;
                   currentHeight = stepHeight;
-                  
                   if (stepWidth >= newWidth && stepHeight >= newHeight) break;
                 }
-                
-                // Final pass with edge enhancement
                 ctx.imageSmoothingEnabled = true;
                 ctx.imageSmoothingQuality = 'high';
                 ctx.filter = 'contrast(1.05) brightness(1.01) saturate(1.02)';
                 ctx.drawImage(currentImage, 0, 0, newWidth, newHeight);
                 
-                // Apply unsharp mask effect for better clarity
-                const imageData = ctx.getImageData(0, 0, newWidth, newHeight);
-                const data = imageData.data;
-                
-                // Simple edge enhancement for upscaling
-                for (let i = 0; i < data.length; i += 4) {
-                  const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-                  const factor = brightness > 128 ? 1.02 : 0.98;
-                  data[i] *= factor;     // Red
-                  data[i + 1] *= factor; // Green
-                  data[i + 2] *= factor; // Blue
-                }
-                
-                ctx.putImageData(imageData, 0, 0);
+                canvas.toBlob((blob) => {
+                  if (blob) {
+                    const upscaledUrl = URL.createObjectURL(blob);
+                    setUpscaledUrl(upscaledUrl);
+                    setUpscaledFileSize(blob.size); // Set upscaled file size
+                    
+                    clearInterval(progressInterval);
+                    setProgress(100);
+
+                    toast({
+                      title: `Image processed successfully!`,
+                      description: `Enhanced from ${originalDimensions.width}×${originalDimensions.height} to ${newWidth}×${newHeight}`,
+                    });
+                  }
+                  setIsUpscaling(false);
+                  resolve();
+                }, 'image/png', 1.0);
               } else {
-                // Direct scaling for downscaling or 1x
-                ctx.imageSmoothingEnabled = true;
-                ctx.imageSmoothingQuality = 'high';
-                
-                if (scale < 1) {
-                  // For downscaling, apply slight sharpening
-                  ctx.filter = 'contrast(1.02) brightness(1.01)';
-                }
-                
                 ctx.drawImage(img, 0, 0, newWidth, newHeight);
               }
-
-              // Convert to blob and create URL
-              canvas.toBlob((blob) => {
-                if (blob) {
-                  const upscaledUrl = URL.createObjectURL(blob);
-                  setUpscaledUrl(upscaledUrl);
-                  
-                  clearInterval(progressInterval);
-                  setProgress(100);
-                  
-                  const action = scale > 1 ? 'upscaled' : scale < 1 ? 'downscaled' : 'processed';
-                  
-                  toast({
-                    title: `Image ${action} successfully!`,
-                    description: `Enhanced from ${originalDimensions.width}×${originalDimensions.height} to ${newWidth}×${newHeight}`,
-                  });
-                }
-                setIsUpscaling(false);
-                resolve();
-              }, 'image/png', 1.0);
             } else {
               clearInterval(progressInterval);
               setIsUpscaling(false);
@@ -238,8 +213,7 @@ const ImageUpscaler = () => {
       link.href = upscaledUrl;
       const name = selectedFile.name.replace(/\.[^/.]+$/, '');
       const ext = selectedFile.name.split('.').pop();
-      const action = parseFloat(scaleFactor) > 1 ? 'upscaled' : parseFloat(scaleFactor) < 1 ? 'downscaled' : 'processed';
-      link.download = `${name}_${action}_${scaleFactor}x.${ext}`;
+      link.download = `${name}_upscaled_${scaleFactor}x.${ext}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -283,9 +257,18 @@ const ImageUpscaler = () => {
                   className="hidden"
                 />
               </Label>
-              <p className="text-xs text-muted-foreground mt-2">
-                Supports JPG, PNG, WebP (Max 10MB)
-              </p>
+              {previewUrl && (
+                <div className="mt-4">
+                  <img 
+                    src={previewUrl} 
+                    alt="Preview" 
+                    className="mx-auto h-24 w-24 object-contain rounded-md"
+                  />
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {selectedFile && `Uploaded File Size: ${formatFileSize(originalFileSize || 0)}`}
+                  </p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -378,6 +361,9 @@ const ImageUpscaler = () => {
                     <p className="text-sm text-muted-foreground">
                       {originalDimensions.width} × {originalDimensions.height}px
                     </p>
+                    <p className="text-sm text-muted-foreground">
+                      {originalFileSize && `Size: ${formatFileSize(originalFileSize)}`}
+                    </p>
                   </div>
                   <div className="border rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900">
                     <img 
@@ -393,6 +379,9 @@ const ImageUpscaler = () => {
                     <h3 className="font-semibold text-green-600 dark:text-green-400">After (Enhanced)</h3>
                     <p className="text-sm text-muted-foreground">
                       {Math.floor(originalDimensions.width * parseFloat(scaleFactor))} × {Math.floor(originalDimensions.height * parseFloat(scaleFactor))}px
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {upscaledFileSize && `Size: ${formatFileSize(upscaledFileSize)}`}
                     </p>
                   </div>
                   <div className="border rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900">

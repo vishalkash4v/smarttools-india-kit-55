@@ -53,27 +53,27 @@ const LogoToFavicon = () => {
         for (const { size } of sizes) {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-          
+
           canvas.width = size;
           canvas.height = size;
-          
+
           if (ctx) {
             // Add white background for transparency
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, size, size);
-            
+
             // Draw image with proper scaling
             ctx.drawImage(img, 0, 0, size, size);
-            
+
             // Convert to data URL
             const dataUrl = canvas.toDataURL('image/png');
             generatedSizes[size.toString()] = dataUrl;
           }
         }
-        
+
         setFaviconSizes(generatedSizes);
         setIsGenerating(false);
-        
+
         toast({
           title: "Favicons generated successfully!",
           description: `Generated ${sizes.length} different favicon sizes.`,
@@ -148,9 +148,9 @@ const LogoToFavicon = () => {
 
             {previewUrl && (
               <div className="bg-muted/50 rounded-lg p-4 text-center">
-                <img 
-                  src={previewUrl} 
-                  alt="Logo preview" 
+                <img
+                  src={previewUrl}
+                  alt="Logo preview"
                   className="mx-auto max-w-32 max-h-32 object-contain rounded"
                 />
                 <p className="text-sm font-medium mt-2">
@@ -160,8 +160,8 @@ const LogoToFavicon = () => {
             )}
 
             {selectedFile && (
-              <Button 
-                onClick={generateFavicons} 
+              <Button
+                onClick={generateFavicons}
                 disabled={isGenerating}
                 className="w-full"
               >
@@ -187,16 +187,16 @@ const LogoToFavicon = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {sizes.map(({ size, name }) => (
                   <div key={size} className="bg-muted/50 rounded-lg p-4 text-center">
-                    <img 
-                      src={faviconSizes[size.toString()]} 
+                    <img
+                      src={faviconSizes[size.toString()]}
                       alt={`${size}x${size} favicon`}
                       className="mx-auto mb-2 border rounded"
-                      style={{ width: size > 48 ? '48px' : `${size}px`, height: size > 48 ? '48px' : `${size}px` }}
+                      style={{ width: '48px', height: '48px' }}  // Ensure uniform size for images
                     />
                     <p className="text-xs font-medium mb-1">{name}</p>
                     <p className="text-xs text-muted-foreground mb-2">{size}×{size}px</p>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="outline"
                       onClick={() => downloadFavicon(size.toString(), faviconSizes[size.toString()])}
                       className="w-full text-xs"
@@ -207,12 +207,13 @@ const LogoToFavicon = () => {
                 ))}
               </div>
 
+
               <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg">
                 <h3 className="font-medium text-blue-800 dark:text-blue-200 mb-2">
                   HTML Implementation:
                 </h3>
                 <pre className="text-xs bg-white dark:bg-gray-800 p-3 rounded overflow-x-auto">
-{`<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+                  {`<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png">
 <link rel="manifest" href="/site.webmanifest">`}

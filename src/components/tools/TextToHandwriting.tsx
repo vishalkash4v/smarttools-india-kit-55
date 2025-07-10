@@ -31,6 +31,9 @@ const paperSizes: PaperSize[] = [
 ];
 
 const TextToHandwriting = () => {
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
   const [inputText, setInputText] = useState('Welcome to our handwriting tool! Type your text here and see it transform into beautiful handwriting instantly.');
   const [fontStyle, setFontStyle] = useState('cursive');
   const [fontSize, setFontSize] = useState([18]);
@@ -55,18 +58,18 @@ const TextToHandwriting = () => {
     const currentPaperSize = getCurrentPaperSize();
     const pixelRatio = quality[0];
     const dpi = 96 * pixelRatio;
-    
+
     // Convert mm to pixels
     const pageWidth = mmToPx(currentPaperSize.width, dpi);
     const pageHeight = mmToPx(currentPaperSize.height, dpi);
     const padding = mmToPx(20, dpi); // 20mm padding
     const marginX = mmToPx(25, dpi); // 25mm left margin
-    
+
     const lines = inputText.split('\n');
     const lineSpacing = fontSize[0] * lineHeight[0] * pixelRatio;
     const maxWidth = pageWidth - marginX - padding;
     const maxLinesPerPage = Math.floor((pageHeight - padding * 2 - mmToPx(30, dpi)) / lineSpacing);
-    
+
     // Process text and split into pages
     const pages: string[][] = [];
     let currentPage: string[] = [];
@@ -89,7 +92,7 @@ const TextToHandwriting = () => {
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return;
-      
+
       tempCtx.font = `${fontSize[0] * pixelRatio}px ${fontStyle}`;
       const words = line.split(' ');
       let currentLine = '';
@@ -97,7 +100,7 @@ const TextToHandwriting = () => {
       words.forEach((word, wordIndex) => {
         const testLine = currentLine + (currentLine ? ' ' : '') + word;
         const testWidth = tempCtx.measureText(testLine).width;
-        
+
         if (testWidth > maxWidth && currentLine) {
           // Add current line and start new one
           if (currentPageLines >= maxLinesPerPage) {
@@ -136,7 +139,7 @@ const TextToHandwriting = () => {
     pages.forEach((pageLines, pageIndex) => {
       const canvas = document.createElement('canvas');
       canvasRefs.current.push(canvas);
-      
+
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
@@ -192,11 +195,11 @@ const TextToHandwriting = () => {
           const randomX = x + (Math.random() - 0.5) * 3 * pixelRatio;
           const randomY = y + (Math.random() - 0.5) * 4 * pixelRatio;
           const angle = (Math.random() - 0.5) * 0.04;
-          
+
           ctx.save();
           ctx.translate(randomX, randomY);
           ctx.rotate(angle);
-          
+
           const chars = word.split('');
           let charX = 0;
           chars.forEach((char) => {
@@ -205,7 +208,7 @@ const TextToHandwriting = () => {
             ctx.fillText(char, charRandomX, charRandomY);
             charX += ctx.measureText(char).width + (Math.random() - 0.5) * 0.5 * pixelRatio;
           });
-          
+
           ctx.restore();
 
           x += ctx.measureText(word + ' ').width + (Math.random() - 0.5) * 2 * pixelRatio;
@@ -237,102 +240,108 @@ const TextToHandwriting = () => {
     generateHandwriting();
   }, []);
 
-  const downloadImages = async () => {
-    if (generatedPages.length === 0) {
-      toast({
-        title: "Error",
-        description: "Please generate handwriting first.",
-        variant: "destructive",
-      });
-      return;
-    }
+const downloadImages = async () => {
+  if (generatedPages.length === 0) {
+    toast({
+      title: "Error",
+      description: "Please generate handwriting first.",
+      variant: "destructive",
+    });
+    return;
+  }
 
-    if (generatedPages.length === 1) {
-      // Single image download
+  setLoading(true);
+  setProgress(0);
+
+  // If we only have one page, download it immediately as an image
+  if (generatedPages.length === 1) {
+    const link = document.createElement('a');
+    link.download = `handwriting-${paperSize.toLowerCase()}.png`;
+    link.href = generatedPages[0];
+    link.click();
+    setLoading(false);
+  } else {
+    // Multiple images - trigger download immediately
+    // In this case, we will just download each page as a separate image
+    generatedPages.forEach((pageDataUrl, index) => {
       const link = document.createElement('a');
-      link.download = `handwriting-${paperSize.toLowerCase()}.png`;
-      link.href = generatedPages[0];
+      link.download = `handwriting-page-${index + 1}.png`;
+      link.href = pageDataUrl;
       link.click();
-    } else {
-      // Multiple images - create ZIP
-      try {
-        const JSZip = (await import('jszip')).default;
-        const zip = new JSZip();
-        
-        generatedPages.forEach((pageDataUrl, index) => {
-          const base64Data = pageDataUrl.split(',')[1];
-          zip.file(`handwriting-page-${index + 1}.png`, base64Data, { base64: true });
-        });
-        
-        const content = await zip.generateAsync({ type: 'blob' });
-        const link = document.createElement('a');
-        link.download = `handwriting-${paperSize.toLowerCase()}-${generatedPages.length}pages.zip`;
-        link.href = URL.createObjectURL(content);
-        link.click();
-        URL.revokeObjectURL(link.href);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to create ZIP file. Please try again.",
-          variant: "destructive",
-        });
-      }
-    }
+    });
 
+    setLoading(false);
     toast({
       title: "Downloaded!",
       description: `${generatedPages.length} page(s) downloaded successfully.`,
     });
-  };
+  }
+};
 
-  const downloadPDF = async () => {
-    if (generatedPages.length === 0) {
-      toast({
-        title: "Error",
-        description: "Please generate handwriting first.",
-        variant: "destructive",
-      });
-      return;
-    }
+const downloadPDF = async () => {
+  if (generatedPages.length === 0) {
+    toast({
+      title: "Error",
+      description: "Please generate handwriting first.",
+      variant: "destructive",
+    });
+    return;
+  }
 
-    try {
-      const jsPDF = (await import('jspdf')).default;
-      const currentPaperSize = getCurrentPaperSize();
-      
-      const pdf = new jsPDF({
-        orientation: currentPaperSize.width > currentPaperSize.height ? 'landscape' : 'portrait',
-        unit: 'mm',
-        format: [currentPaperSize.width, currentPaperSize.height]
-      });
+  setLoading(true);
+  setProgress(0);
 
-      generatedPages.forEach((pageDataUrl, index) => {
-        if (index > 0) {
-          pdf.addPage();
-        }
-        pdf.addImage(
-          pageDataUrl,
-          'PNG',
-          0,
-          0,
-          currentPaperSize.width,
-          currentPaperSize.height
-        );
-      });
+  // Use the generated pages directly for PDF download (without further processing)
+  try {
+    const jsPDF = (await import('jspdf')).default;
+    const currentPaperSize = getCurrentPaperSize();
 
-      pdf.save(`handwriting-${paperSize.toLowerCase()}-${generatedPages.length}pages.pdf`);
-      
-      toast({
-        title: "PDF Downloaded!",
-        description: `${generatedPages.length} page PDF created successfully.`,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to create PDF. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
+    const pdf = new jsPDF({
+      orientation: currentPaperSize.width > currentPaperSize.height ? 'landscape' : 'portrait',
+      unit: 'mm',
+      format: [currentPaperSize.width, currentPaperSize.height],
+    });
+
+    generatedPages.forEach((pageDataUrl, index) => {
+      if (index > 0) {
+        pdf.addPage();
+      }
+      pdf.addImage(pageDataUrl, 'PNG', 0, 0, currentPaperSize.width, currentPaperSize.height);
+    });
+
+    pdf.save(`handwriting-${paperSize.toLowerCase()}-${generatedPages.length}pages.pdf`);
+
+    setLoading(false);
+    toast({
+      title: "PDF Downloaded!",
+      description: `${generatedPages.length} page PDF created successfully.`,
+    });
+  } catch (error) {
+    setLoading(false);
+    toast({
+      title: "Error",
+      description: "Failed to create PDF. Please try again.",
+      variant: "destructive",
+    });
+  }
+};
+
+const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const text = e.target.value;
+  const wordCount = text.trim().split(/\s+/).length; // Split by spaces to count words
+
+  if (wordCount <= 500) {
+    setInputText(text); // Update the input text only if word count is <= 500
+  } else {
+    // Optionally show a toast or error message
+    toast({
+      title: "Word limit reached",
+      description: "You cannot enter more than 500 words.",
+      variant: "destructive",
+    });
+  }
+};
+
 
   const fontOptions = [
     { value: 'cursive', label: 'Cursive' },
@@ -366,7 +375,8 @@ const TextToHandwriting = () => {
               id="input-text"
               placeholder="Type your text here and watch it transform into handwriting automatically..."
               value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
+              
+                onChange={handleInputChange} // Use handleInputChange instead of direct onChange
               rows={6}
               className="resize-none"
             />
@@ -457,7 +467,7 @@ const TextToHandwriting = () => {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg">Live Handwriting Preview</CardTitle>
               <CardDescription>
-                {generatedPages.length > 1 
+                {generatedPages.length > 1
                   ? `${generatedPages.length} pages generated • ${getCurrentPaperSize().name} (${getCurrentPaperSize().width}×${getCurrentPaperSize().height}mm)`
                   : `1 page • ${getCurrentPaperSize().name} (${getCurrentPaperSize().width}×${getCurrentPaperSize().height}mm)`
                 }
@@ -468,7 +478,7 @@ const TextToHandwriting = () => {
                 {generatedPages.map((pageDataUrl, index) => (
                   <div key={index} className="flex justify-center">
                     <div className="relative">
-                      <img 
+                      <img
                         src={pageDataUrl}
                         alt={`Handwriting Page ${index + 1}`}
                         className="border rounded-lg shadow-sm bg-white max-w-full h-auto block mx-auto"
@@ -481,17 +491,24 @@ const TextToHandwriting = () => {
                   </div>
                 ))}
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button onClick={downloadImages} variant="outline" className="flex items-center gap-2">
                   <FileImage className="h-4 w-4" />
-                  Download Images {generatedPages.length > 1 && '(ZIP)'}
+                  Download Images {generatedPages.length > 1 && '(All at one time)'}
                 </Button>
                 <Button onClick={downloadPDF} variant="outline" className="flex items-center gap-2">
                   <FileText className="h-4 w-4" />
                   Download PDF
                 </Button>
               </div>
+              {loading && (
+                <div className="flex justify-center items-center space-x-2">
+                  <div className="loader"></div> {/* Add your custom loader here */}
+                  <span>Downloading... {Math.round(progress)}%</span>
+                </div>
+              )}
+
             </CardContent>
           </Card>
 

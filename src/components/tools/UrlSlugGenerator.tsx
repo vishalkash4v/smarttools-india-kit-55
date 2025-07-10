@@ -1,23 +1,23 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Link, Copy, Type } from 'lucide-react';
+import { Link, Copy, CheckCircle, FileText } from 'lucide-react';  // Use FileText instead of Type
 import { useToast } from '@/hooks/use-toast';
 
 const UrlSlugGenerator = () => {
   const [inputText, setInputText] = useState('');
   const [slug, setSlug] = useState('');
+  const [isCopied, setIsCopied] = useState(false);
   const { toast } = useToast();
 
   const generateSlug = (text: string) => {
     return text
       .toLowerCase()
       .trim()
-      .replace(/[^\w\s-]/g, '') // Remove special characters
-      .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
-      .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+      .replace(/[^\w\s-]/g, '') 
+      .replace(/[\s_-]+/g, '-') 
+      .replace(/^-+|-+$/g, ''); 
   };
 
   useEffect(() => {
@@ -30,10 +30,16 @@ const UrlSlugGenerator = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(slug);
+    setIsCopied(true);
+
     toast({
       title: "Copied!",
       description: "URL slug copied to clipboard.",
     });
+
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
   };
 
   const examples = [
@@ -79,8 +85,13 @@ const UrlSlugGenerator = () => {
                   readOnly
                   className="font-mono"
                 />
-                <Button onClick={copyToClipboard} variant="outline" size="icon">
-                  <Copy className="h-4 w-4" />
+                <Button
+                  onClick={copyToClipboard}
+                  variant="outline"
+                  size="icon"
+                  className={isCopied ? "bg-green-200 text-green-800" : ""}
+                >
+                  {isCopied ? <CheckCircle className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                 </Button>
               </div>
             </div>
@@ -89,7 +100,7 @@ const UrlSlugGenerator = () => {
           <Card className="bg-muted/50">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                <Type className="h-5 w-5" />
+                <FileText className="h-5 w-5" />  {/* Replaced 'Type' with 'FileText' */}
                 Examples
               </CardTitle>
             </CardHeader>

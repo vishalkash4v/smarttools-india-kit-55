@@ -59,6 +59,7 @@ const Footer = () => {
   ];
 
   return (
+    <div className='margin-1'>
     <footer className="bg-muted/50 border-t">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
@@ -134,6 +135,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </div>
   );
 };
 

@@ -10,6 +10,7 @@ import { FileText, Copy, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const LoremIpsumGenerator = () => {
+  const [copiedStyle, setCopiedStyle] = useState(false);
   const [paragraphs, setParagraphs] = useState('3');
   const [wordsPerParagraph, setWordsPerParagraph] = useState('50');
   const [randomWords, setRandomWords] = useState('false');
@@ -43,7 +44,7 @@ const LoremIpsumGenerator = () => {
       const maxWords = baseWordCount + variation;
       actualWordCount = Math.floor(Math.random() * (maxWords - minWords + 1)) + minWords;
     }
-    
+
     if (isFirst && startWithLorem === 'true') {
       words = ['Lorem', 'ipsum', 'dolor', 'sit', 'amet'];
       actualWordCount -= 5;
@@ -62,7 +63,7 @@ const LoremIpsumGenerator = () => {
   const generateLorem = () => {
     const numParagraphs = parseInt(paragraphs);
     const wordsPerPar = parseInt(wordsPerParagraph);
-    
+
     if (numParagraphs <= 0 || wordsPerPar <= 0) {
       toast({
         title: "Invalid Input",
@@ -82,16 +83,18 @@ const LoremIpsumGenerator = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generatedText);
+    setCopiedStyle(true); // Set copied state
     toast({
       title: "Copied!",
       description: "Lorem ipsum text copied to clipboard.",
     });
+    setTimeout(() => setCopiedStyle(false), 2000); // Reset after 2 seconds
   };
 
   const clearText = () => {
     setGeneratedText('');
+    setCopiedStyle(false); // Reset copied state
   };
-
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <Card>
@@ -170,9 +173,13 @@ const LoremIpsumGenerator = () => {
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">Generated Text</CardTitle>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                    <Button
+                      variant={copiedStyle ? "default" : "outline"}
+                      size="sm"
+                      onClick={copyToClipboard}
+                    >
                       <Copy className="h-4 w-4 mr-2" />
-                      Copy
+                      {copiedStyle ? "Copied" : "Copy"}
                     </Button>
                     <Button variant="outline" size="sm" onClick={clearText}>
                       Clear

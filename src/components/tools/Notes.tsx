@@ -1,12 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Trash2, Edit, Save, X, Plus, Search, Hash } from 'lucide-react';
+import { Trash2, Edit, Save, X, Plus, Search, Hash, Pin, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { saveAs } from 'file-saver';
 
 interface Note {
   id: string;
@@ -16,6 +16,7 @@ interface Note {
   createdAt: string;
   updatedAt: string;
   color: string;
+  pinned: boolean;
 }
 
 const Notes: React.FC = () => {
@@ -29,6 +30,7 @@ const Notes: React.FC = () => {
     tags: '',
     color: '#ffffff'
   });
+  const [selectedNotes, setSelectedNotes] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const colors = [
@@ -46,9 +48,11 @@ const Notes: React.FC = () => {
     }
   }, []);
 
-  // Save notes to localStorage
+  // Save notes to localStorage whenever notes state changes
   useEffect(() => {
-    localStorage.setItem('keepNotes', JSON.stringify(notes));
+    if (notes.length) {
+      localStorage.setItem('keepNotes', JSON.stringify(notes));
+    }
   }, [notes]);
 
   const createNote = () => {
@@ -67,7 +71,8 @@ const Notes: React.FC = () => {
       tags: newNote.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      color: newNote.color
+      color: newNote.color,
+      pinned: false,
     };
 
     setNotes([note, ...notes]);
@@ -91,6 +96,23 @@ const Notes: React.FC = () => {
     toast({ title: "Note deleted" });
   };
 
+  const togglePin = (id: string) => {
+    setNotes(notes.map(note =>
+      note.id === id ? { ...note, pinned: !note.pinned } : note
+    ));
+    toast({ title: "Note pin status changed" });
+  };
+
+  const handleNoteSelection = (id: string) => {
+    const newSelection = new Set(selectedNotes);
+    if (newSelection.has(id)) {
+      newSelection.delete(id);
+    } else {
+      newSelection.add(id);
+    }
+    setSelectedNotes(newSelection);
+  };
+
   const filteredNotes = notes.filter(note =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     note.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -103,6 +125,24 @@ const Notes: React.FC = () => {
       day: 'numeric',
       year: 'numeric'
     });
+  };
+
+  // Download selected notes or all notes as JSON file
+  const downloadNotes = (selectedNotes: Note[] | 'all') => {
+    const notesToDownload = selectedNotes === 'all' ? notes : selectedNotes;
+    const blob = new Blob([JSON.stringify(notesToDownload, null, 2)], { type: 'application/json' });
+    saveAs(blob, `notes-${new Date().toISOString()}.json`);
+  };
+
+  // Function to determine whether the background is light or dark
+  const isLightBackground = (color: string) => {
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    // Calculate luminance using the formula for perceived brightness
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return luminance > 128; // Light if luminance is greater than 128
   };
 
   return (
@@ -125,6 +165,20 @@ const Notes: React.FC = () => {
           Add New Note
         </Button>
       )}
+
+      {/* Download Options */}
+      <div className="flex gap-2">
+        <Button onClick={() => downloadNotes('all')} variant="outline" className="flex-1">
+          <Download className="h-4 w-4 mr-2" />
+          Download All Notes
+        </Button>
+        {selectedNotes.size > 0 && (
+          <Button onClick={() => downloadNotes(Array.from(selectedNotes).map(id => notes.find(note => note.id === id)!))} variant="outline" className="flex-1">
+            <Download className="h-4 w-4 mr-2" />
+            Download Selected Notes
+          </Button>
+        )}
+      </div>
 
       {/* Create Note Form */}
       {isCreating && (
@@ -191,7 +245,7 @@ const Notes: React.FC = () => {
         </div>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredNotes.map(note => (
           <NoteCard
             key={note.id}
@@ -201,7 +255,11 @@ const Notes: React.FC = () => {
             onSave={(updates) => updateNote(note.id, updates)}
             onCancel={() => setEditingId(null)}
             onDelete={() => deleteNote(note.id)}
+            onPin={() => togglePin(note.id)}
+            onSelect={() => handleNoteSelection(note.id)}
+            selected={selectedNotes.has(note.id)}
             formatDate={formatDate}
+            isLightBackground={isLightBackground(note.color)} // Pass background color check to NoteCard
           />
         ))}
       </div>
@@ -216,7 +274,11 @@ interface NoteCardProps {
   onSave: (updates: Partial<Note>) => void;
   onCancel: () => void;
   onDelete: () => void;
+  onPin: () => void;
+  onSelect: () => void;
+  selected: boolean;
   formatDate: (date: string) => string;
+  isLightBackground: boolean; // New prop to determine light or dark background
 }
 
 const NoteCard: React.FC<NoteCardProps> = ({
@@ -226,7 +288,11 @@ const NoteCard: React.FC<NoteCardProps> = ({
   onSave,
   onCancel,
   onDelete,
-  formatDate
+  onPin,
+  onSelect,
+  selected,
+  formatDate,
+  isLightBackground
 }) => {
   const [editData, setEditData] = useState({
     title: note.title,
@@ -242,51 +308,20 @@ const NoteCard: React.FC<NoteCardProps> = ({
     });
   };
 
-  if (isEditing) {
-    return (
-      <Card style={{ backgroundColor: note.color }}>
-        <CardContent className="p-4 space-y-3">
-          <Input
-            value={editData.title}
-            onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-            placeholder="Note title..."
-          />
-          <Textarea
-            value={editData.content}
-            onChange={(e) => setEditData({ ...editData, content: e.target.value })}
-            placeholder="Write your note..."
-            rows={3}
-          />
-          <Input
-            value={editData.tags}
-            onChange={(e) => setEditData({ ...editData, tags: e.target.value })}
-            placeholder="Tags (comma separated)..."
-          />
-          <div className="flex gap-2">
-            <Button onClick={handleSave} size="sm" className="flex-1">
-              <Save className="h-3 w-3 mr-1" />
-              Save
-            </Button>
-            <Button onClick={onCancel} variant="outline" size="sm" className="flex-1">
-              <X className="h-3 w-3 mr-1" />
-              Cancel
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
-    <Card 
-      className="cursor-pointer hover:shadow-md transition-shadow"
+    <Card
+      className={`cursor-pointer hover:shadow-md transition-shadow ${selected ? 'border-2 border-primary' : ''}`}
       style={{ backgroundColor: note.color }}
+      onClick={onSelect}
     >
-      <CardContent className="p-4">
+      <CardContent className={`p-4 ${isLightBackground ? 'text-dark' : 'text-white'}`}>
         <div className="space-y-3">
           <div className="flex justify-between items-start">
             <h3 className="font-semibold text-lg leading-tight">{note.title}</h3>
             <div className="flex gap-1">
+              <Button variant="ghost" size="icon" onClick={onPin} className="h-8 w-8">
+                <Pin className={`h-4 w-4 ${note.pinned ? 'text-primary' : 'text-muted'}`} />
+              </Button>
               <Button variant="ghost" size="icon" onClick={onEdit} className="h-8 w-8">
                 <Edit className="h-3 w-3" />
               </Button>
@@ -295,13 +330,13 @@ const NoteCard: React.FC<NoteCardProps> = ({
               </Button>
             </div>
           </div>
-          
+
           {note.content && (
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-4">
+            <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-3">
               {note.content}
             </p>
           )}
-          
+
           {note.tags.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {note.tags.map(tag => (
@@ -312,7 +347,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
               ))}
             </div>
           )}
-          
+
           <div className="text-xs text-muted-foreground">
             {formatDate(note.updatedAt)}
           </div>

@@ -9,11 +9,11 @@ import FAQ from '@/components/sections/FAQ';
 import Testimonials from '@/components/sections/Testimonials';
 import ToolSearch from '@/components/tools/ToolSearch';
 import { allTools } from '@/data/toolsData';
-import { 
-  Zap, 
-  Shield, 
-  Globe, 
-  Users, 
+import {
+  Zap,
+  Shield,
+  Globe,
+  Users,
   Star,
   ArrowRight,
   CheckCircle,
@@ -70,7 +70,7 @@ const LandingPage = () => {
         <meta name="twitter:title" content="FYN Tools India - Free Online Professional Tools" />
         <meta name="twitter:description" content="25+ free online tools for professionals. Secure calculators, text tools, converters, and generators. Instant results, no registration." />
         <link rel="canonical" href="https://fyntools.com" />
-        
+
         {/* Structured Data */}
         <script type="application/ld+json">
           {JSON.stringify({
@@ -95,13 +95,13 @@ const LandingPage = () => {
           <div className="absolute inset-0 opacity-30">
             <div className="h-full w-full bg-gradient-to-br from-transparent via-primary/5 to-transparent"></div>
           </div>
-          
+
           <div className="container mx-auto px-4 relative">
             <div className="text-center max-w-5xl mx-auto">
               <div className="mb-8 animate-bounce-in">
                 <Badge variant="secondary" className="mb-4 text-sm px-4 py-2 glass-effect">
                   <Sparkles className="h-4 w-4 mr-2" />
-                  25+ Professional Tools Available
+                  80+ Professional Tools Available
                 </Badge>
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
                   <span className="heading-gradient">Professional</span>
@@ -111,14 +111,14 @@ const LandingPage = () => {
                   <span className="text-primary">for Everyone</span>
                 </h1>
                 <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
-                  Free, secure, and instant tools for developers, businesses, and individuals. 
+                  Free, secure, and instant tools for developers, businesses, and individuals.
                   No registration required, works directly in your browser.
                 </p>
               </div>
 
               {/* Search Bar */}
-              <div className="mb-8">
-                <ToolSearch tools={allTools} className="max-w-lg" />
+              <div className="mb-8 flex justify-center">
+                <ToolSearch tools={allTools} className="max-w-lg w-full" />
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up">

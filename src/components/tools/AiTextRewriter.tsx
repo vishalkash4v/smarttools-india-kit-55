@@ -508,28 +508,32 @@ const AiTextRewriter = () => {
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button 
-              onClick={rewriteText} 
-              disabled={!inputText.trim() || isRewriting}
-              className="flex-1"
-            >
-              {isRewriting ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Applying 20+ Techniques...
-                </>
-              ) : (
-                <>
-                  <Wand2 className="h-4 w-4 mr-2" />
-                  Rewrite with Advanced AI
-                </>
-              )}
-            </Button>
-            <Button variant="outline" onClick={clearText}>
-              Clear All
-            </Button>
-          </div>
+         <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+  <Button 
+    onClick={rewriteText} 
+    disabled={!inputText.trim() || isRewriting}
+    className="flex-1 min-h-[48px] sm:min-h-[40px] text-sm sm:text-base"
+  >
+    {isRewriting ? (
+      <>
+        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+        Applying 20+ Techniques...
+      </>
+    ) : (
+      <>
+        <Wand2 className="h-4 w-4 mr-2" />
+        Rewrite with Advanced AI
+      </>
+    )}
+  </Button>
+  <Button 
+    variant="outline" 
+    onClick={clearText}
+    className="min-h-[48px] sm:min-h-[40px] text-sm sm:text-base"
+  >
+    Clear All
+  </Button>
+</div>
 
           {rewrittenText && (
             <Card className="bg-green-50 dark:bg-green-950/20">
