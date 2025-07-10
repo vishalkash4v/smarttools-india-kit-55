@@ -6,54 +6,50 @@ import ToolPageLayout from '@/components/tools/ToolPageLayout';
 const UnitConverterPage = () => {
   const toolData = {
     title: "Free Unit Converter Online",
-    description: "Convert between different units of measurement instantly. Length, weight, temperature, volume, area, and more. Free online unit converter with accurate conversions and multiple unit systems.",
-    category: "Calculator Tools",
+    description: "Convert between different units of measurement including length, weight, temperature, volume, and more. Comprehensive unit conversion tool with accurate calculations.",
+    category: "Converter Tools",
     
     howToUse: [
-      "Select the type of measurement (length, weight, temperature, etc.)",
+      "Select the type of unit you want to convert (length, weight, etc.)",
+      "Choose the 'from' unit from the dropdown list",
       "Enter the value you want to convert",
-      "Choose the source unit from the dropdown",
-      "Select the target unit for conversion",
+      "Select the 'to' unit from the second dropdown",
       "View the converted result instantly"
     ],
     
     features: [
-      "Convert length, weight, temperature, volume, and area",
+      "Multiple unit categories (length, weight, temperature, volume)",
+      "Accurate conversion calculations",
       "Support for metric and imperial units",
-      "Instant real-time conversion",
-      "High precision calculations",
-      "Common unit presets for quick access",
+      "Instant conversion results",
+      "Easy-to-use dropdown menus",
       "Mobile-friendly interface"
     ],
     
     faqs: [
       {
         question: "What types of units can I convert?",
-        answer: "You can convert length (meters, feet, inches), weight (kilograms, pounds, ounces), temperature (Celsius, Fahrenheit, Kelvin), volume (liters, gallons, cups), and area (square meters, acres, etc.)."
+        answer: "You can convert length (meters, feet, inches), weight (kilograms, pounds), temperature (Celsius, Fahrenheit, Kelvin), volume (liters, gallons), and many other unit types."
       },
       {
         question: "How accurate are the conversions?",
-        answer: "Our conversions use precise mathematical formulas and are accurate to multiple decimal places. The results are suitable for both everyday use and professional applications."
+        answer: "Our conversions use precise mathematical formulas and are accurate to multiple decimal places, suitable for both casual and professional use."
       },
       {
-        question: "Can I convert between different unit systems?",
-        answer: "Yes, you can convert between metric, imperial, and other unit systems. For example, convert meters to feet, kilograms to pounds, or Celsius to Fahrenheit."
+        question: "Can I convert between metric and imperial units?",
+        answer: "Yes, the tool supports conversion between metric, imperial, and other measurement systems commonly used worldwide."
       },
       {
-        question: "Are the conversion factors up to date?",
-        answer: "Yes, we use the latest international standards and conversion factors. Our conversions are based on official definitions from organizations like NIST and ISO."
-      },
-      {
-        question: "Can I use this for cooking measurements?",
-        answer: "Absolutely! Our converter includes common cooking units like cups, tablespoons, teaspoons, ounces, and milliliters, making it perfect for recipe conversions."
+        question: "Is there a limit to the values I can convert?",
+        answer: "No, you can convert any reasonable numeric value. The tool handles both very small and very large numbers efficiently."
       }
     ],
     
     relatedTools: [
-      { name: "Temperature Converter", href: "/temperature-converter", description: "Convert between temperature scales" },
-      { name: "BMI Calculator", href: "/bmi-calculator", description: "Calculate body mass index" },
-      { name: "Currency Converter", href: "/currency-converter", description: "Convert between currencies" },
-      { name: "Percentage Calculator", href: "/percentage-calculator", description: "Calculate percentages" }
+      { name: "Simple Calculator", href: "/simple-calculator", description: "Basic math calculations" },
+      { name: "Percentage Calculator", href: "/percentage-calculator", description: "Calculate percentages" },
+      { name: "Currency Converter", href: "/currency-converter", description: "Convert currencies" },
+      { name: "BMI Calculator", href: "/bmi-calculator", description: "Calculate body mass index" }
     ]
   };
 
