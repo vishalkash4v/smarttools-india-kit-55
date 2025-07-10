@@ -7,7 +7,7 @@ const QrGeneratorPage = () => {
   const toolData = {
     title: "Free QR Code Generator Online",
     description: "Generate QR codes instantly for URLs, text, WiFi, and more. Create custom QR codes with logo, colors, and different formats. Free, fast, and secure QR code generator tool.",
-    keywords: "QR code generator, create QR code, QR generator, free QR code, custom QR code, QR code maker",
+    category: "Utility Tools",
     
     howToUse: [
       "Enter your text, URL, or data in the input field",
@@ -50,17 +50,24 @@ const QrGeneratorPage = () => {
     ],
     
     relatedTools: [
-      { name: "QR Code Scanner", href: "/qr-scanner" },
-      { name: "Barcode Generator", href: "/barcode-generator" },
-      { name: "URL Shortener", href: "/url-shortener" },
-      { name: "Logo to Favicon", href: "/logo-to-favicon" }
+      { name: "QR Code Scanner", href: "/qr-scanner", description: "Scan and decode QR codes instantly" },
+      { name: "Barcode Generator", href: "/barcode-generator", description: "Create various types of barcodes" },
+      { name: "URL Shortener", href: "/url-shortener", description: "Create short links for easy sharing" },
+      { name: "Logo to Favicon", href: "/logo-to-favicon", description: "Convert logos to website favicons" }
     ]
   };
 
   return (
-    <ToolPageLayout {...toolData}>
-      <QrGenerator />
-    </ToolPageLayout>
+    <ToolPageLayout
+      title={toolData.title}
+      description={toolData.description}
+      toolInterface={<QrGenerator />}
+      howToUse={toolData.howToUse}
+      features={toolData.features}
+      faqs={toolData.faqs}
+      relatedTools={toolData.relatedTools}
+      category={toolData.category}
+    />
   );
 };
 

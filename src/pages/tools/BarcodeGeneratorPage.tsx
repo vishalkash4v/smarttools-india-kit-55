@@ -7,7 +7,7 @@ const BarcodeGeneratorPage = () => {
   const toolData = {
     title: "Free Barcode Generator Online",
     description: "Generate barcodes in multiple formats including Code 128, EAN-13, UPC-A, and more. Create high-quality barcodes for products, inventory, and business use. Free online barcode generator tool.",
-    keywords: "barcode generator, create barcode, barcode maker, Code 128, EAN-13, UPC-A, free barcode generator",
+    category: "Business Tools",
     
     howToUse: [
       "Enter your data or product number in the input field",
@@ -50,17 +50,24 @@ const BarcodeGeneratorPage = () => {
     ],
     
     relatedTools: [
-      { name: "QR Code Generator", href: "/qr-generator" },
-      { name: "QR Code Scanner", href: "/qr-scanner" },
-      { name: "Image Resizer", href: "/image-resizer" },
-      { name: "Logo to Favicon", href: "/logo-to-favicon" }
+      { name: "QR Code Generator", href: "/qr-generator", description: "Create QR codes for various purposes" },
+      { name: "QR Code Scanner", href: "/qr-scanner", description: "Scan and decode QR codes" },
+      { name: "Image Resizer", href: "/image-resizer", description: "Resize images for different uses" },
+      { name: "Logo to Favicon", href: "/logo-to-favicon", description: "Convert logos to favicons" }
     ]
   };
 
   return (
-    <ToolPageLayout {...toolData}>
-      <BarcodeGenerator />
-    </ToolPageLayout>
+    <ToolPageLayout
+      title={toolData.title}
+      description={toolData.description}
+      toolInterface={<BarcodeGenerator />}
+      howToUse={toolData.howToUse}
+      features={toolData.features}
+      faqs={toolData.faqs}
+      relatedTools={toolData.relatedTools}
+      category={toolData.category}
+    />
   );
 };
 

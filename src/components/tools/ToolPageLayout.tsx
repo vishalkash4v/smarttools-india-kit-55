@@ -13,7 +13,7 @@ interface ToolPageLayoutProps {
   howToUse: string[];
   features: string[];
   faqs: { question: string; answer: string }[];
-  relatedTools: { name: string; href: string; description: string }[];
+  relatedTools: { name: string; href: string; description?: string }[];
   category: string;
   rating?: number;
   userCount?: string;
