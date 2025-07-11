@@ -5,55 +5,53 @@ import ToolPageLayout from '@/components/tools/ToolPageLayout';
 
 const WhitespaceRemoverPage = () => {
   const toolData = {
-    title: "Free Whitespace Remover Tool Online",
-    description: "Remove extra spaces, tabs, and line breaks from your text instantly. Clean up messy text formatting with our free online whitespace remover tool.",
+    title: "Whitespace Remover - Remove Extra Spaces Online",
+    description: "Remove extra whitespace, multiple spaces, tabs, and line breaks from text. Clean up messy text formatting with options to remove leading, trailing, and duplicate spaces.",
     category: "Text Tools",
     
     howToUse: [
-      "Paste or type your text with extra whitespace",
-      "Click 'Remove Extra Spaces' to process the text",
-      "View the cleaned text in the output area",
-      "Copy the processed text using the copy button",
-      "Use the cleaned text in your projects"
+      "Paste or type text with unwanted whitespace in the input area",
+      "Choose whitespace removal options (extra spaces, tabs, line breaks)",
+      "Click 'Remove Whitespace' to clean your text",
+      "Copy the cleaned text from the output area",
+      "Use additional options for specific formatting needs"
     ],
     
     features: [
-      "Removes multiple consecutive spaces",
-      "Trims leading and trailing whitespace",
-      "Cleans up tab characters and line breaks",
-      "Preserves single spaces between words",
-      "Real-time text processing",
-      "One-click copy functionality"
+      "Remove multiple consecutive spaces",
+      "Eliminate leading and trailing whitespace",
+      "Remove tabs and replace with spaces",
+      "Delete empty lines and line breaks",
+      "Preserve paragraph structure option",
+      "Batch text processing",
+      "Real-time text cleaning preview",
+      "Undo functionality available"
     ],
     
     faqs: [
       {
-        question: "What types of whitespace does this tool remove?",
-        answer: "The tool removes extra spaces, tabs, multiple line breaks, and leading/trailing whitespace while preserving single spaces between words and proper text structure."
+        question: "What types of whitespace can be removed?",
+        answer: "Our tool removes spaces, tabs, line breaks, carriage returns, and other Unicode whitespace characters. You can choose which types to remove based on your specific needs."
       },
       {
-        question: "Will this tool affect my text formatting?",
-        answer: "The tool preserves the essential structure of your text while removing unnecessary whitespace. It maintains single spaces between words and proper line breaks where needed."
+        question: "Will this affect my text's paragraph structure?",
+        answer: "You can choose to preserve paragraph structure by keeping single line breaks while removing excessive spacing. This maintains readability while cleaning up formatting issues."
       },
       {
-        question: "Can I process large amounts of text?",
-        answer: "Yes, our tool can handle large text documents efficiently. There's no strict limit on the amount of text you can process."
+        question: "Can I remove whitespace from code or structured text?",
+        answer: "Yes, but be careful with code as whitespace can be meaningful in some programming languages. Use the preview feature to ensure the cleaned text maintains its intended structure."
       },
       {
-        question: "Is my text data secure?",
-        answer: "Yes, all text processing happens locally in your browser. Your text is never sent to our servers or stored anywhere, ensuring complete privacy."
-      },
-      {
-        question: "Does this work with different languages?",
-        answer: "Yes, the whitespace remover works with text in any language and character set, including special characters and Unicode text."
+        question: "How do I clean text copied from PDFs?",
+        answer: "PDF text often contains irregular spacing and line breaks. Use our comprehensive cleaning options to remove extra spaces, fix line breaks, and normalize the text formatting."
       }
     ],
     
     relatedTools: [
+      { name: "Duplicate Line Remover", href: "/duplicate-line-remover", description: "Remove duplicate lines from text" },
       { name: "Text Case Converter", href: "/text-case-converter", description: "Convert text between different cases" },
-      { name: "Word Counter", href: "/word-counter", description: "Count words and characters" },
-      { name: "Text Reverser", href: "/text-reverser", description: "Reverse your text" },
-      { name: "Text Formatter", href: "/text-formatter", description: "Format and style text" }
+      { name: "Word Counter", href: "/word-counter", description: "Count words, characters, and lines" },
+      { name: "Text Reverser", href: "/text-reverser", description: "Reverse text and strings" }
     ]
   };
 
@@ -61,12 +59,12 @@ const WhitespaceRemoverPage = () => {
     <ToolPageLayout
       title={toolData.title}
       description={toolData.description}
+      category={toolData.category}
       toolInterface={<WhitespaceRemover />}
       howToUse={toolData.howToUse}
       features={toolData.features}
       faqs={toolData.faqs}
       relatedTools={toolData.relatedTools}
-      category={toolData.category}
     />
   );
 };
