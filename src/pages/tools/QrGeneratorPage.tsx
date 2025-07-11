@@ -1,17 +1,20 @@
 
 import React from 'react';
 import QrGenerator from '@/components/tools/QrGenerator';
-import ToolPageLayout from '@/components/tools/ToolPageLayout';
+import EnhancedToolPageLayout from '@/components/tools/EnhancedToolPageLayout';
 
 const QrGeneratorPage = () => {
   const toolData = {
     title: "Free QR Code Generator Online",
     description: "Generate QR codes instantly for URLs, text, WiFi, and more. Create custom QR codes with logo, colors, and different formats. Free, fast, and secure QR code generator tool.",
+    shortIntro: "Generate QR codes for URLs, text, WiFi, and more instantly with our free online QR Code Generator.",
     category: "Utility Tools",
+    canonicalUrl: "https://fyntools.com/qr-generator",
+    keywords: "free QR code generator, QR code maker online, custom QR codes, QR generator tool",
     
     howToUse: [
       "Enter your text, URL, or data in the input field",
-      "Choose QR code size and error correction level",
+      "Choose QR code size and error correction level", 
       "Customize colors and add logo if needed",
       "Click 'Generate QR Code' to create your code",
       "Download your QR code in PNG or SVG format"
@@ -20,7 +23,7 @@ const QrGeneratorPage = () => {
     features: [
       "Generate QR codes for URLs, text, WiFi, and contact info",
       "Customizable size and error correction levels",
-      "Add custom colors and logos to your QR codes",
+      "Add custom colors and logos to your QR codes", 
       "Download in multiple formats (PNG, SVG, PDF)",
       "High-resolution output for print and digital use",
       "No registration required - completely free"
@@ -58,15 +61,18 @@ const QrGeneratorPage = () => {
   };
 
   return (
-    <ToolPageLayout
+    <EnhancedToolPageLayout
       title={toolData.title}
       description={toolData.description}
+      shortIntro={toolData.shortIntro}
+      category={toolData.category}
+      canonicalUrl={toolData.canonicalUrl}
+      keywords={toolData.keywords}
       toolInterface={<QrGenerator />}
       howToUse={toolData.howToUse}
       features={toolData.features}
       faqs={toolData.faqs}
       relatedTools={toolData.relatedTools}
-      category={toolData.category}
     />
   );
 };
