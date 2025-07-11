@@ -5,54 +5,50 @@ import ToolPageLayout from '@/components/tools/ToolPageLayout';
 
 const ImageResizerPage = () => {
   const toolData = {
-    title: "Free Image Resizer Online",
-    description: "Resize images online for free. Reduce or increase image dimensions while maintaining quality. Perfect for social media, websites, and print. Supports JPEG, PNG, WebP formats.",
+    title: "Free Image Resizer Tool Online",
+    description: "Resize images to any dimension while maintaining quality. Batch resize multiple images, maintain aspect ratios, and optimize for web, print, or social media use.",
     category: "Image Tools",
     
     howToUse: [
-      "Upload your image by clicking or dragging it to the upload area",
-      "Enter the desired width and height dimensions",
-      "Choose to maintain aspect ratio or stretch the image",
-      "Select the output format (JPEG, PNG, WebP)",
-      "Click 'Resize Image' and download the result"
+      "Upload one or more images to resize",
+      "Enter desired width and height dimensions",
+      "Choose to maintain aspect ratio or stretch to fit",
+      "Select output quality and format if needed",
+      "Download resized images individually or as a batch"
     ],
     
     features: [
-      "Resize images to exact dimensions",
-      "Maintain aspect ratio automatically",
-      "Support for JPEG, PNG, WebP formats",
-      "High-quality resizing algorithms",
       "Batch image resizing capability",
-      "No file size or quantity limits"
+      "Maintain or ignore aspect ratios",
+      "Preset sizes for common uses",
+      "Quality control for output images",
+      "Support for all major image formats",
+      "Real-time preview of changes"
     ],
     
     faqs: [
       {
-        question: "What image formats are supported?",
-        answer: "We support JPEG, PNG, WebP, and GIF formats for both input and output. You can also convert between formats while resizing."
+        question: "Can I resize multiple images at once?",
+        answer: "Yes, our batch processing feature allows you to upload and resize multiple images simultaneously with the same settings."
       },
       {
         question: "Will resizing affect image quality?",
-        answer: "Our advanced algorithms minimize quality loss during resizing. However, enlarging images beyond their original size may result in some quality reduction."
+        answer: "Enlarging images may reduce quality, while reducing size typically maintains good quality. We use high-quality algorithms to minimize quality loss."
       },
       {
-        question: "Can I resize multiple images at once?",
-        answer: "Yes, you can upload and resize multiple images simultaneously. This is perfect for batch processing large numbers of images."
+        question: "What are the preset size options?",
+        answer: "We offer presets for social media (Instagram, Facebook, Twitter), web thumbnails, print sizes, and common screen resolutions."
       },
       {
-        question: "What's the maximum file size I can resize?",
-        answer: "There's no strict file size limit, but very large images may take longer to process. For best performance, we recommend images under 50MB."
-      },
-      {
-        question: "Are my images stored on your servers?",
-        answer: "No, all image processing happens locally in your browser. Your images are never uploaded to our servers, ensuring complete privacy."
+        question: "Can I maintain the original aspect ratio?",
+        answer: "Yes, you can choose to maintain aspect ratios to prevent image distortion, or disable it to fit exact dimensions."
       }
     ],
     
     relatedTools: [
+      { name: "Image Cropper", href: "/image-cropper", description: "Crop images to specific areas" },
       { name: "Image Compressor", href: "/image-compressor", description: "Reduce image file sizes" },
-      { name: "Image Cropper", href: "/image-cropper", description: "Crop images to specific dimensions" },
-      { name: "Image Format Converter", href: "/image-format-converter", description: "Convert between image formats" },
+      { name: "Image Format Converter", href: "/image-format-converter", description: "Convert image formats" },
       { name: "Background Remover", href: "/background-remover", description: "Remove image backgrounds" }
     ]
   };

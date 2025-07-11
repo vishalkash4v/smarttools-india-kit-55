@@ -6,54 +6,50 @@ import ToolPageLayout from '@/components/tools/ToolPageLayout';
 const LoremIpsumGeneratorPage = () => {
   const toolData = {
     title: "Free Lorem Ipsum Generator Online",
-    description: "Generate Lorem Ipsum placeholder text for your designs and layouts. Create custom amounts of Lorem Ipsum text with paragraphs, sentences, and words. Free Lorem Ipsum generator tool.",
+    description: "Generate Lorem Ipsum placeholder text for your designs and mockups. Choose from words, sentences, or paragraphs. Perfect for web design, print layouts, and content templates.",
     category: "Text Tools",
     
     howToUse: [
-      "Select the type of Lorem Ipsum text (paragraphs, sentences, or words)",
-      "Enter the number of units you want to generate",
-      "Choose whether to start with 'Lorem ipsum dolor sit amet'",
-      "Click 'Generate Lorem Ipsum' to create your text",
-      "Copy the generated text for use in your projects"
+      "Select the type of Lorem Ipsum (words, sentences, or paragraphs)",
+      "Choose the quantity you need",
+      "Click 'Generate' to create placeholder text",
+      "Copy the generated text to your clipboard",
+      "Use in your designs, mockups, or templates"
     ],
     
     features: [
-      "Generate paragraphs, sentences, or individual words",
-      "Customizable quantity for any project size",
-      "Option to start with traditional Lorem Ipsum opening",
-      "Clean, properly formatted output",
-      "One-click copy to clipboard",
-      "Mobile-friendly interface"
+      "Generate words, sentences, or paragraphs",
+      "Customizable quantity options",
+      "Classic Lorem Ipsum text",
+      "Instant generation and copying",
+      "Perfect for design mockups",
+      "No character or length limits"
     ],
     
     faqs: [
       {
         question: "What is Lorem Ipsum text?",
-        answer: "Lorem Ipsum is scrambled Latin text that has been used as placeholder text in the printing and typesetting industry since the 1500s. It's used because it has a normal distribution of letters."
+        answer: "Lorem Ipsum is standard placeholder text used in the printing and typesetting industry since the 1500s. It's pseudo-Latin text that doesn't distract from design layouts."
       },
       {
         question: "Why use Lorem Ipsum instead of regular text?",
-        answer: "Lorem Ipsum prevents viewers from being distracted by readable content, allowing them to focus on the design, layout, and visual elements rather than the text content."
+        answer: "Lorem Ipsum prevents viewers from being distracted by readable content, allowing them to focus on design elements, layout, and visual aspects."
       },
       {
-        question: "Is Lorem Ipsum text copyrighted?",
-        answer: "No, Lorem Ipsum text is not copyrighted and is free to use for any purpose, including commercial projects. It's essentially nonsensical scrambled Latin text."
+        question: "Can I generate different amounts of text?",
+        answer: "Yes, you can generate anywhere from a few words to multiple paragraphs, depending on your design needs."
       },
       {
-        question: "Can I customize the length of generated text?",
-        answer: "Yes, you can generate any amount of Lorem Ipsum text by specifying the number of paragraphs, sentences, or words you need for your project."
-      },
-      {
-        question: "Is this the same Lorem Ipsum used everywhere?",
-        answer: "Yes, we use the standard Lorem Ipsum text that has been the industry standard since the 1960s, ensuring consistency with other design tools and templates."
+        question: "Is Lorem Ipsum text meaningful?",
+        answer: "No, Lorem Ipsum is scrambled Latin text that has no meaningful content. It's purely used as a visual placeholder."
       }
     ],
     
     relatedTools: [
-      { name: "Word Counter", href: "/word-counter", description: "Count words in your text" },
+      { name: "Word Counter", href: "/word-counter", description: "Count words and characters" },
       { name: "Text Case Converter", href: "/text-case-converter", description: "Convert text case" },
-      { name: "Text Reverser", href: "/text-reverser", description: "Reverse your text" },
-      { name: "Random Password Generator", href: "/password-generator", description: "Generate random passwords" }
+      { name: "Random Name Generator", href: "/name-generator", description: "Generate random names" },
+      { name: "Text Reverser", href: "/text-reverser", description: "Reverse text strings" }
     ]
   };
 
