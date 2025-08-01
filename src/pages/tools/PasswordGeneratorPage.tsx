@@ -1,93 +1,70 @@
 
 import React from 'react';
-import EnhancedToolPageLayout from '@/components/tools/EnhancedToolPageLayout';
 import PasswordGenerator from '@/components/tools/PasswordGenerator';
+import ToolPageLayout from '@/components/tools/ToolPageLayout';
 
-const PasswordGeneratorPage: React.FC = () => {
-  const howToUse = [
-    "Select your desired password length using the slider (8-50 characters)",
-    "Choose which character types to include: uppercase, lowercase, numbers, symbols",
-    "Click 'Generate Password' to create a secure password",
-    "Copy the generated password and use it for your accounts"
-  ];
-
-  const features = [
-    "Customizable password length (8-50 characters)",
-    "Multiple character type options",
-    "Instant password generation",
-    "Copy to clipboard functionality",
-    "Secure random generation",
-    "No passwords stored or logged"
-  ];
-
-  const faqs = [
-    {
-      question: "How secure are the generated passwords?",
-      answer: "Our password generator uses cryptographically secure random number generation to create passwords. The passwords are generated locally in your browser and are not stored anywhere."
-    },
-    {
-      question: "What makes a strong password?",
-      answer: "A strong password should be at least 12 characters long, contain a mix of uppercase and lowercase letters, numbers, and special characters, and avoid common words or patterns."
-    },
-    {
-      question: "Should I use different passwords for different accounts?",
-      answer: "Yes, absolutely! Using unique passwords for each account ensures that if one password is compromised, your other accounts remain secure."
-    },
-    {
-      question: "How often should I change my passwords?",
-      answer: "It's recommended to change passwords every 3-6 months, or immediately if you suspect a security breach. Use a password manager to keep track of multiple passwords."
-    }
-  ];
-
-  const relatedTools = [
-    {
-      name: "Username Generator",
-      href: "/tools/username-generator",
-      description: "Generate unique usernames for your accounts"
-    },
-    {
-      name: "Hash Generator",
-      href: "/tools/hash-generator", 
-      description: "Generate secure hashes for data integrity"
-    },
-    {
-      name: "Random Number Generator",
-      href: "/tools/random-number-generator",
-      description: "Generate random numbers for various purposes"
-    }
-  ];
-
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      rating: 5,
-      text: "Best password generator I've used. Simple, secure, and reliable!",
-      title: "Security Analyst"
-    },
-    {
-      name: "Mike Chen",
-      rating: 5,
-      text: "Love the customization options. Generated passwords for all my accounts.",
-      title: "Developer"
-    }
-  ];
+const PasswordGeneratorPage = () => {
+  const toolData = {
+    title: "Password Generator - Create Strong & Secure Passwords Online",
+    description: "Generate strong, secure passwords with customizable length and character sets. Create unique passwords with uppercase, lowercase, numbers, and special characters for maximum security.",
+    category: "Security Tools",
+    
+    howToUse: [
+      "Set your desired password length using the slider",
+      "Choose which character types to include (uppercase, lowercase, numbers, symbols)",
+      "Click 'Generate Password' to create a new secure password",
+      "Copy the generated password to your clipboard",
+      "Use the password for your accounts and save it securely"
+    ],
+    
+    features: [
+      "Customizable password length (4-128 characters)",
+      "Include/exclude uppercase letters, lowercase letters, numbers, and symbols",
+      "Instant password generation with one click",
+      "Copy to clipboard functionality",
+      "Password strength indicator",
+      "Generate multiple passwords at once",
+      "No passwords stored or transmitted",
+      "Works offline for maximum security"
+    ],
+    
+    faqs: [
+      {
+        question: "How secure are the generated passwords?",
+        answer: "Our password generator uses cryptographically secure random number generation to create truly random passwords. The passwords are generated locally in your browser and never transmitted or stored anywhere."
+      },
+      {
+        question: "What makes a password strong?",
+        answer: "Strong passwords are long (12+ characters), contain a mix of uppercase and lowercase letters, numbers, and special characters, and are unique for each account. Our generator creates passwords that meet all these criteria."
+      },
+      {
+        question: "Should I use symbols in my passwords?",
+        answer: "Yes, including symbols significantly increases password strength by expanding the character set. However, some websites have restrictions on special characters, so you can disable symbols if needed."
+      },
+      {
+        question: "How often should I change my passwords?",
+        answer: "Change passwords immediately if there's a security breach, every 90 days for critical accounts, and whenever you suspect compromise. Use unique passwords for each account and consider using a password manager."
+      }
+    ],
+    
+    relatedTools: [
+      { name: "Hash Generator", href: "/hash-generator", description: "Generate MD5, SHA1, SHA256 hashes" },
+      { name: "QR Code Generator", href: "/qr-code-generator", description: "Create QR codes for text and URLs" },
+      { name: "Base64 Converter", href: "/base64-converter", description: "Encode and decode Base64 data" },
+      { name: "JWT Decoder", href: "/jwt-decoder", description: "Decode and verify JWT tokens" }
+    ]
+  };
 
   return (
-    <EnhancedToolPageLayout
-      title="Password Generator"
-      description="Generate strong, secure passwords instantly with our free Password Generator. Customize length and character types for maximum security. No storage, completely safe."
-      shortIntro="Create strong, secure passwords in seconds with customizable options for length and character types."
+    <ToolPageLayout
+      title={toolData.title}
+      description={toolData.description}
+      category={toolData.category}
       toolInterface={<PasswordGenerator />}
-      howToUse={howToUse}
-      features={features}
-      faqs={faqs}
-      relatedTools={relatedTools}
-      testimonials={testimonials}
-      category="Security Tools"
-      rating={4.9}
-      userCount="50,000+"
-      canonicalUrl="https://fyntools.com/tools/password-generator"
-      keywords="password generator, secure passwords, random password, strong password, password creator, security tool"
+      howToUse={toolData.howToUse}
+      features={toolData.features}
+      faqs={toolData.faqs}
+      relatedTools={toolData.relatedTools}
     />
   );
 };

@@ -23,7 +23,6 @@ interface EnhancedToolPageLayoutProps {
   children?: React.ReactNode;
   canonicalUrl?: string;
   keywords?: string;
-  testimonials?: { name: string; rating: number; text: string; title?: string }[];
 }
 
 const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
@@ -40,8 +39,7 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
   userCount = "10,000+",
   children,
   canonicalUrl,
-  keywords,
-  testimonials
+  keywords
 }) => {
   const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
   const shareText = `Check out this amazing ${title} tool!`;
@@ -55,8 +53,7 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
     breadcrumbs: [
       { name: "Home", url: "/" },
       { name: title, url: canonicalUrl || shareUrl }
-    ],
-    testimonials: testimonials
+    ]
   };
 
   const schemas = generateToolSchemas(schemaConfig);
@@ -253,45 +250,6 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
             </CardContent>
           </Card>
         </section>
-
-        {/* Testimonials */}
-        {testimonials && testimonials.length > 0 && (
-          <section className="mb-12">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl">What Users Say</CardTitle>
-                <CardDescription>
-                  Real feedback from our users
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
-                  {testimonials.map((testimonial, index) => (
-                    <div key={index} className="p-4 rounded-lg bg-muted/50">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">"{testimonial.text}"</p>
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-sm">{testimonial.name}</span>
-                        {testimonial.title && (
-                          <span className="text-xs text-muted-foreground">• {testimonial.title}</span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-        )}
 
         {/* Related Tools */}
         <section className="mb-12">

@@ -11,12 +11,6 @@ export interface SchemaConfig {
     name: string;
     url: string;
   }>;
-  testimonials?: Array<{
-    name: string;
-    rating: number;
-    text: string;
-    title?: string;
-  }>;
 }
 
 export const generateSoftwareApplicationSchema = (config: SchemaConfig) => {
@@ -69,29 +63,8 @@ export const generateBreadcrumbSchema = (breadcrumbs: Array<{ name: string; url:
   };
 };
 
-export const generateTestimonialsSchema = (testimonials: Array<{ name: string; rating: number; text: string; title?: string }>) => {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "Online Tool",
-    "review": testimonials.map(testimonial => ({
-      "@type": "Review",
-      "author": {
-        "@type": "Person",
-        "name": testimonial.name
-      },
-      "reviewRating": {
-        "@type": "Rating",
-        "ratingValue": testimonial.rating,
-        "bestRating": 5
-      },
-      "reviewBody": testimonial.text
-    }))
-  };
-};
-
 export const generateToolSchemas = (config: SchemaConfig) => {
-  const schemas: any[] = [
+  const schemas = [
     generateSoftwareApplicationSchema(config)
   ];
 
@@ -101,10 +74,6 @@ export const generateToolSchemas = (config: SchemaConfig) => {
 
   if (config.breadcrumbs && config.breadcrumbs.length > 0) {
     schemas.push(generateBreadcrumbSchema(config.breadcrumbs));
-  }
-
-  if (config.testimonials && config.testimonials.length > 0) {
-    schemas.push(generateTestimonialsSchema(config.testimonials));
   }
 
   return schemas;

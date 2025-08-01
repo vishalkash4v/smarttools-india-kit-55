@@ -22,7 +22,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           {!isMobile && <AppSidebar />}
           <div className="flex-1 flex flex-col min-w-0">
             <Header />
-            <main className="flex-1">
+            <main className="flex-1 container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full">
               {children}
             </main>
             <Footer />
