@@ -148,7 +148,7 @@ const SipCalculator = () => {
 
 const chartOptions = {
   responsive: true,
-  maintainAspectRatio: false,  // Ensures chart resizes correctly on different screens
+  maintainAspectRatio: false,
   scales: {
     x: {
       ticks: {
@@ -162,29 +162,29 @@ const chartOptions = {
       },
     },
     y: {
-      beginAtZero: true,  // Ensures the y-axis starts from zero
+      beginAtZero: true,
     },
   },
   plugins: {
     legend: {
-      position: 'bottom',  // Move the legend to the bottom
-      align: 'start',  // Align the legend to the left
+      position: 'bottom' as const,
+      align: 'start' as const,
       labels: {
-        boxWidth: 20,  // Control the size of the legend boxes
-        padding: 10,   // Add padding between legend items
-        usePointStyle: true, // This makes the legend item appear as a point (circle)
+        boxWidth: 20,
+        padding: 10,
+        usePointStyle: true,
       },
     },
     tooltip: {
-      mode: 'nearest',    // Show tooltip for the nearest point (even when clicking near the point)
-      intersect: false,   // Allow tooltips when clicking near a point
-      position: 'nearest', // Show tooltip at the nearest point position
+      mode: 'nearest' as const,
+      intersect: false,
+      position: 'nearest' as const,
       callbacks: {
         label: (context: any) => {
           const dataIndex = context.dataIndex;
-          const investedAmount = context.chart.data.datasets[0].data[dataIndex]; // Invested Amount
-          const interestEarned = context.chart.data.datasets[1].data[dataIndex];   // Interest Earned
-          const totalValue = context.chart.data.datasets[2].data[dataIndex];       // Total Value
+          const investedAmount = context.chart.data.datasets[0].data[dataIndex];
+          const interestEarned = context.chart.data.datasets[1].data[dataIndex];
+          const totalValue = context.chart.data.datasets[2].data[dataIndex];
 
           return [
             `Invested Amount: ₹${investedAmount.toFixed(2)}`,
@@ -195,7 +195,7 @@ const chartOptions = {
       },
     },
   },
-};
+} as const;
 
 
 
