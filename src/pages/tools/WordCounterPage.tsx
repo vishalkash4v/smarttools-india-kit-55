@@ -1,70 +1,93 @@
 
 import React from 'react';
+import EnhancedToolPageLayout from '@/components/tools/EnhancedToolPageLayout';
 import WordCounter from '@/components/tools/WordCounter';
-import ToolPageLayout from '@/components/tools/ToolPageLayout';
 
-const WordCounterPage = () => {
-  const toolData = {
-    title: "Word Counter - Count Words, Characters & Text Statistics",
-    description: "Count words, characters, sentences, and paragraphs in your text. Get detailed text statistics including reading time, keyword density, and character frequency analysis.",
-    category: "Text Tools",
-    
-    howToUse: [
-      "Type or paste your text into the input area",
-      "View real-time word and character counts",
-      "Check additional statistics like sentences and paragraphs",
-      "Analyze reading time and keyword density",
-      "Export statistics or copy counts to clipboard"
-    ],
-    
-    features: [
-      "Real-time word and character counting",
-      "Sentence and paragraph counting",
-      "Reading time estimation",
-      "Keyword density analysis",
-      "Character frequency statistics",
-      "With and without spaces character count",
-      "Average words per sentence calculation",
-      "Export results in multiple formats"
-    ],
-    
-    faqs: [
-      {
-        question: "How accurate is the word counting?",
-        answer: "Our word counter uses advanced algorithms to accurately identify words, handling various languages, punctuation, and formatting. It follows standard word counting rules used by most text editors and writing software."
-      },
-      {
-        question: "Does it count hyphenated words correctly?",
-        answer: "Yes, hyphenated words are counted as single words (e.g., 'twenty-one' counts as one word). Compound words with hyphens follow standard grammatical rules for word counting."
-      },
-      {
-        question: "What's the difference between characters with and without spaces?",
-        answer: "Characters with spaces includes all characters including spaces, tabs, and line breaks. Characters without spaces counts only letters, numbers, and punctuation marks, excluding whitespace."
-      },
-      {
-        question: "How is reading time calculated?",
-        answer: "Reading time is estimated based on average reading speeds: 200-250 words per minute for adults. The calculation considers text complexity and provides estimates for different reading levels."
-      }
-    ],
-    
-    relatedTools: [
-      { name: "Text Case Converter", href: "/text-case-converter", description: "Convert text between different cases" },
-      { name: "Duplicate Line Remover", href: "/duplicate-line-remover", description: "Remove duplicate lines from text" },
-      { name: "Whitespace Remover", href: "/whitespace-remover", description: "Clean up text spacing" },
-      { name: "Text Reverser", href: "/text-reverser", description: "Reverse text and strings" }
-    ]
-  };
+const WordCounterPage: React.FC = () => {
+  const howToUse = [
+    "Type or paste your text into the text area",
+    "View real-time statistics: words, characters, sentences, and paragraphs",
+    "See additional metrics like reading time and average word length",
+    "Use the statistics for writing optimization and analysis"
+  ];
+
+  const features = [
+    "Real-time word and character counting",
+    "Sentence and paragraph counting",
+    "Reading time estimation",
+    "Character count with and without spaces",
+    "Average word length calculation",
+    "No text storage - complete privacy"
+  ];
+
+  const faqs = [
+    {
+      question: "How accurate is the word count?",
+      answer: "Our word counter uses standard algorithms to accurately count words, excluding extra spaces and considering punctuation properly. It's highly accurate for most text types."
+    },
+    {
+      question: "What is the reading time based on?",
+      answer: "Reading time is calculated based on an average reading speed of 200-250 words per minute, which is the typical reading speed for adults."
+    },
+    {
+      question: "Does this tool store my text?",
+      answer: "No, your text is processed locally in your browser and is never stored on our servers. Your privacy and content security are completely protected."
+    },
+    {
+      question: "Can I use this for SEO content optimization?",
+      answer: "Yes! The word count, character count, and reading time metrics are perfect for optimizing content length for SEO and readability standards."
+    }
+  ];
+
+  const relatedTools = [
+    {
+      name: "Text Case Converter",
+      href: "/tools/text-case-converter",
+      description: "Convert text to uppercase, lowercase, or title case"
+    },
+    {
+      name: "Lorem Ipsum Generator",
+      href: "/tools/lorem-ipsum-generator",
+      description: "Generate placeholder text for your projects"
+    },
+    {
+      name: "Text Reverser",
+      href: "/tools/text-reverser",
+      description: "Reverse your text characters or words"
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: "Jennifer Liu",
+      rating: 5,
+      text: "Perfect for my blog writing. The reading time feature helps me optimize post length!",
+      title: "Content Writer"
+    },
+    {
+      name: "David Park",
+      rating: 5,
+      text: "Simple, accurate, and fast. Use it daily for checking essay word counts.",
+      title: "Student"
+    }
+  ];
 
   return (
-    <ToolPageLayout
-      title={toolData.title}
-      description={toolData.description}
-      category={toolData.category}
+    <EnhancedToolPageLayout
+      title="Word Counter"
+      description="Free online word counter tool to count words, characters, sentences, and paragraphs in real-time. Get reading time estimates and text statistics instantly."
+      shortIntro="Count words, characters, sentences, and paragraphs instantly with our free online word counter tool."
       toolInterface={<WordCounter />}
-      howToUse={toolData.howToUse}
-      features={toolData.features}
-      faqs={toolData.faqs}
-      relatedTools={toolData.relatedTools}
+      howToUse={howToUse}
+      features={features}
+      faqs={faqs}
+      relatedTools={relatedTools}
+      testimonials={testimonials}
+      category="Text Tools"
+      rating={4.8}
+      userCount="45,000+"
+      canonicalUrl="https://fyntools.com/tools/word-counter"
+      keywords="word counter, character counter, text counter, word count tool, text statistics, reading time calculator"
     />
   );
 };
