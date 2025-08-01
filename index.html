@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -8,11 +7,21 @@
     <title>FYN Tools.com - Free Online Tools & Calculators</title>
     <meta name="description" content="Discover 100+ free online tools and calculators for productivity, design, development, and everyday use. No registration required - instant results!" />
     
-    <!-- Google Fonts for enhanced handwriting -->
+    <!-- Google Fonts Preconnect and Preload -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&family=Indie+Flower&family=Shadows+Into+Light&display=swap" rel="stylesheet">
-    
+    <!-- Preload the fonts -->
+ <link
+  rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&family=Indie+Flower&family=Shadows+Into+Light&display=swap"
+  as="style"
+  crossorigin="anonymous"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&family=Indie+Flower&family=Shadows+Into+Light&display=swap"
+  crossorigin="anonymous"
+/>
     <!-- SEO and Social Media Meta Tags -->
     <meta property="og:title" content="FYN Tools Worldwide - Free Online Tools & Calculators" />
     <meta property="og:description" content="Discover 100+ free online tools and calculators for productivity, design, development, and everyday use. No registration required!" />
@@ -48,9 +57,15 @@
       }
     }
     </script>
+
+    <!-- Defer Non-Essential CSS -->
+    <link rel="stylesheet" href="/assets/main-CVL8_yJi.css" media="print" onload="this.media='all'">
+
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Defer the JavaScript -->
+    <script type="module" src="/src/main.tsx" defer></script>
   </body>
 </html>

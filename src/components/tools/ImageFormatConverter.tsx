@@ -1,23 +1,20 @@
-
 import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { Upload, Download, Image as ImageIcon, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
 const ImageFormatConverter = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>('');
-  const [outputFormat, setOutputFormat] = useState<'jpeg' | 'png' | 'webp'>('jpeg');
-  const [quality, setQuality] = useState([80]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
+  const [outputFormat, setOutputFormat] = useState('jpeg');
   const [isConverting, setIsConverting] = useState(false);
-  const [convertedUrl, setConvertedUrl] = useState<string>('');
+  const [convertedUrl, setConvertedUrl] = useState('');
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = useCallback((e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -47,7 +44,6 @@ const ImageFormatConverter = () => {
         ctx?.drawImage(img, 0, 0);
 
         const mimeType = `image/${outputFormat}`;
-        const qualityValue = outputFormat === 'png' ? undefined : quality[0] / 100;
         
         canvas.toBlob((blob) => {
           if (blob) {
@@ -55,7 +51,7 @@ const ImageFormatConverter = () => {
             setConvertedUrl(url);
             toast.success(`Image converted to ${outputFormat.toUpperCase()}`);
           }
-        }, mimeType, qualityValue);
+        }, mimeType);
       };
 
       img.src = previewUrl;
@@ -64,7 +60,7 @@ const ImageFormatConverter = () => {
     } finally {
       setIsConverting(false);
     }
-  }, [selectedFile, previewUrl, outputFormat, quality]);
+  }, [selectedFile, previewUrl, outputFormat]);
 
   const downloadImage = useCallback(() => {
     if (!convertedUrl || !selectedFile) return;
@@ -127,34 +123,18 @@ const ImageFormatConverter = () => {
             <CardTitle>Conversion Settings</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="format">Output Format</Label>
-                <Select value={outputFormat} onValueChange={(value: 'jpeg' | 'png' | 'webp') => setOutputFormat(value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select format" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="jpeg">JPEG</SelectItem>
-                    <SelectItem value="png">PNG</SelectItem>
-                    <SelectItem value="webp">WebP</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {outputFormat !== 'png' && (
-                <div>
-                  <Label htmlFor="quality">Quality: {quality[0]}%</Label>
-                  <Slider
-                    value={quality}
-                    onValueChange={setQuality}
-                    max={100}
-                    min={1}
-                    step={1}
-                    className="mt-2"
-                  />
-                </div>
-              )}
+            <div>
+              <Label htmlFor="format">Output Format</Label>
+              <Select value={outputFormat} onValueChange={(value) => setOutputFormat(value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select format" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="jpeg">JPEG</SelectItem>
+                  <SelectItem value="png">PNG</SelectItem>
+                  <SelectItem value="webp">WebP</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">

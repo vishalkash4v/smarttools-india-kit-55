@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,10 +17,10 @@ const ColorPaletteGenerator: React.FC = () => {
     const g = parseInt(baseHex.substr(2, 2), 16);
     const b = parseInt(baseHex.substr(4, 2), 16);
 
-    // Generate complementary colors
+    // Generate complementary color
     colors.push(baseColor);
     colors.push(`#${(255 - r).toString(16).padStart(2, '0')}${(255 - g).toString(16).padStart(2, '0')}${(255 - b).toString(16).padStart(2, '0')}`);
-    
+
     // Generate analogous colors
     for (let i = 1; i <= 3; i++) {
       const factor = 0.3 * i;
@@ -39,6 +38,16 @@ const ColorPaletteGenerator: React.FC = () => {
       toast({
         title: 'Copied!',
         description: `Color ${color} copied to clipboard.`,
+      });
+    });
+  };
+
+  const copyPaletteAsJSON = () => {
+    const json = JSON.stringify(palette, null, 2);
+    navigator.clipboard.writeText(json).then(() => {
+      toast({
+        title: 'Palette Copied!',
+        description: 'Entire palette copied as JSON array.',
       });
     });
   };
@@ -72,16 +81,21 @@ const ColorPaletteGenerator: React.FC = () => {
 
       {palette.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Generated Palette</h3>
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold">Generated Palette</h3>
+            <Button variant="outline" size="sm" onClick={copyPaletteAsJSON}>
+              <Copy className="h-4 w-4 mr-2" /> Copy All as JSON
+            </Button>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {palette.map((color, index) => (
               <div key={index} className="space-y-2">
                 <div
-                  className="h-20 rounded-lg cursor-pointer flex items-center justify-center"
+                  className="h-20 rounded-lg cursor-pointer flex items-center justify-center group"
                   style={{ backgroundColor: color }}
                   onClick={() => copyColor(color)}
                 >
-                  <Copy className="h-4 w-4 text-white opacity-0 hover:opacity-100 transition-opacity" />
+                  <Copy className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <p className="text-sm text-center font-mono">{color}</p>
               </div>

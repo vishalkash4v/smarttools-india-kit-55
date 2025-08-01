@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -15,20 +14,30 @@ interface Task {
 const TodoList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskText, setNewTaskText] = useState<string>('');
+  const [hasLoaded, setHasLoaded] = useState(false); // ✅ added
   const { toast } = useToast();
 
-  // Load tasks from localStorage
+  // Load tasks from localStorage (only in browser)
   useEffect(() => {
-    const storedTasks = localStorage.getItem('todoListTasks');
-    if (storedTasks) {
-      setTasks(JSON.parse(storedTasks));
+    if (typeof window !== 'undefined') {
+      const storedTasks = localStorage.getItem('todoListTasks');
+      if (storedTasks) {
+        try {
+          setTasks(JSON.parse(storedTasks));
+        } catch (e) {
+          console.error('Failed to parse localStorage:', e);
+        }
+      }
+      setHasLoaded(true); // ✅ now we know tasks are loaded
     }
   }, []);
 
-  // Save tasks to localStorage
+  // Save tasks to localStorage whenever they change (but only after initial load)
   useEffect(() => {
-    localStorage.setItem('todoListTasks', JSON.stringify(tasks));
-  }, [tasks]);
+    if (typeof window !== 'undefined' && hasLoaded) {
+      localStorage.setItem('todoListTasks', JSON.stringify(tasks));
+    }
+  }, [tasks, hasLoaded]);
 
   const handleAddTask = (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
@@ -65,7 +74,7 @@ const TodoList: React.FC = () => {
 
   const clearAllTasks = () => {
     if (tasks.length === 0) {
-      toast({ title: "No tasks to clear", variant: "default"});
+      toast({ title: "No tasks to clear", variant: "default" });
       return;
     }
     setTasks([]);
@@ -73,7 +82,7 @@ const TodoList: React.FC = () => {
       title: "All tasks cleared",
     });
   };
-  
+
   const completedTasks = tasks.filter(task => task.completed).length;
   const pendingTasks = tasks.length - completedTasks;
 
@@ -93,21 +102,20 @@ const TodoList: React.FC = () => {
       </form>
 
       {tasks.length > 0 && (
-         <div className="flex justify-between items-center text-sm text-muted-foreground">
+        <div className="flex justify-between items-center text-sm text-muted-foreground">
           <span>{pendingTasks} pending, {completedTasks} completed</span>
           <Button variant="outline" size="sm" onClick={clearAllTasks}>Clear All</Button>
         </div>
       )}
-      
+
       {tasks.length === 0 && <p className="text-center text-muted-foreground">No tasks yet. Add one above!</p>}
 
       <ul className="space-y-3">
         {tasks.map(task => (
           <li
             key={task.id}
-            className={`flex items-center gap-3 p-3 rounded-md border transition-colors ${
-              task.completed ? 'bg-muted/50 border-green-200 dark:border-green-700' : 'bg-card'
-            }`}
+            className={`flex items-center gap-3 p-3 rounded-md border transition-colors ${task.completed ? 'bg-muted/50 border-green-200 dark:border-green-700' : 'bg-card'
+              }`}
           >
             <Checkbox
               id={`task-${task.id}`}

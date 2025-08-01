@@ -59,8 +59,8 @@ const Footer = () => {
   ];
 
   return (
-    <div className='margin-1'>
     <footer className="bg-muted/50 border-t">
+    <div className='margin-1'>
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Company Info */}
@@ -80,11 +80,11 @@ const Footer = () => {
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4" />
-                <span>Mumbai, Maharashtra, India</span>
+                <span>Una, Himachal Pradesh, India</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4" />
-                <span>contact@fyntools-india.com</span>
+                <span>contact@fyntools.com</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
@@ -134,8 +134,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
     </div>
+    </footer>
   );
 };
 

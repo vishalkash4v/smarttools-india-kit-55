@@ -52,6 +52,9 @@ import {
   Eraser,
   CopyCheck,
   Smartphone,
+  Volume2,
+  QrCode,
+  Cloud
 } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
@@ -73,7 +76,7 @@ export function AppSidebar() {
         { title: "Tools", url: "/tools", icon: Layout },
         { title: "About", url: "/about", icon: HelpCircle },
         { title: "Contact", url: "/contact", icon: HelpCircle },
-      ]
+      ],
     },
     {
       title: "Text & Writing Tools",
@@ -81,18 +84,119 @@ export function AppSidebar() {
         { title: "Word Counter", url: "/word-counter", icon: FileText },
         { title: "Text Case Converter", url: "/text-case-converter", icon: TextIcon },
         { title: "Text Font Changer", url: "/text-font-changer", icon: Type },
-        { title: "JSON Formatter", url: "/json-formatter", icon: FileCode2 },
-        { title: "Whitespace Remover", url: "/whitespace-remover", icon: TextIcon },
-        { title: "Duplicate Line Remover", url: "/duplicate-line-remover", icon: FileText },
-        { title: "Text Reverser", url: "/text-reverser", icon: TextIcon },
+        { title: "Base64 Converter", url: "/base64-converter", icon: FileCode2 },
         { title: "Lorem Ipsum Generator", url: "/lorem-ipsum-generator", icon: FileText },
-        { title: "AI Text Rewriter", url: "/ai-text-rewriter", icon: TextIcon },
-        { title: "Base64 Converter", url: "/base64-converter", icon: FileText },
-        { title: "Text to Handwriting", url: "/text-to-handwriting", icon: TextIcon },
-        { title: "URL Slug Generator", url: "/url-slug-generator", icon: TextIcon },
-        { title: "Notes", url: "/notes", icon: StickyNote },
+        { title: "Whitespace Remover", url: "/whitespace-remover", icon: Eraser },
+        { title: "Duplicate Line Remover", url: "/duplicate-line-remover", icon: CopyCheck },
+        { title: "Text Reverser", url: "/text-reverser", icon: RotateCcw },
         { title: "Regex Tester", url: "/regex-tester", icon: Search },
-      ]
+        { title: "AI Text Rewriter", url: "/ai-text-rewriter", icon: Zap },
+        { title: "Text to Handwriting", url: "/text-to-handwriting", icon: PenTool },
+        { title: "Text to Speech", url: "/text-to-speech", icon: Volume2 },
+        { title: "Markdown Editor", url: "/markdown-editor", icon: FileText },
+        { title: "Notes", url: "/notes", icon: StickyNote },
+        { title: "URL Slug Generator", url: "/url-slug-generator", icon: Link2 },
+        { title: "Json Formatter", url: "/json-formatter", icon: FileCode2 },
+        { title: "Html Formatter", url: "/html-formatter", icon: FileCode2 },
+        { title: "Json Validator", url: "/json-validator", icon: FileCode2 },
+      ],
+    },
+    {
+      title: "Image & File Tools",
+      items: [
+        { title: "Image Compressor", url: "/image-compressor", icon: ImageIcon },
+        { title: "Image Resizer", url: "/tools/image-resizer", icon: ImageIcon },
+        { title: "Auto Image Resizer", url: "/auto-image-resizer", icon: ImageIcon },
+        { title: "Image Upscaler", url: "/image-upscaler", icon: Zap },
+        { title: "Image Cropper", url: "/image-cropper", icon: Crop },
+        { title: "Image Format Converter", url: "/image-format-converter", icon: RotateCcw },
+        { title: "SVG Optimizer", url: "/svg-optimizer", icon: FileCode2 },
+        { title: "Image Metadata Viewer", url: "/image-metadata-viewer", icon: Eye },
+        { title: "PDF Text Extractor", url: "/pdf-text-extractor", icon: FileArchive },
+        { title: "Placeholder Image Generator", url: "/placeholder-image-generator", icon: ImageIcon },
+        { title: "Logo to Favicon", url: "/logo-to-favicon", icon: Star },
+        { title: "Pixelate Tool", url: "/pixelate-tool", icon: ImageIcon },
+        { title: "Background Remover", url: "/tools/background-remover", icon: Eraser },
+        { title: "Add Name Date Photo", url: "/add-name-date-photo", icon: Camera },
+        { title: "Photo Annotation Tool", url: "/photo-annotation-tool", icon: PenTool },
+        { title: "QR Scanner", url: "/tools/qr-scanner", icon: QrCode },
+      ],
+    },
+    {
+      title: "Design & CSS Tools",
+      items: [
+        { title: "Box Shadow Generator", url: "/box-shadow-generator", icon: Layout },
+        { title: "Border Radius Generator", url: "/border-radius-generator", icon: Layout },
+        { title: "Gradient Generator", url: "/gradient-generator", icon: Palette },
+        { title: "Button Generator", url: "/button-generator", icon: Layout },
+        { title: "Color Converter", url: "/color-converter", icon: Palette },
+        { title: "Color Palette Generator", url: "/color-palette-generator", icon: Palette },
+        { title: "Color Picker", url: "/color-picker", icon: Palette },
+      ],
+    },
+    {
+      title: "Calculator Tools",
+      items: [
+        { title: "Simple Calculator", url: "/simple-calculator", icon: Calculator },
+        { title: "Temperature Converter", url: "/temperature-converter", icon: Thermometer },
+        { title: "Unit Converter", url: "/unit-converter", icon: Layout },
+        { title: "Enhanced Unit Converter", url: "/enhanced-unit-converter", icon: ArrowLeftRight },
+        { title: "Table to JSON Converter", url: "/table-to-json-converter", icon: Table },
+      ],
+    },
+    {
+      title: "Calculation Tools",
+      items: [
+        { title: "Age Calculator", url: "/age-calculator", icon: Calendar },
+        { title: "Date Difference Calculator", url: "/date-difference-calculator", icon: Calendar },
+        { title: "Future Date Calculator", url: "/future-date-calculator", icon: Calendar },
+        { title: "BMI Calculator", url: "/bmi-calculator", icon: Activity },
+        { title: "Percentage Calculator", url: "/percentage-calculator", icon: Percent },
+        { title: "Currency Converter", url: "/currency-converter", icon: Coins },
+        { title: "GST Calculator", url: "/gst-calculator", icon: IndianRupee },
+        { title: "EMI Calculator", url: "/emi-calculator", icon: PiggyBank },
+        { title: "SIP Calculator", url: "/sip-calculator", icon: PiggyBank },
+        { title: "PPF Calculator", url: "/ppf-calculator", icon: PiggyBank },
+        { title: "FD Calculator", url: "/fd-calculator", icon: PiggyBank },
+        { title: "Income Tax Calculator", url: "/income-tax-calculator", icon: IndianRupee },
+      ],
+    },
+
+    {
+      title: "Utility Tools",
+      items: [
+        { title: "QR Code Generator", url: "/qr-code-generator", icon: QrCode },
+        { title: "QR Generator", url: "/qr-generator", icon: QrCode },
+        { title: "Random Number Generator", url: "/random-number-generator", icon: Hash },
+        { title: "Yes No Generator", url: "/yes-no-generator", icon: Hash },
+        { title: "Coin Flip", url: "/coin-flip", icon: Hash },
+        { title: "Dice Roller", url: "/dice-roller", icon: Hash },
+        { title: "Todo List", url: "/todo-list", icon: ListChecks },
+        { title: "Redirect", url: "/redirect", icon: ArrowLeftRight },
+        { title: "List Randomizer", url: "/list-randomizer", icon: List },
+        { title: "Barcode Generator", url: "/barcode-generator", icon: Barcode },
+        { title: "Password Generator", url: "/password-generator", icon: Key },
+        { title: "Url Shortener", url: "/url-shortener", icon: Link2 },
+        { title: "Url Wrapper", url: "/url-wrapper", icon: Link2 },
+        { title: "Username Generator", url: "/username-generator", icon: User },
+        { title: "Name Generator", url: "/name-generator", icon: User },
+        { title: "Business Idea Generator", url: "/business-idea-generator", icon: Star },
+        { title: "Stopwatch", url: "/stopwatch", icon: Timer },
+        { title: "Countdown Timer", url: "/countdown-timer", icon: Clock },
+        { title: "Weather Forecast", url: "/weather-forecast", icon: Cloud },
+      ],
+    },
+    {
+      title: "Developer Tools",
+      items: [
+        { title: "Hash Generator", url: "/hash-generator", icon: Hash },
+        { title: "JWT Decoder", url: "/jwt-decoder", icon: Key },
+        { title: "Meta Tag Previewer", url: "/meta-tag-previewer", icon: Eye },
+        { title: "JavaScript Minifier", url: "/javascript-minifier", icon: FileCode2 },
+        { title: "CSS Minifier", url: "/css-minifier", icon: FileCode2 },
+        { title: "Discord Formatter", url: "/discord-formatter", icon: Hash },
+        { title: "Live Preview", url: "/live-preview", icon: Eye },
+      ],
     },
     {
       title: "Typing Tools",
@@ -101,96 +205,33 @@ export function AppSidebar() {
         { title: "Typing Test", url: "/typing-test", icon: Timer },
         { title: "Typing Games", url: "/typing-games", icon: Gamepad2 },
         { title: "Typing Competition", url: "/typing-competition", icon: Trophy },
-      ]
-    },
-    {
-      title: "Calculator Tools",
-      items: [
-        { title: "Simple Calculator", url: "/simple-calculator", icon: Calculator },
-        { title: "Age Calculator", url: "/age-calculator", icon: User },
-        { title: "Date Difference Calculator", url: "/date-difference-calculator", icon: Calendar },
-        { title: "BMI Calculator", url: "/bmi-calculator", icon: Activity },
-        { title: "Percentage Calculator", url: "/percentage-calculator", icon: Percent },
-        { title: "GST Calculator", url: "/gst-calculator", icon: IndianRupee },
-        { title: "EMI Calculator", url: "/emi-calculator", icon: PiggyBank },
-        { title: "Temperature Converter", url: "/temperature-converter", icon: Thermometer },
-        { title: "Unit Converter", url: "/unit-converter", icon: Layout },
-        { title: "Enhanced Unit Converter", url: "/enhanced-unit-converter", icon: ArrowLeftRight },
-      ]
-    },
-    {
-      title: "Financial Tools",
-      items: [
-        { title: "SIP & Lump Sum Calculator", url: "/sip-calculator", icon: Coins },
-        { title: "PPF Calculator", url: "/ppf-calculator", icon: Coins },
-        { title: "FD Calculator", url: "/fd-calculator", icon: Coins },
-        { title: "Income Tax Calculator", url: "/income-tax-calculator", icon: IndianRupee },
-        { title: "Currency Converter", url: "/currency-converter", icon: Coins },
-      ]
-    },
-    {
-      title: "Image & File Tools",
-      items: [
-        { title: "Image Compressor", url: "/image-compressor", icon: ImageIcon },
-        { title: "Logo to Favicon", url: "/logo-to-favicon", icon: Star },
-        { title: "Image Upscaler", url: "/image-upscaler", icon: Zap },
-        { title: "Image Cropper", url: "/image-cropper", icon: Crop },
-        { title: "Image Format Converter", url: "/image-format-converter", icon: RotateCcw },
-        { title: "SVG Optimizer", url: "/svg-optimizer", icon: FileCode2 },
-        { title: "Image Metadata Viewer", url: "/image-metadata-viewer", icon: Camera },
-        { title: "PDF Text Extractor", url: "/pdf-text-extractor", icon: FileArchive },
-        { title: "Placeholder Generator", url: "/placeholder-image-generator", icon: FileImage },
-        { title: "Pixelate Tool", url: "/tools/pixelate-tool", icon: ImageIcon },
-        { title: "Photo Annotation", url: "/tools/photo-annotation-tool", icon: StickyNote },
-        { title: "Background Remover", url: "/tools/background-remover", icon: ImageIcon },
-        { title: "Image Resizer", url: "/tools/image-resizer", icon: ImageIcon },
-      ]
-    },
-    {
-      title: "Utility Tools",
-      items: [
-        { title: "QR Code Generator", url: "/qr-code-generator", icon: FileCode2 },
-        { title: "QR Scanner", url: "/tools/qr-scanner", icon: Layout },
-        { title: "Password Generator", url: "/password-generator", icon: Key },
-        { title: "Color Picker Tool", url: "/color-picker-tool", icon: Palette },
-        { title: "Todo List", url: "/todo-list", icon: ListChecks },
-        { title: "Stopwatch", url: "/stopwatch", icon: Timer },
-        { title: "Countdown Timer", url: "/countdown-timer", icon: Clock },
-        { title: "Live Preview", url: "/live-preview", icon: Eye },
-        { title: "JavaScript Minifier", url: "/javascript-minifier", icon: FileCode2 },
-        { title: "Table to JSON Converter", url: "/table-to-json-converter", icon: Table },
-        { title: "List Randomizer", url: "/list-randomizer", icon: List },
-        { title: "Barcode Generator", url: "/barcode-generator", icon: Barcode },
-        { title: "URL App Wrapper", url: "/url-wrapper", icon: Smartphone },
-      ]
+      ],
     },
     {
       title: "Social Media Tools",
       items: [
-        { title: "URL Shortener", url: "/url-shortener", icon: Link2 },
         { title: "Hashtag Generator", url: "/hashtag-generator", icon: Hash },
         { title: "Social Media Link Generator", url: "/social-media-link-generator", icon: Share2 },
-        { title: "Content Planner", url: "/social-media-planner", icon: CalendarSchedule },
+        { title: "Social Media Planner", url: "/social-media-planner", icon: Calendar },
         { title: "Social Media DB Viewer", url: "/social-media-db-viewer", icon: Globe },
-        { title: "Instagram & Facebook Downloader", url: "/social-media-downloader", icon: Download },
+        { title: "Social Media Downloader", url: "/social-media-downloader", icon: Download },
         { title: "YouTube Downloader", url: "/youtube-downloader", icon: Video },
-      ]
-    },
-    {
-      title: "Developer Tools",
-      items: [
-        { title: "Hash Generator", url: "/hash-generator", icon: Hash },
-        { title: "JWT Token Decoder", url: "/jwt-decoder", icon: Key },
-        { title: "Meta Tag Previewer", url: "/meta-tag-previewer", icon: Eye },
-      ]
+      ],
     },
     {
       title: "Network Tools",
       items: [
-        { title: "What's My IP", url: "/ip-lookup", icon: Globe },
-      ]
+        { title: "IP Lookup", url: "/ip-lookup", icon: Globe },
+      ],
+    },
+    {
+      title: "Themes",
+      items: [
+        { title: "Themes", url: "/themes", icon: Layout },
+      ],
     },
   ];
+
 
   return (
     <div className="w-60 flex-shrink-0 border-r border-border py-4 bg-background">

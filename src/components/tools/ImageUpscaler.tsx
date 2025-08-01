@@ -9,98 +9,90 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const ImageUpscaler = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [upscaledUrl, setUpscaledUrl] = useState<string | null>(null);
-  const [scaleFactor, setScaleFactor] = useState<string>('2');
-  const [isUpscaling, setIsUpscaling] = useState<boolean>(false);
-  const [progress, setProgress] = useState<number>(0);
-  const [estimatedTime, setEstimatedTime] = useState<number>(0);
-  const [originalDimensions, setOriginalDimensions] = useState<{ width: number; height: number } | null>(null);
-  const [originalFileSize, setOriginalFileSize] = useState<number | null>(null);
-  const [upscaledFileSize, setUpscaledFileSize] = useState<number | null>(null); // State for upscaled file size
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [upscaledUrl, setUpscaledUrl] = useState(null);
+  const [scaleFactor, setScaleFactor] = useState('2');
+  const [isUpscaling, setIsUpscaling] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [estimatedTime, setEstimatedTime] = useState(0);
+  const [originalDimensions, setOriginalDimensions] = useState(null);
+  const [originalFileSize, setOriginalFileSize] = useState(null);
+  const [upscaledFileSize, setUpscaledFileSize] = useState(null);
   const { toast } = useToast();
 
   const scaleOptions = [
-    { value: '0.5', label: '0.5x (50% - Downscale)' },
-    { value: '1', label: '1x (100% - Original)' },
-    { value: '1.5', label: '1.5x (150%)' },
-    { value: '2', label: '2x (200%)' },
-    { value: '3', label: '3x (300%)' }
+    { value: '0.5', label: '0.5x' },
+    { value: '1', label: '1x' },
+    { value: '1.5', label: '1.5x' },
+    { value: '2', label: '2x' },
   ];
 
-  // Function to convert bytes to KB or MB
-  const formatFileSize = (size: number) => {
-    if (size < 1024) {
-      return `${size} B`;
-    } else if (size < 1024 * 1024) {
-      return `${(size / 1024).toFixed(2)} KB`;
-    } else {
-      return `${(size / (1024 * 1024)).toFixed(2)} MB`;
-    }
+  const formatFileSize = (size) => {
+    if (size < 1024) return `${size} B`;
+    if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`;
+    return `${(size / (1024 * 1024)).toFixed(2)} MB`;
   };
 
-  const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = useCallback((event) => {
     const file = event.target.files?.[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        toast({
-          title: "Invalid file type",
-          description: "Please select an image file.",
-          variant: "destructive",
-        });
-        return;
-      }
+    if (!file) return;
 
-      if (file.size > 10 * 1024 * 1024) { // 10MB limit
-        toast({
-          title: "File too large",
-          description: "Please select an image smaller than 10MB.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      setSelectedFile(file);
-      setOriginalFileSize(file.size);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-      setUpscaledUrl(null);
-      setUpscaledFileSize(null);
-      setProgress(0);
-
-      // Get original dimensions
-      const img = new Image();
-      img.onload = () => {
-        setOriginalDimensions({ width: img.width, height: img.height });
-        
-        // Estimate processing time based on image size and scale
-        const pixelCount = img.width * img.height;
-        const scale = parseFloat(scaleFactor);
-        const newPixelCount = pixelCount * scale * scale;
-        const timeEstimate = Math.max(5, Math.min(60, Math.round(newPixelCount / 500000)));
-        setEstimatedTime(timeEstimate);
-      };
-      img.src = url;
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file.",
+        variant: "destructive",
+      });
+      return;
     }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 10MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSelectedFile(file);
+    setOriginalFileSize(file.size);
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    setUpscaledUrl(null);
+    setUpscaledFileSize(null);
+    setProgress(0);
+
+    const img = new Image();
+    img.onload = () => {
+      setOriginalDimensions({ width: img.width, height: img.height });
+      const pixelCount = img.width * img.height;
+      const scale = parseFloat(scaleFactor);
+      const newPixelCount = pixelCount * scale * scale;
+      const timeEstimate = Math.max(5, Math.min(60, Math.round(newPixelCount / 500000)));
+      setEstimatedTime(timeEstimate);
+    };
+    img.src = url;
   }, [toast, scaleFactor]);
 
-  const simulateProgress = (duration: number) => {
-    const steps = 50;
+  const simulateProgress = (duration) => {
+    const steps = 100;
     const interval = duration * 1000 / steps;
     let currentStep = 0;
 
-    const progressInterval = setInterval(() => {
-      currentStep++;
-      const progressValue = Math.min(95, (currentStep / steps) * 100);
-      setProgress(progressValue);
+    return new Promise<void>((resolve) => {
+      const progressInterval = setInterval(() => {
+        currentStep++;
+        const progressValue = Math.min(99, (currentStep / steps) * 100);
+        setProgress(progressValue);
 
-      if (currentStep >= steps) {
-        clearInterval(progressInterval);
-      }
-    }, interval);
-
-    return progressInterval;
+        if (currentStep >= steps) {
+          clearInterval(progressInterval);
+          resolve();
+        }
+      }, interval);
+    });
   };
 
   const upscaleImage = useCallback(async () => {
@@ -108,8 +100,6 @@ const ImageUpscaler = () => {
 
     setIsUpscaling(true);
     setProgress(0);
-
-    const progressInterval = simulateProgress(estimatedTime);
 
     try {
       const scale = parseFloat(scaleFactor);
@@ -121,22 +111,41 @@ const ImageUpscaler = () => {
       const img = new Image();
 
       const processImage = () => {
-        return new Promise<void>((resolve) => {
+        return new Promise<void>((resolve, reject) => {
           img.onload = async () => {
+            if (!ctx) {
+              reject(new Error('Canvas context not available'));
+              return;
+            }
+
             canvas.width = newWidth;
             canvas.height = newHeight;
 
-            if (ctx) {
-              // Enhanced upscaling with multiple passes for better quality
+            if (scale === 1) {
+              ctx.drawImage(img, 0, 0, newWidth, newHeight);
+            } else {
               const tempCanvas = document.createElement('canvas');
               const tempCtx = tempCanvas.getContext('2d');
               
-              if (tempCtx && scale > 1) {
-                // Multi-pass upscaling for better quality
-                let currentWidth = originalDimensions.width;
-                let currentHeight = originalDimensions.height;
-                let currentImage = img;
-                
+              if (!tempCtx) {
+                reject(new Error('Temporary canvas context not available'));
+                return;
+              }
+
+              let currentWidth = originalDimensions.width;
+              let currentHeight = originalDimensions.height;
+              let currentImage = img;
+
+              const qualitySettings = {
+                '0.5': { smoothing: true, quality: 'high', filter: 'contrast(1.0) brightness(1.0) saturate(1.0)' },
+                '1': { smoothing: false, quality: 'medium', filter: 'none' },
+                '1.5': { smoothing: true, quality: 'high', filter: 'contrast(1.1) brightness(1.02) saturate(1.05)' },
+                '2': { smoothing: true, quality: 'high', filter: 'contrast(1.15) brightness(1.03) saturate(1.1)' },
+              };
+
+              const settings = qualitySettings[scaleFactor] || qualitySettings['2'];
+
+              if (scale > 1) {
                 while (currentWidth < newWidth || currentHeight < newHeight) {
                   const stepScale = Math.min(2, Math.min(newWidth / currentWidth, newHeight / currentHeight));
                   const stepWidth = Math.floor(currentWidth * stepScale);
@@ -144,13 +153,14 @@ const ImageUpscaler = () => {
                   
                   tempCanvas.width = stepWidth;
                   tempCanvas.height = stepHeight;
-                  tempCtx.imageSmoothingEnabled = true;
-                  tempCtx.imageSmoothingQuality = 'high';
-                  tempCtx.filter = 'contrast(1.1) brightness(1.02) saturate(1.05)';
+                  tempCtx.imageSmoothingEnabled = settings.smoothing;
+                  tempCtx.imageSmoothingQuality = settings.quality;
+                  tempCtx.filter = settings.filter;
                   tempCtx.drawImage(currentImage, 0, 0, stepWidth, stepHeight);
+
                   const newImg = new Image();
                   newImg.src = tempCanvas.toDataURL();
-                  await new Promise<void>(imgResolve => {
+                  await new Promise<void>((imgResolve) => {
                     newImg.onload = () => imgResolve();
                   });
                   currentImage = newImg;
@@ -158,52 +168,62 @@ const ImageUpscaler = () => {
                   currentHeight = stepHeight;
                   if (stepWidth >= newWidth && stepHeight >= newHeight) break;
                 }
-                ctx.imageSmoothingEnabled = true;
-                ctx.imageSmoothingQuality = 'high';
-                ctx.filter = 'contrast(1.05) brightness(1.01) saturate(1.02)';
-                ctx.drawImage(currentImage, 0, 0, newWidth, newHeight);
-                
-                canvas.toBlob((blob) => {
-                  if (blob) {
-                    const upscaledUrl = URL.createObjectURL(blob);
-                    setUpscaledUrl(upscaledUrl);
-                    setUpscaledFileSize(blob.size); // Set upscaled file size
-                    
-                    clearInterval(progressInterval);
-                    setProgress(100);
-
-                    toast({
-                      title: `Image processed successfully!`,
-                      description: `Enhanced from ${originalDimensions.width}×${originalDimensions.height} to ${newWidth}×${newHeight}`,
-                    });
-                  }
-                  setIsUpscaling(false);
-                  resolve();
-                }, 'image/png', 1.0);
               } else {
-                ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                tempCanvas.width = newWidth;
+                tempCanvas.height = newHeight;
+                tempCtx.imageSmoothingEnabled = settings.smoothing;
+                tempCtx.imageSmoothingQuality = settings.quality;
+                tempCtx.filter = settings.filter;
+                tempCtx.drawImage(img, 0, 0, newWidth, newHeight);
+                currentImage = new Image();
+                currentImage.src = tempCanvas.toDataURL();
+                await new Promise<void>((imgResolve) => {
+                  currentImage.onload = () => imgResolve();
+                });
               }
-            } else {
-              clearInterval(progressInterval);
-              setIsUpscaling(false);
-              resolve();
+
+              ctx.imageSmoothingEnabled = settings.smoothing;
+              ctx.imageSmoothingQuality = settings.quality;
+              ctx.filter = settings.filter;
+              ctx.drawImage(currentImage, 0, 0, newWidth, newHeight);
             }
+
+            // Determine the output format based on the original file's MIME type
+            const originalMimeType = selectedFile.type;
+            const supportedMimeTypes = ['image/png', 'image/jpeg', 'image/webp'];
+            const outputMimeType = supportedMimeTypes.includes(originalMimeType) ? originalMimeType : 'image/png';
+            const quality = outputMimeType === 'image/jpeg' ? 0.92 : 1.0; // Use high quality for JPEG
+
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const upscaledUrl = URL.createObjectURL(blob);
+                setUpscaledUrl(upscaledUrl);
+                setUpscaledFileSize(blob.size);
+                setProgress(100);
+                toast({
+                  title: "Image processed successfully!",
+                  description: `Enhanced from ${originalDimensions.width}×${originalDimensions.height} to ${newWidth}×${newHeight}`,
+                });
+              }
+              resolve();
+            }, outputMimeType, quality);
           };
+          img.onerror = () => reject(new Error('Image loading failed'));
+          img.src = URL.createObjectURL(selectedFile);
         });
       };
 
-      img.src = URL.createObjectURL(selectedFile);
-      await processImage();
+      await Promise.all([simulateProgress(estimatedTime), processImage()]);
+      setIsUpscaling(false);
     } catch (error) {
       console.error('Processing error:', error);
-      clearInterval(progressInterval);
       toast({
         title: "Processing failed",
         description: "An error occurred while processing the image.",
         variant: "destructive",
       });
-      setIsUpscaling(false);
       setProgress(0);
+      setIsUpscaling(false);
     }
   }, [selectedFile, scaleFactor, originalDimensions, estimatedTime, toast]);
 
@@ -226,7 +246,7 @@ const ImageUpscaler = () => {
         <Alert className="mb-4 sm:mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            This tool uses advanced multi-pass processing with edge enhancement for better quality results.
+            This tool uses advanced multi-pass processing with scale-specific quality enhancements.
             {isUpscaling && (
               <strong className="block mt-2 text-red-600 dark:text-red-400">
                 ⚠️ Processing in progress - Do not close this page or navigate away until complete!
@@ -357,7 +377,7 @@ const ImageUpscaler = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-3">
                   <div className="text-center">
-                    <h3 className="font-semibold text-muted-foreground">Before (Original)</h3>
+                    <h3 className="font-semibold text-muted-foreground">Before</h3>
                     <p className="text-sm text-muted-foreground">
                       {originalDimensions.width} × {originalDimensions.height}px
                     </p>
@@ -368,7 +388,7 @@ const ImageUpscaler = () => {
                   <div className="border rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900">
                     <img 
                       src={previewUrl} 
-                      alt="Original" 
+                      alt="Before" 
                       className="w-full h-60 sm:h-80 object-contain"
                     />
                   </div>
@@ -376,7 +396,7 @@ const ImageUpscaler = () => {
                 
                 <div className="space-y-3">
                   <div className="text-center">
-                    <h3 className="font-semibold text-green-600 dark:text-green-400">After (Enhanced)</h3>
+                    <h3 className="font-semibold text-green-600 dark:text-green-400">After</h3>
                     <p className="text-sm text-muted-foreground">
                       {Math.floor(originalDimensions.width * parseFloat(scaleFactor))} × {Math.floor(originalDimensions.height * parseFloat(scaleFactor))}px
                     </p>
@@ -387,7 +407,7 @@ const ImageUpscaler = () => {
                   <div className="border rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900">
                     <img 
                       src={upscaledUrl} 
-                      alt="Enhanced" 
+                      alt="After" 
                       className="w-full h-60 sm:h-80 object-contain"
                     />
                   </div>

@@ -10,13 +10,15 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "glass-card rounded-2xl text-card-foreground transition-all duration-300 hover-lift",
-      className
+      "glass-card rounded-2xl text-card-foreground transition-all duration-300 w-full sm:w-[95%] md:w-[80%]",
+      className // Add your custom class here for further customization
     )}
     {...props}
   />
-))
-Card.displayName = "Card"
+));
+
+Card.displayName = "Card";
+
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,

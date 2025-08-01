@@ -13,7 +13,7 @@ const BoxShadowGenerator = () => {
   const [verticalOffset, setVerticalOffset] = useState([10]);
   const [blurRadius, setBlurRadius] = useState([15]);
   const [spreadRadius, setSpreadRadius] = useState([0]);
-  const [shadowColor, setShadowColor] = useState('#000000');
+  const [shadowColor, setShadowColor] = useState('#ec2e9b');
   const [opacity, setOpacity] = useState([50]);
 
   const shadowValue = `${horizontalOffset[0]}px ${verticalOffset[0]}px ${blurRadius[0]}px ${spreadRadius[0]}px ${shadowColor}${Math.round(opacity[0] * 2.55).toString(16).padStart(2, '0')}`;
@@ -29,7 +29,7 @@ const BoxShadowGenerator = () => {
     setVerticalOffset([10]);
     setBlurRadius([15]);
     setSpreadRadius([0]);
-    setShadowColor('#000000');
+    setShadowColor('#ec2e9b');
     setOpacity([50]);
   };
 

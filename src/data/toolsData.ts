@@ -6,8 +6,10 @@ import {
   TrendingUp, List, Barcode, PenTool, StickyNote, Share2, Link2, Hash, 
   Calendar as CalendarSchedule, Type, Smartphone, Keyboard, Trophy, Gamepad2, 
   Users, Image as ImageIcon, Zap, Star, Crop, RotateCcw, Camera, FileImage, 
-  FileArchive, Download, Video, Copy
+  FileArchive, Download, Video, Copy, Paintbrush, Sparkles, Dices, MessageSquare, 
+  FileCode2, Edit, UserPlus, Link, CloudSun
 } from "lucide-react";
+
 
 export interface Tool {
   id: string;
@@ -730,4 +732,270 @@ export const allTools: Tool[] = [
     href: '/youtube-downloader',
     icon: Video
   },
+   { 
+    id: 'box-shadow-generator', 
+    name: 'Box Shadow Generator', 
+    category: 'Development Tools', 
+    description: 'Create and customize CSS box-shadow effects for your web elements.', 
+    keywords: 'box shadow, css shadow, shadow generator, css effects', 
+    path: '/box-shadow-generator', 
+    href: '/box-shadow-generator', 
+    icon: Palette 
+  },
+  { 
+    id: 'border-radius-generator', 
+    name: 'Border Radius Generator', 
+    category: 'Development Tools', 
+    description: 'Generate CSS border-radius properties for rounded corners.', 
+    keywords: 'border radius, css border, rounded corners, css generator', 
+    path: '/border-radius-generator', 
+    href: '/border-radius-generator', 
+    icon: Palette 
+  },
+  { 
+    id: 'button-generator', 
+    name: 'Button Generator', 
+    category: 'Development Tools', 
+    description: 'Design and generate CSS for custom buttons with various styles.', 
+    keywords: 'button generator, css button, custom button, button styles', 
+    path: '/button-generator', 
+    href: '/button-generator', 
+    icon: Palette 
+  },
+  { 
+    id: 'css-minifier', 
+    name: 'CSS Minifier', 
+    category: 'Development Tools', 
+    description: 'Minify CSS code to reduce file size and improve performance.', 
+    keywords: 'css minifier, compress css, optimize css, css minification', 
+    path: '/css-minifier', 
+    href: '/css-minifier', 
+    icon: Code 
+  },
+  { 
+    id: 'gradient-generator', 
+    name: 'Gradient Generator', 
+    category: 'Development Tools', 
+    description: 'Create custom CSS gradients with multiple colors and directions.', 
+    keywords: 'gradient generator, css gradient, linear gradient, radial gradient', 
+    path: '/gradient-generator', 
+    href: '/gradient-generator', 
+    icon: Paintbrush 
+  },
+  { 
+    id: 'html-formatter', 
+    name: 'HTML Formatter', 
+    category: 'Development Tools', 
+    description: 'Format and beautify HTML code for better readability.', 
+    keywords: 'html formatter, beautify html, html code formatter, clean html', 
+    path: '/html-formatter', 
+    href: '/html-formatter', 
+    icon: FileCode2 
+  },
+  { 
+    id: 'json-validator', 
+    name: 'JSON Validator', 
+    category: 'Development Tools', 
+    description: 'Validate and format JSON data for accuracy and readability.', 
+    keywords: 'json validator, validate json, json checker, json format', 
+    path: '/json-validator', 
+    href: '/json-validator', 
+    icon: Code 
+  },
+
+  // Utility Tools
+  { 
+    id: 'coin-flip', 
+    name: 'Coin Flip', 
+    category: 'Utility Tools', 
+    description: 'Simulate a coin flip to make random decisions.', 
+    keywords: 'coin flip, random decision, heads or tails, coin toss', 
+    path: '/coin-flip', 
+    href: '/coin-flip', 
+    icon: Dices 
+  },
+  { 
+    id: 'dice-roller', 
+    name: 'Dice Roller', 
+    category: 'Utility Tools', 
+    description: 'Roll virtual dice with customizable sides and quantities.', 
+    keywords: 'dice roller, roll dice, random dice, dice simulator', 
+    path: '/dice-roller', 
+    href: '/dice-roller', 
+    icon: Dices 
+  },
+  { 
+    id: 'random-number-generator', 
+    name: 'Random Number Generator', 
+    category: 'Utility Tools', 
+    description: 'Generate random numbers within a specified range.', 
+    keywords: 'random number, number generator, randomizer, random numbers', 
+    path: '/random-number-generator', 
+    href: '/random-number-generator', 
+    icon: Hash 
+  },
+  { 
+    id: 'url-shortener', 
+    name: 'URL Shortener', 
+    category: 'Utility Tools', 
+    description: 'Shorten long URLs for easier sharing and tracking.', 
+    keywords: 'url shortener, shorten link, short url, link shortener', 
+    path: '/url-shortener', 
+    href: '/url-shortener', 
+    icon: Link 
+  },
+  { 
+    id: 'yes-no-generator', 
+    name: 'Yes/No Generator', 
+    category: 'Utility Tools', 
+    description: 'Generate a random Yes or No answer for decision-making.', 
+    keywords: 'yes no generator, random decision, yes or no, decision maker', 
+    path: '/yes-no-generator', 
+    href: '/yes-no-generator', 
+    icon: ListChecks 
+  },
+
+  // Text & Writing Tools
+  { 
+    id: 'business-idea-generator', 
+    name: 'Business Idea Generator', 
+    category: 'Text & Writing Tools', 
+    description: 'Generate creative business ideas based on your preferences.', 
+    keywords: 'business ideas, idea generator, startup ideas, entrepreneurship', 
+    path: '/business-idea-generator', 
+    href: '/business-idea-generator', 
+    icon: Sparkles 
+  },
+  { 
+    id: 'discord-formatter', 
+    name: 'Discord Formatter', 
+    category: 'Text & Writing Tools', 
+    description: 'Format text for Discord with markdown and emojis.', 
+    keywords: 'discord formatter, markdown discord, text formatting, discord text', 
+    path: '/discord-formatter', 
+    href: '/discord-formatter', 
+    icon: MessageSquare 
+  },
+  { 
+    id: 'hashtag-generator', 
+    name: 'Hashtag Generator', 
+    category: 'Text & Writing Tools', 
+    description: 'Generate relevant hashtags for social media posts.', 
+    keywords: 'hashtag generator, social media hashtags, hashtag ideas, tags', 
+    path: '/hashtag-generator', 
+    href: '/hashtag-generator', 
+    icon: Hash 
+  },
+  { 
+    id: 'markdown-editor', 
+    name: 'Markdown Editor', 
+    category: 'Text & Writing Tools', 
+    description: 'Write and preview markdown text with real-time rendering.', 
+    keywords: 'markdown editor, markdown preview, write markdown, markdown tool', 
+    path: '/markdown-editor', 
+    href: '/markdown-editor', 
+    icon: Edit 
+  },
+  { 
+    id: 'name-generator', 
+    name: 'Name Generator', 
+    category: 'Text & Writing Tools', 
+    description: 'Generate random names for people, businesses, or projects.', 
+    keywords: 'name generator, random names, business names, character names', 
+    path: '/name-generator', 
+    href: '/name-generator', 
+    icon: UserPlus 
+  },
+  { 
+    id: 'username-generator', 
+    name: 'Username Generator', 
+    category: 'Text & Writing Tools', 
+    description: 'Create unique usernames for social media or gaming platforms.', 
+    keywords: 'username generator, random username, gaming username, social media', 
+    path: '/username-generator', 
+    href: '/username-generator', 
+    icon: User 
+  },
+
+  // Converter Tools
+  { 
+    id: 'color-converter', 
+    name: 'Color Converter', 
+    category: 'Converter Tools', 
+    description: 'Convert colors between HEX, RGB, HSL, and other formats.', 
+    keywords: 'color converter, hex to rgb, rgb to hex, color formats', 
+    path: '/color-converter', 
+    href: '/color-converter', 
+    icon: Palette 
+  },
+
+  // Image Tools
+  { 
+    id: 'color-palette-generator', 
+    name: 'Color Palette Generator', 
+    category: 'Image Tools', 
+    description: 'Generate color palettes from images or custom inputs.', 
+    keywords: 'color palette, palette generator, color scheme, design colors', 
+    path: '/color-palette-generator', 
+    href: '/color-palette-generator', 
+    icon: Palette 
+  },
+
+  // Video & Social Media Tools
+  { 
+    id: 'social-media-link-generator', 
+    name: 'Social Media Link Generator', 
+    category: 'Video & Social Media Tools', 
+    description: 'Create direct links for sharing content on social media platforms.', 
+    keywords: 'social media links, share links, social media share, link generator', 
+    path: '/social-media-link-generator', 
+    href: '/social-media-link-generator', 
+    icon: Share2 
+  },
+  { 
+    id: 'social-media-planner', 
+    name: 'Social Media Planner', 
+    category: 'Video & Social Media Tools', 
+    description: 'Plan and schedule your social media posts with ease.', 
+    keywords: 'social media planner, post scheduler, content calendar, social media', 
+    path: '/social-media-planner', 
+    href: '/social-media-planner', 
+    icon: CalendarSchedule 
+  },
+  { 
+    id: 'text-to-speech', 
+    name: 'Text to Speech', 
+    category: 'Video & Social Media Tools', 
+    description: 'Convert text to audio with natural-sounding voices.', 
+    keywords: 'text to speech, tts, speech synthesis, text to audio', 
+    path: '/text-to-speech', 
+    href: '/text-to-speech', 
+    icon: FileText 
+  },
+
+  // Network Tools
+  { 
+    id: 'weather-forecast', 
+    name: 'Weather Forecast', 
+    category: 'Network Tools', 
+    description: 'Check the weather forecast for any location.', 
+    keywords: 'weather forecast, weather checker, weather app, weather data', 
+    path: '/weather-forecast', 
+    href: '/weather-forecast', 
+    icon: CloudSun 
+  },
+
+  // Redirect (Utility Tools)
+  // { 
+  //   id: 'redirect', 
+  //   name: 'Redirect', 
+  //   category: 'Utility Tools', 
+  //   description: 'Create and manage URL redirects for your website.', 
+  //   keywords: 'url redirect, redirect link, link redirection, website redirect', 
+  //   path: '/redirect', 
+  //   href: '/redirect', 
+  //   icon: Link2 
+  // },
+ 
+
 ];

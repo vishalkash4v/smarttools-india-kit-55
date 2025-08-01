@@ -3,59 +3,138 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BarChart, PiggyBank, Calendar, Percent } from 'lucide-react';
+import { PiggyBank } from 'lucide-react';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend);
 
 const SipCalculator = () => {
   const [calculationType, setCalculationType] = useState<'sip' | 'lumpsum'>('sip');
-  const [monthlyInvestment, setMonthlyInvestment] = useState('');
-  const [lumpSumAmount, setLumpSumAmount] = useState('');
-  const [timePeriod, setTimePeriod] = useState('');
-  const [interestRate, setInterestRate] = useState('');
+  const [monthlyInvestment, setMonthlyInvestment] = useState(25000);
+  const [lumpSumAmount, setLumpSumAmount] = useState(100000);
+  const [timePeriod, setTimePeriod] = useState(10);
+  const [interestRate, setInterestRate] = useState(12);
   const [result, setResult] = useState<{ totalInvestment: number; totalReturns: number; maturityAmount: number; } | null>(null);
   const { currencySymbol, loading: currencyLoading } = useCurrency();
+  const [editingValues, setEditingValues] = useState<{ monthlyInvestment: boolean, lumpSumAmount: boolean, interestRate: boolean, timePeriod: boolean }>({
+    monthlyInvestment: false,
+    lumpSumAmount: false,
+    interestRate: false,
+    timePeriod: false,
+  });
 
-  const calculateSip = () => {
-    const P = parseFloat(monthlyInvestment);
-    const L = parseFloat(lumpSumAmount);
-    const r = parseFloat(interestRate) / 100 / 12;
-    const n = parseFloat(timePeriod) * 12;
-
-    if ((calculationType === 'sip' && P <= 0) || (calculationType === 'lumpsum' && L <= 0) || r <= 0 || n <= 0) return;
-
+  const calculateSIP = () => {
+    const P = monthlyInvestment;
+    const r = interestRate / 100 / 12;
+    const n = timePeriod * 12;
     let maturityAmount = 0;
     let totalInvestment = 0;
+    let totalInterest = 0;
 
-    if (calculationType === 'sip') {
-      // Future Value of SIP Formula: FV = P * (((1 + r)^n - 1) / r) * (1 + r)
-      maturityAmount = P * (((Math.pow(1 + r, n) - 1) / r) * (1 + r));
-      totalInvestment = P * n;
-    } else {
-      // Compound Interest Formula: A = P(1 + r/n)^(nt)
-      maturityAmount = L * Math.pow(1 + (r * 12) / 1, 1 * n / 12);
-      totalInvestment = L;
+    if (P <= 0 || r <= 0 || n <= 0) return;
+
+    let investmentData = {
+      investedAmount: [],
+      interestEarned: [],
+      totalAmount: [],
+    };
+
+    // Calculate yearly values
+    for (let i = 1; i <= timePeriod; i++) {
+      const monthsInYear = i * 12;
+      const annualInvestment = P * 12; // Monthly investment * 12
+      totalInvestment += annualInvestment;
+
+      // Calculate maturity amount (Total amount including interest) for that year
+      let maturity = annualInvestment * Math.pow(1 + r, monthsInYear);
+
+      // Calculate interest earned that year
+      let interest = maturity - annualInvestment;
+
+      totalInterest += interest;
+      maturityAmount = totalInvestment + totalInterest;
+
+      investmentData.investedAmount.push(annualInvestment);
+      investmentData.interestEarned.push(interest);
+      investmentData.totalAmount.push(maturityAmount);
     }
 
     const totalReturns = maturityAmount - totalInvestment;
 
-    setResult({
-      totalInvestment,
-      totalReturns,
-      maturityAmount,
-    });
+    setResult({ totalInvestment, totalReturns, maturityAmount });
+
+    return investmentData;
+  };
+
+  const calculateLumpsum = () => {
+    const L = lumpSumAmount;
+    const r = interestRate / 100;
+    const n = timePeriod;
+
+    if (L <= 0 || r <= 0 || n <= 0) return;
+
+    // Compound Interest Formula: A = P(1 + r/n)^(nt)
+    const maturityAmount = L * Math.pow(1 + r, n);
+    const totalInvestment = L;
+    const totalReturns = maturityAmount - totalInvestment;
+
+    setResult({ totalInvestment, totalReturns, maturityAmount });
+
+    return {
+      investedAmount: [totalInvestment],
+      interestEarned: [totalReturns],
+      totalAmount: [maturityAmount],
+    };
   };
 
   const handleCalculate = () => {
-    calculateSip();
+    if (calculationType === 'sip') {
+      const investmentData = calculateSIP();
+      updateChartData(investmentData);
+    } else {
+      const investmentData = calculateLumpsum();
+      updateChartData(investmentData);
+    }
+  };
+
+  const updateChartData = (investmentData: any) => {
+    setChartData({
+      labels: Array.from({ length: timePeriod }, (_, i) => `Year ${i + 1}`),
+      datasets: [
+        {
+          label: 'Invested Amount',
+          data: investmentData.investedAmount,
+          borderColor: 'rgb(75, 192, 192)',
+          fill: false,
+          tension: 0.4, // Smooth lines
+        },
+        {
+          label: 'Interest Earned',
+          data: investmentData.interestEarned,
+          borderColor: 'rgb(54, 162, 235)',
+          fill: false,
+          tension: 0.4,
+        },
+        {
+          label: 'Total Value',
+          data: investmentData.totalAmount,
+          borderColor: 'rgb(153, 102, 255)',
+          fill: false,
+          tension: 0.4,
+        }
+      ],
+    });
   };
 
   const handleClear = () => {
-    setMonthlyInvestment('');
-    setLumpSumAmount('');
-    setTimePeriod('');
-    setInterestRate('');
+    setMonthlyInvestment(25000);
+    setLumpSumAmount(100000);
+    setTimePeriod(10);
+    setInterestRate(12);
     setResult(null);
+    setChartData({});
   };
 
   const formatCurrency = (amount: number) => {
@@ -64,6 +143,62 @@ const SipCalculator = () => {
       maximumFractionDigits: 0,
     }).format(amount);
   };
+
+  const [chartData, setChartData] = useState<any>({});
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,  // Ensures chart resizes correctly on different screens
+  scales: {
+    x: {
+      ticks: {
+        autoSkip: true,
+        maxRotation: 45,
+        minRotation: 30,
+      },
+      title: {
+        display: true,
+        text: 'Years',
+      },
+    },
+    y: {
+      beginAtZero: true,  // Ensures the y-axis starts from zero
+    },
+  },
+  plugins: {
+    legend: {
+      position: 'bottom',  // Move the legend to the bottom
+      align: 'start',  // Align the legend to the left
+      labels: {
+        boxWidth: 20,  // Control the size of the legend boxes
+        padding: 10,   // Add padding between legend items
+        usePointStyle: true, // This makes the legend item appear as a point (circle)
+      },
+    },
+    tooltip: {
+      mode: 'nearest',    // Show tooltip for the nearest point (even when clicking near the point)
+      intersect: false,   // Allow tooltips when clicking near a point
+      position: 'nearest', // Show tooltip at the nearest point position
+      callbacks: {
+        label: (context: any) => {
+          const dataIndex = context.dataIndex;
+          const investedAmount = context.chart.data.datasets[0].data[dataIndex]; // Invested Amount
+          const interestEarned = context.chart.data.datasets[1].data[dataIndex];   // Interest Earned
+          const totalValue = context.chart.data.datasets[2].data[dataIndex];       // Total Value
+
+          return [
+            `Invested Amount: ₹${investedAmount.toFixed(2)}`,
+            `Interest Earned: ₹${interestEarned.toFixed(2)}`,
+            `Total Value: ₹${totalValue.toFixed(2)}`
+          ];
+        },
+      },
+    },
+  },
+};
+
+
+
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -96,70 +231,57 @@ const SipCalculator = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {calculationType === 'sip' && (
-              <div className="space-y-2">
-                <Label htmlFor="monthlyInvestment" className="flex items-center gap-2">
-                  <PiggyBank className="h-4 w-4" />
-                  Monthly Investment
-                </Label>
-                <Input
-                  id="monthlyInvestment"
-                  type="number"
-                  placeholder="5000"
-                  value={monthlyInvestment}
-                  onChange={(e) => setMonthlyInvestment(e.target.value)}
-                />
-              </div>
-            )}
-
-            {calculationType === 'lumpsum' && (
-              <div className="space-y-2">
-                <Label htmlFor="lumpSumAmount" className="flex items-center gap-2">
-                  <PiggyBank className="h-4 w-4" />
-                  Lump Sum Amount
-                </Label>
-                <Input
-                  id="lumpSumAmount"
-                  type="number"
-                  placeholder="100000"
-                  value={lumpSumAmount}
-                  onChange={(e) => setLumpSumAmount(e.target.value)}
-                />
-              </div>
-            )}
-
+            {/* Monthly Investment / Lump Sum Amount */}
             <div className="space-y-2">
-              <Label htmlFor="timePeriod" className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                Time Period (Years)
+              <Label htmlFor="monthlyInvestment" className="flex items-center gap-2">
+                {calculationType === 'sip' ? 'Monthly Investment (₹)' : 'Lump Sum Amount (₹)'}
               </Label>
-              <Input
-                id="timePeriod"
-                type="number"
-                placeholder="5"
-                value={timePeriod}
-                onChange={(e) => setTimePeriod(e.target.value)}
+              <input
+                type="range"
+                min="1000"
+                max="100000"
+                value={calculationType === 'sip' ? monthlyInvestment : lumpSumAmount}
+                onChange={(e) => calculationType === 'sip' ? setMonthlyInvestment(Number(e.target.value)) : setLumpSumAmount(Number(e.target.value))}
+                className="w-full"
               />
+              <div>{currencySymbol}{formatCurrency(calculationType === 'sip' ? monthlyInvestment : lumpSumAmount)}</div>
             </div>
 
+            {/* Expected Rate of Return */}
             <div className="space-y-2">
               <Label htmlFor="interestRate" className="flex items-center gap-2">
-                <Percent className="h-4 w-4" />
-                Expected Rate of Return (% per annum)
+                Expected Rate of Return (%)
               </Label>
-              <Input
-                id="interestRate"
-                type="number"
-                step="0.1"
-                placeholder="12"
+              <input
+                type="range"
+                min="1"
+                max="25"
                 value={interestRate}
-                onChange={(e) => setInterestRate(e.target.value)}
+                onChange={(e) => setInterestRate(Number(e.target.value))}
+                className="w-full"
               />
+              <div>{interestRate}%</div>
+            </div>
+
+            {/* Time Period */}
+            <div className="space-y-2">
+              <Label htmlFor="timePeriod" className="flex items-center gap-2">
+                Time Period (Years)
+              </Label>
+              <input
+                type="range"
+                min="1"
+                max="30"
+                value={timePeriod}
+                onChange={(e) => setTimePeriod(Number(e.target.value))}
+                className="w-full"
+              />
+              <div>{timePeriod} years</div>
             </div>
           </div>
 
           <div className="flex gap-2">
-            <Button onClick={handleCalculate} disabled={!monthlyInvestment && !lumpSumAmount || !timePeriod || !interestRate} className="flex-1">
+            <Button onClick={handleCalculate} disabled={monthlyInvestment <= 0 || timePeriod <= 0 || interestRate <= 0} className="flex-1">
               Calculate
             </Button>
             <Button variant="outline" onClick={handleClear}>
@@ -180,14 +302,12 @@ const SipCalculator = () => {
                     </div>
                     <div className="text-sm text-muted-foreground">Total Investment</div>
                   </div>
-                  
                   <div className="text-center p-4 bg-background rounded-lg border">
                     <div className="text-2xl font-bold text-green-600">
                       {currencySymbol}{formatCurrency(result.totalReturns)}
                     </div>
                     <div className="text-sm text-muted-foreground">Total Returns</div>
                   </div>
-                  
                   <div className="text-center p-4 bg-background rounded-lg border">
                     <div className="text-2xl font-bold text-primary">
                       {currencySymbol}{formatCurrency(result.maturityAmount)}
@@ -195,22 +315,11 @@ const SipCalculator = () => {
                     <div className="text-sm text-muted-foreground">Maturity Value</div>
                   </div>
                 </div>
-                
-                {calculationType === 'sip' && (
-                  <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-                    <div className="text-sm text-blue-700 dark:text-blue-300">
-                      <strong>Monthly SIP:</strong> {currencySymbol}{formatCurrency(parseFloat(monthlyInvestment))} for {timePeriod} years
-                    </div>
-                  </div>
-                )}
-                
-                {calculationType === 'lumpsum' && (
-                  <div className="mt-6 p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
-                    <div className="text-sm text-green-700 dark:text-green-300">
-                      <strong>Lump Sum Investment:</strong> {currencySymbol}{formatCurrency(parseFloat(lumpSumAmount))} for {timePeriod} years
-                    </div>
-                  </div>
-                )}
+
+                {/* Chart Component */}
+                <div className="mt-6" style={{ position: 'relative', height: '400px' }}>
+                  <Line data={chartData} options={chartOptions} />
+                </div>
               </CardContent>
             </Card>
           )}

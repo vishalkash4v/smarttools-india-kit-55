@@ -8,6 +8,7 @@ const AiTextRewriterPage = () => {
     title: "AI Text Rewriter - Paraphrase & Rewrite Content",
     description: "Rewrite and paraphrase text using AI technology. Transform your content while maintaining meaning. Free online AI text rewriter for better writing.",
     category: "AI Tools",
+    keywords:"AI text rewriter, paraphrase tool, AI paraphrasing tool, text rewriter online, rewrite content, AI content rewriter, free paraphrasing tool, AI rewrite tool, content paraphraser, text rephraser",
     
     howToUse: [
       "Paste your original text in the input area",
@@ -57,6 +58,7 @@ const AiTextRewriterPage = () => {
     <ToolPageLayout
       title={toolData.title}
       description={toolData.description}
+      keywords={toolData.keywords}
       category={toolData.category}
       toolInterface={<AiTextRewriter />}
       howToUse={toolData.howToUse}

@@ -8,6 +8,7 @@ const AgeCalculatorPage = () => {
     title: "Free Age Calculator Online",
     description: "Calculate your exact age in years, months, days, hours, minutes, and seconds. Find age difference between dates and get detailed age statistics instantly.",
     category: "Calculator Tools",
+    keywords:"age calculator, chronological age calculator, age calculator by year, age difference calculator, exact age calculator, biological age calculator, date of birth calculator, age in days calculator, how old am I calculator,when is my next birthday, how many days left for my birthday",
     
     howToUse: [
       "Enter your birth date using the date picker",
@@ -54,9 +55,11 @@ const AgeCalculatorPage = () => {
   };
 
   return (
+    
     <ToolPageLayout
       title={toolData.title}
       description={toolData.description}
+      keywords={toolData.keywords}
       toolInterface={<AgeCalculator />}
       howToUse={toolData.howToUse}
       features={toolData.features}

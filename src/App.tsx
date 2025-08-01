@@ -102,6 +102,36 @@ import SocialMediaDbViewerPage from '@/pages/tools/SocialMediaDbViewerPage';
 import SocialMediaDownloaderPage from '@/pages/tools/SocialMediaDownloaderPage';
 import YoutubeDownloaderPage from '@/pages/tools/YoutubeDownloaderPage';
 
+import BoxShadowGeneratorPage from '@/pages/tools/BoxShadowGeneratorPage'
+
+import BorderRadiusGeneratorPage from '@/pages/tools/BorderRadiusGeneratorPage';
+import BusinessIdeaGeneratorPage from '@/pages/tools/BusinessIdeaGeneratorPage';
+import ButtonGeneratorPage from '@/pages/tools/ButtonGeneratorPage';
+import CoinFlipPage from '@/pages/tools/CoinFlipPage';
+import ColorConverterPage from '@/pages/tools/ColorConverterPage';
+import ColorPaletteGeneratorPage from '@/pages/tools/ColorPaletteGeneratorPage';
+import ColorPickerPage from '@/pages/tools/ColorPickerPage'; // if separate from ColorPickerToolPage
+import CssMinifierPage from '@/pages/tools/CssMinifierPage';
+import DiceRollerPage from '@/pages/tools/DiceRollerPage';
+import DiscordFormatterPage from '@/pages/tools/DiscordFormatterPage';
+import GradientGeneratorPage from '@/pages/tools/GradientGeneratorPage';
+import HashtagGeneratorPage from '@/pages/tools/HashtagGeneratorPage';
+import HtmlFormatterPage from '@/pages/tools/HtmlFormatterPage';
+import JsonValidatorPage from '@/pages/tools/JsonValidatorPage';
+import MarkdownEditorPage from '@/pages/tools/MarkdownEditorPage';
+import NameGeneratorPage from '@/pages/tools/NameGeneratorPage';
+import QrGeneratorPage from '@/pages/tools/QrGeneratorPage'; // if different from QRCodeGeneratorPage
+import RandomNumberGeneratorPage from '@/pages/tools/RandomNumberGeneratorPage';
+import RedirectPage from '@/pages/tools/RedirectPage';
+import SocialMediaLinkGeneratorPage from '@/pages/tools/SocialMediaLinkGeneratorPage';
+import SocialMediaPlannerPage from '@/pages/tools/SocialMediaPlannerPage';
+import TextToSpeechPage from '@/pages/tools/TextToSpeechPage';
+import UrlShortenerPage from '@/pages/tools/UrlShortenerPage';
+import UsernameGeneratorPage from '@/pages/tools/UsernameGeneratorPage';
+import WeatherForecastPage from '@/pages/tools/WeatherForecastPage';
+import YesNoGeneratorPage from '@/pages/tools/YesNoGeneratorPage';
+
+
 // Theme Management
 import ThemesPage from '@/pages/tools/ThemesPage';
 
@@ -120,7 +150,7 @@ function App() {
       <BrowserRouter>
         <ScrollToTop />
         <QueryClientProvider client={queryClient}>
-          <Toaster 
+          <Toaster
             position="top-right"
             expand={true}
             richColors
@@ -225,6 +255,39 @@ function App() {
               <Route path="/social-media-db-viewer" element={<SocialMediaDbViewerPage />} />
               <Route path="/social-media-downloader" element={<SocialMediaDownloaderPage />} />
               <Route path="/youtube-downloader" element={<YoutubeDownloaderPage />} />
+
+
+              <Route path="/box-shadow-generator" element={<BoxShadowGeneratorPage />} />
+              <Route path="/add-name-date-photo" element={<AddNameDatePhotoPage />} />
+              <Route path="/auto-image-resizer" element={<AutoImageResizerPage />} />
+            
+              <Route path="/border-radius-generator" element={<BorderRadiusGeneratorPage />} />
+              <Route path="/business-idea-generator" element={<BusinessIdeaGeneratorPage />} />
+              <Route path="/button-generator" element={<ButtonGeneratorPage />} />
+              <Route path="/coin-flip" element={<CoinFlipPage />} />
+              <Route path="/color-converter" element={<ColorConverterPage />} />
+              <Route path="/color-palette-generator" element={<ColorPaletteGeneratorPage />} />
+              <Route path="/color-picker" element={<ColorPickerPage />} />
+              <Route path="/css-minifier" element={<CssMinifierPage />} />
+              <Route path="/dice-roller" element={<DiceRollerPage />} />
+              <Route path="/discord-formatter" element={<DiscordFormatterPage />} />
+              <Route path="/gradient-generator" element={<GradientGeneratorPage />} />
+              <Route path="/hashtag-generator" element={<HashtagGeneratorPage />} />
+              <Route path="/html-formatter" element={<HtmlFormatterPage />} />
+              <Route path="/json-validator" element={<JsonValidatorPage />} />
+              <Route path="/markdown-editor" element={<MarkdownEditorPage />} />
+              <Route path="/name-generator" element={<NameGeneratorPage />} />
+              <Route path="/qr-generator" element={<QrGeneratorPage />} /> 
+              <Route path="/random-number-generator" element={<RandomNumberGeneratorPage />} />
+              <Route path="/redirect" element={<RedirectPage />} />
+              <Route path="/social-media-link-generator" element={<SocialMediaLinkGeneratorPage />} />
+              <Route path="/social-media-planner" element={<SocialMediaPlannerPage />} />
+              <Route path="/text-to-speech" element={<TextToSpeechPage />} />
+              <Route path="/url-shortener" element={<UrlShortenerPage />} />
+              <Route path="/username-generator" element={<UsernameGeneratorPage />} />
+              <Route path="/weather-forecast" element={<WeatherForecastPage />} />
+              <Route path="/yes-no-generator" element={<YesNoGeneratorPage />} />
+
             </Routes>
           </MainLayout>
         </QueryClientProvider>

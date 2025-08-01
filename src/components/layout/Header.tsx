@@ -34,7 +34,7 @@ const Header = () => {
           >
             <div className="relative">
               <img 
-                src="/logobeta.png" 
+                src="/logobeta.webp" 
                 alt="FYN Tools Logo" 
                 className="w-35 h-14 rounded-xl object-contain"
                 onError={(e) => {

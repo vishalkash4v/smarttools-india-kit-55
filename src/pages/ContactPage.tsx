@@ -32,13 +32,13 @@ const ContactPage = () => {
               "@type": "ContactPoint",
               "telephone": "+91-8350937959",
               "contactType": "Customer Service",
-              "email": "contact@fyntools-india.com",
+              "email": "contact@fyntools.com",
               "areaServed": "IN"
             },
             "address": {
               "@type": "PostalAddress",
-              "addressLocality": "Mumbai",
-              "addressRegion": "Maharashtra",
+              "addressLocality": "Una",
+              "addressRegion": "Himachal Pradesh",
               "addressCountry": "IN"
             }
           })}
@@ -77,7 +77,7 @@ const ContactPage = () => {
                     <Mail className="h-5 w-5 text-primary" />
                     <div>
                       <p className="font-medium">Email</p>
-                      <p className="text-muted-foreground">contact@fyntools-india.com</p>
+                      <p className="text-muted-foreground">contact@fyntools.com</p>
                     </div>
                   </div>
                   
@@ -85,7 +85,7 @@ const ContactPage = () => {
                     <MapPin className="h-5 w-5 text-primary" />
                     <div>
                       <p className="font-medium">Location</p>
-                      <p className="text-muted-foreground">Mumbai, Maharashtra, India</p>
+                      <p className="text-muted-foreground">Una, Himachal Pradesh, India</p>
                     </div>
                   </div>
                 </CardContent>

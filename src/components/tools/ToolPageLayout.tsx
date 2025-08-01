@@ -1,14 +1,16 @@
-
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Share2, Star, Users, Shield, Clock, Zap } from 'lucide-react';
+import { Share2, Star, Users, Shield, Clock, Zap, Compass } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface ToolPageLayoutProps {
   title: string;
   description: string;
+  keywords?: string;
   toolInterface?: React.ReactNode;
   howToUse: string[];
   features: string[];
@@ -23,6 +25,7 @@ interface ToolPageLayoutProps {
 const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
   title,
   description,
+  keywords,
   toolInterface,
   howToUse,
   features,
@@ -42,12 +45,18 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`
     };
-    
+
     window.open(urls[platform as keyof typeof urls], '_blank', 'width=600,height=400');
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background/90">
+      <Helmet>
+        <title>{title} - FYN Tools India</title>
+        <meta name="description" content={description} />
+        {keywords && <meta name="keywords" content={keywords} />}
+      </Helmet>
+
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header Section */}
         <div className="text-center mb-12">
@@ -62,7 +71,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-6">
             {description}
           </p>
-          
+
           {/* Rating and User Count */}
           <div className="flex items-center justify-center gap-6 mb-8">
             <div className="flex items-center gap-2">
@@ -76,17 +85,44 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
           </div>
         </div>
 
-        {/* Table of Contents */}
-        <Card className="mb-8">
+        {/* Quick Navigation */}
+        <Card className="mb-8 bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20 shadow-lg rounded-xl">
           <CardHeader>
-            <CardTitle className="text-lg">Quick Navigation</CardTitle>
+            <CardTitle className="text-lg flex items-center gap-2 justify-center">
+              <Compass className="h-5 w-5 text-primary" />
+              Quick Navigation
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <a href="#tool" className="text-primary hover:underline">🔧 Use Tool</a>
-              <a href="#how-to-use" className="text-primary hover:underline">📋 How to Use</a>
-              <a href="#features" className="text-primary hover:underline">⭐ Features</a>
-              <a href="#faq" className="text-primary hover:underline">❓ FAQ</a>
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
+              <a
+                href="#tool"
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 hover:bg-primary/20 hover:scale-105 transition-all duration-200 text-primary font-medium"
+              >
+                <Zap className="h-4 w-4" />
+                Use Tool
+              </a>
+              <a
+                href="#how-to-use"
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 hover:bg-primary/20 hover:scale-105 transition-all duration-200 text-primary font-medium"
+              >
+                <Clock className="h-4 w-4" />
+                How to Use
+              </a>
+              <a
+                href="#features"
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 hover:bg-primary/20 hover:scale-105 transition-all duration-200 text-primary font-medium"
+              >
+                <Star className="h-4 w-4" />
+                Features
+              </a>
+              <a
+                href="#faq"
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 hover:bg-primary/20 hover:scale-105 transition-all duration-200 text-primary font-medium"
+              >
+                <Shield className="h-4 w-4" />
+                FAQ
+              </a>
             </div>
           </CardContent>
         </Card>
@@ -207,7 +243,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
                       <h4 className="font-semibold mb-2">{tool.name}</h4>
                       <p className="text-sm text-muted-foreground mb-3">{tool.description}</p>
                       <Button asChild size="sm" className="w-full">
-                        <a href={tool.href}>Try Now</a>
+                        <Link to={tool.href}>Try Now</Link>
                       </Button>
                     </CardContent>
                   </Card>
@@ -230,25 +266,25 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
           </CardHeader>
           <CardContent>
             <div className="flex gap-4">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => handleShare('twitter')}
                 className="flex items-center gap-2"
               >
                 🐦 Twitter
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => handleShare('linkedin')}
                 className="flex items-center gap-2"
               >
                 💼 LinkedIn
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => handleShare('facebook')}
                 className="flex items-center gap-2"
               >
