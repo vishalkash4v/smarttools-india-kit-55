@@ -17,12 +17,12 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <CurrencyProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-background">
+        <div className="min-h-screen flex w-full bg-background max-w-[100vw] overflow-x-hidden">
           {/* Only show sidebar on desktop */}
           {!isMobile && <AppSidebar />}
-          <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex-1 flex flex-col min-w-0 w-full">
             <Header />
-            <main className="flex-1">
+            <main className="flex-1 w-full">
               {children}
             </main>
             <Footer />
