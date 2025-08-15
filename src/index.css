@@ -542,3 +542,7 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-muted-foreground/70;
 }
+
+ .md\:w-\[80\%\] {
+    width: 100% !important;
+  }

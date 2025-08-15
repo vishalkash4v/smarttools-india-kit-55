@@ -42,35 +42,54 @@ const WordCounterPage: React.FC = () => {
   const relatedTools = [
     {
       name: "Text Case Converter",
-      href: "/tools/text-case-converter",
+      href: "/text-case-converter",
       description: "Convert text to uppercase, lowercase, or title case"
     },
     {
       name: "Lorem Ipsum Generator",
-      href: "/tools/lorem-ipsum-generator",
+      href: "/lorem-ipsum-generator",
       description: "Generate placeholder text for your projects"
     },
     {
       name: "Text Reverser",
-      href: "/tools/text-reverser",
+      href: "/text-reverser",
       description: "Reverse your text characters or words"
     }
   ];
 
-  const testimonials = [
-    {
-      name: "Jennifer Liu",
-      rating: 5,
-      text: "Perfect for my blog writing. The reading time feature helps me optimize post length!",
-      title: "Content Writer"
-    },
-    {
-      name: "David Park",
-      rating: 5,
-      text: "Simple, accurate, and fast. Use it daily for checking essay word counts.",
-      title: "Student"
-    }
-  ];
+ const testimonials = [
+  {
+    name: "Jennifer Liu",
+    rating: 5,
+    text: "Perfect for my blog writing. The reading time feature helps me optimize post length!",
+    title: "Content Writer"
+  },
+  {
+    name: "David Park",
+    rating: 5,
+    text: "Simple, accurate, and fast. Use it daily for checking essay word counts.",
+    title: "Student"
+  },
+  {
+    name: "Ravi Mehta",
+    rating: 4,
+    text: "Clean UI and super responsive. Would love a grammar checker built-in!",
+    title: "Digital Marketer"
+  },
+  {
+    name: "Emily Johnson",
+    rating: 5,
+    text: "Helps me stay within character limits for my social media posts. Really useful!",
+    title: "Social Media Manager"
+  },
+  {
+    name: "Carlos Diaz",
+    rating: 5,
+    text: "Reliable tool! I’ve bookmarked it for daily work reports and email drafts.",
+    title: "Project Coordinator"
+  }
+];
+
 
   return (
     <EnhancedToolPageLayout

@@ -15,6 +15,11 @@ import { useToast } from '@/hooks/use-toast';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 
+const API_ENDPOINT = 'https://api.apilayer.com/paraphraser';
+// ⚠️ Don’t ship secrets to the browser in production.
+// Use a server-side proxy (e.g., /api/rewrite) and read the key on the server.
+const API_KEY = 'fgnxIASyJnX54qj14E0KqifxUNDjW639';
+
 const AiTextRewriter = () => {
   const [inputText, setInputText] = useState('');
   const [rewrittenText, setRewrittenText] = useState('');
@@ -26,56 +31,72 @@ const AiTextRewriter = () => {
   const [useIdioms, setUseIdioms] = useState(true);
   const { toast } = useToast();
 
+  const wordCount = (t: string) => (t.trim() ? t.trim().split(/\s+/).length : 0);
+
   const rewriteText = async () => {
-  if (!inputText.trim()) {
-    toast({
-      title: "No Text Provided",
-      description: "Please enter some text to rewrite.",
-      variant: "destructive",
-    });
-    return;
-  }
+    const text = inputText.trim();
+    if (!text) {
+      toast({
+        title: 'No Text Provided',
+        description: 'Please enter some text to rewrite.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-  setIsRewriting(true);
+    setIsRewriting(true);
+    setRewrittenText('');
 
-  try {
-    const response = await fetch('https://tools-best-smm.in/api/tools/rewrite', {
-    // const response = await fetch('http://localhost:3000/api/tools/rewrite', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ text: inputText })
-    });
+    try {
+      const res = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain', // <-- must be plain text
+          apikey: API_KEY,              // <-- your APILayer key
+        },
+        body: text,                      // <-- send raw text (no JSON.stringify)
+      });
 
-    if (!response.ok) throw new Error('Failed to rewrite text');
+      // Handle non-2xx
+      if (!res.ok) {
+        const msg = `API error ${res.status}`;
+        throw new Error(msg);
+      }
 
-    const result = await response.json();
-    setRewrittenText(result?.rewrittenText || '');
+      const data = await res.json();
+      const paraphrased =
+        typeof data?.paraphrased === 'string' ? data.paraphrased.trim() : '';
 
-    toast({
-      title: "Text Successfully Rewritten!",
-      description: "Text has been transformed successfully via API.",
-    });
+      if (!paraphrased) {
+        // Common reasons: input too short/simple, or wrong content-type
+        throw new Error('No paraphrase returned. Try a longer sentence.');
+      }
 
-  } catch (error) {
-    console.error('API Rewrite error:', error);
-    toast({
-      title: "Rewrite Failed",
-      description: "There was an error rewriting your text. Please try again.",
-      variant: "destructive",
-    });
-  } finally {
-    setIsRewriting(false);
-  }
-};
+      setRewrittenText(paraphrased);
 
+      toast({
+        title: 'Text Rewritten',
+        description: 'Paraphrase generated successfully.',
+      });
+    } catch (err: any) {
+      console.error('API Rewrite error:', err);
+      toast({
+        title: 'Rewrite Failed',
+        description:
+          err?.message ||
+          'There was an error rewriting your text. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsRewriting(false);
+    }
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(rewrittenText);
     toast({
-      title: "Copied!",
-      description: "Rewritten text copied to clipboard.",
+      title: 'Copied!',
+      description: 'Rewritten text copied to clipboard.',
     });
   };
 
@@ -107,7 +128,7 @@ const AiTextRewriter = () => {
             Advanced AI Text Rewriter
           </CardTitle>
           <CardDescription>
-            Transform your content using advanced rewriting logic powered by AI.
+            Transform your content using an AI paraphraser API.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -175,13 +196,13 @@ const AiTextRewriter = () => {
             <Label htmlFor="inputText">Original Text</Label>
             <Textarea
               id="inputText"
-              placeholder="Paste your original or AI-generated text here..."
+              placeholder="Paste your text here..."
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               className="min-h-[200px]"
             />
             <div className="text-sm text-muted-foreground">
-              Characters: {inputText.length} | Words: {inputText.trim().split(/\s+/).filter(Boolean).length}
+              Characters: {inputText.length} | Words: {wordCount(inputText)}
             </div>
           </div>
 
@@ -230,7 +251,7 @@ const AiTextRewriter = () => {
               <CardContent className="min-h-[200px] bg-white dark:bg-gray-900 p-4 rounded-md text-sm">
                 {renderFormattedText(rewrittenText)}
                 <div className="mt-4 text-sm text-muted-foreground">
-                  Characters: {rewrittenText.length} | Words: {rewrittenText.trim().split(/\s+/).filter(Boolean).length}
+                  Characters: {rewrittenText.length} | Words: {wordCount(rewrittenText)}
                 </div>
               </CardContent>
             </Card>
@@ -238,7 +259,7 @@ const AiTextRewriter = () => {
 
           <Card className="bg-blue-50 dark:bg-blue-950/20">
             <CardContent className="pt-6 text-sm text-blue-700 dark:text-blue-300">
-              <strong>🚀 Powered by AI:</strong> Rewrites are generated using smart server-side logic with 20+ transformation patterns for human-like fluency and AI detection bypassing.
+              <strong>⚙️ Note:</strong> For production, proxy this request through your server to keep your API key private.
             </CardContent>
           </Card>
         </CardContent>

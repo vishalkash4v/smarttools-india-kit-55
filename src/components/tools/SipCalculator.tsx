@@ -25,69 +25,80 @@ const SipCalculator = () => {
     timePeriod: false,
   });
 
-  const calculateSIP = () => {
-    const P = monthlyInvestment;
-    const r = interestRate / 100 / 12;
-    const n = timePeriod * 12;
-    let maturityAmount = 0;
-    let totalInvestment = 0;
-    let totalInterest = 0;
+const calculateSIP = () => {
+  const P = monthlyInvestment;
+  const r = interestRate / 100 / 12; // monthly rate
+  const n = timePeriod * 12; // total months
 
-    if (P <= 0 || r <= 0 || n <= 0) return;
+  if (P <= 0 || r <= 0 || n <= 0) return;
 
-    let investmentData = {
-      investedAmount: [],
-      interestEarned: [],
-      totalAmount: [],
-    };
+  let totalInvestment = P * n;
+  let maturityAmount = P * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+  let totalReturns = maturityAmount - totalInvestment;
 
-    // Calculate yearly values
-    for (let i = 1; i <= timePeriod; i++) {
-      const monthsInYear = i * 12;
-      const annualInvestment = P * 12; // Monthly investment * 12
-      totalInvestment += annualInvestment;
-
-      // Calculate maturity amount (Total amount including interest) for that year
-      let maturity = annualInvestment * Math.pow(1 + r, monthsInYear);
-
-      // Calculate interest earned that year
-      let interest = maturity - annualInvestment;
-
-      totalInterest += interest;
-      maturityAmount = totalInvestment + totalInterest;
-
-      investmentData.investedAmount.push(annualInvestment);
-      investmentData.interestEarned.push(interest);
-      investmentData.totalAmount.push(maturityAmount);
-    }
-
-    const totalReturns = maturityAmount - totalInvestment;
-
-    setResult({ totalInvestment, totalReturns, maturityAmount });
-
-    return investmentData;
+  // Prepare yearly chart data
+  let investmentData = {
+    investedAmount: [],
+    interestEarned: [],
+    totalAmount: [],
   };
 
-  const calculateLumpsum = () => {
-    const L = lumpSumAmount;
-    const r = interestRate / 100;
-    const n = timePeriod;
+  for (let year = 1; year <= timePeriod; year++) {
+    const months = year * 12;
+    const invested = P * months;
+    const matured = P * ((Math.pow(1 + r, months) - 1) / r) * (1 + r);
+    const interest = matured - invested;
 
-    if (L <= 0 || r <= 0 || n <= 0) return;
+    investmentData.investedAmount.push(invested);
+    investmentData.interestEarned.push(interest);
+    investmentData.totalAmount.push(matured);
+  }
 
-    // Compound Interest Formula: A = P(1 + r/n)^(nt)
-    const maturityAmount = L * Math.pow(1 + r, n);
-    const totalInvestment = L;
-    const totalReturns = maturityAmount - totalInvestment;
+  setResult({
+    totalInvestment,
+    totalReturns,
+    maturityAmount,
+  });
 
-    setResult({ totalInvestment, totalReturns, maturityAmount });
+  return investmentData;
+};
 
-    return {
-      investedAmount: [totalInvestment],
-      interestEarned: [totalReturns],
-      totalAmount: [maturityAmount],
-    };
+
+ const calculateLumpsum = () => {
+  const L = lumpSumAmount;
+  const r = interestRate / 100;
+  const n = timePeriod;
+
+  if (L <= 0 || r <= 0 || n <= 0) return;
+
+  const totalInvestment = L;
+  const investmentData = {
+    investedAmount: [],
+    interestEarned: [],
+    totalAmount: [],
   };
+
+  for (let year = 1; year <= timePeriod; year++) {
+    const matured = L * Math.pow(1 + r, year);
+    const interest = matured - L;
+
+    investmentData.investedAmount.push(totalInvestment); // constant principal
+    investmentData.interestEarned.push(interest);
+    investmentData.totalAmount.push(matured);
+  }
+
+  const finalMaturityAmount = L * Math.pow(1 + r, n);
+  const totalReturns = finalMaturityAmount - totalInvestment;
+
+  setResult({
+    totalInvestment,
+    totalReturns,
+    maturityAmount: finalMaturityAmount,
+  });
+
+  return investmentData;
+};
+
 
   const handleCalculate = () => {
     if (calculationType === 'sip') {
@@ -106,21 +117,21 @@ const SipCalculator = () => {
         {
           label: 'Invested Amount',
           data: investmentData.investedAmount,
-          borderColor: 'rgb(75, 192, 192)',
+          borderColor: 'rgb(51, 0, 0)',
           fill: false,
           tension: 0.4, // Smooth lines
         },
         {
           label: 'Interest Earned',
           data: investmentData.interestEarned,
-          borderColor: 'rgb(54, 162, 235)',
+          borderColor: 'rgb(3, 139, 37)',
           fill: false,
           tension: 0.4,
         },
         {
           label: 'Total Value',
           data: investmentData.totalAmount,
-          borderColor: 'rgb(153, 102, 255)',
+          borderColor: 'rgb(88, 158, 228)',
           fill: false,
           tension: 0.4,
         }
@@ -146,56 +157,56 @@ const SipCalculator = () => {
 
   const [chartData, setChartData] = useState<any>({});
 
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    x: {
-      ticks: {
-        autoSkip: true,
-        maxRotation: 45,
-        minRotation: 30,
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        ticks: {
+          autoSkip: true,
+          maxRotation: 45,
+          minRotation: 30,
+        },
+        title: {
+          display: true,
+          text: 'Years',
+        },
       },
-      title: {
-        display: true,
-        text: 'Years',
-      },
-    },
-    y: {
-      beginAtZero: true,
-    },
-  },
-  plugins: {
-    legend: {
-      position: 'bottom' as const,
-      align: 'start' as const,
-      labels: {
-        boxWidth: 20,
-        padding: 10,
-        usePointStyle: true,
+      y: {
+        beginAtZero: true,
       },
     },
-    tooltip: {
-      mode: 'nearest' as const,
-      intersect: false,
-      position: 'nearest' as const,
-      callbacks: {
-        label: (context: any) => {
-          const dataIndex = context.dataIndex;
-          const investedAmount = context.chart.data.datasets[0].data[dataIndex];
-          const interestEarned = context.chart.data.datasets[1].data[dataIndex];
-          const totalValue = context.chart.data.datasets[2].data[dataIndex];
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+        align: 'start' as const,
+        labels: {
+          boxWidth: 20,
+          padding: 10,
+          usePointStyle: true,
+        },
+      },
+      tooltip: {
+        mode: 'nearest' as const,
+        intersect: false,
+        position: 'nearest' as const,
+        callbacks: {
+          label: (context: any) => {
+            const dataIndex = context.dataIndex;
+            const investedAmount = context.chart.data.datasets[0].data[dataIndex];
+            const interestEarned = context.chart.data.datasets[1].data[dataIndex];
+            const totalValue = context.chart.data.datasets[2].data[dataIndex];
 
-          return [
-            `Invested Amount: ₹${investedAmount.toFixed(2)}`,
-            `Interest Earned: ₹${interestEarned.toFixed(2)}`,
-            `Total Value: ₹${totalValue.toFixed(2)}`
-          ];
+            return [
+              `Invested Amount: ₹${investedAmount.toFixed(2)}`,
+              `Interest Earned: ₹${interestEarned.toFixed(2)}`,
+              `Total Value: ₹${totalValue.toFixed(2)}`
+            ];
+          },
         },
       },
     },
-  },
-} as const;
+  } as const;
 
 
 

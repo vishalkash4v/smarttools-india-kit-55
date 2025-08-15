@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://fyntools.com/sitemap.xml

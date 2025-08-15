@@ -1,36 +1,50 @@
-import React, { useState, useMemo } from 'react';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import React, { useState, useMemo, useMemo as useMemoAlias } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { differenceInYears, differenceInMonths, differenceInDays, isValid, parseISO, format } from 'date-fns';
-import { User, Calendar, Gift } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import { differenceInYears, differenceInMonths, differenceInDays, isValid, format } from 'date-fns';
+import { User, Gift } from 'lucide-react';
+import { cn } from "@/lib/utils";
+
+// MUI X Date Pickers (responsive)
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+
+// Animations
+import { motion, AnimatePresence } from 'framer-motion';
+
+const EMOJIS = ["🎉", "🎈", "🎂", "🥳", "🎊"];
 
 const AgeCalculator = () => {
-  const [dob, setDob] = useState('');
-
-  const handleDobChange = (e) => {
-    setDob(e.target.value);
-  };
+  const [dob, setDob] = useState<Dayjs | null>(null);
 
   const ageResult = useMemo(() => {
     if (!dob) return null;
 
-    const birthDate = parseISO(dob);
-    if (!isValid(birthDate)) return { error: "Invalid date format. Please use YYYY-MM-DD." };
-    
+    const birthDate = dob.toDate();
+    if (!isValid(birthDate)) return { error: "Invalid date selected." };
+
     const today = new Date();
     if (birthDate > today) return { error: "Date of birth cannot be in the future." };
 
     const years = differenceInYears(today, birthDate);
+
     const monthsDate = new Date(birthDate);
     monthsDate.setFullYear(monthsDate.getFullYear() + years);
+
     const months = differenceInMonths(today, monthsDate);
+
     const daysDate = new Date(monthsDate);
     daysDate.setMonth(daysDate.getMonth() + months);
+
     const days = differenceInDays(today, daysDate);
-    
-    const nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+
+    const nextBirthday = new Date(
+      today.getFullYear(),
+      birthDate.getMonth(),
+      birthDate.getDate()
+    );
     if (nextBirthday < today) {
       nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
     }
@@ -41,126 +55,227 @@ const AgeCalculator = () => {
       months,
       days,
       daysToNextBirthday,
-      error: null,
+      error: null as string | null,
       summary: `You are ${years} years, ${months} months, and ${days} days old.`
     };
   }, [dob]);
 
-  const handleReset = () => {
-    setDob('');
-  };
+  const isBirthdayToday = !!ageResult && !ageResult.error && ageResult.daysToNextBirthday === 0;
 
-  const todayDateString = format(new Date(), 'yyyy-MM-dd');
+  const handleReset = () => setDob(null);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 px-4 sm:px-6 py-8">
+    <div className="max-w-3xl mx-auto space-y-6 sm:space-y-8 px-4 sm:px-6">
       {/* Hero Section */}
-      <div className="text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900 mb-4">
-          <User className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600 dark:text-purple-300" />
+      <div className="text-center space-y-3 sm:space-y-4">
+        <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-100 mb-2 sm:mb-4">
+          <User className="w-7 h-7 sm:w-8 sm:h-8 text-purple-600" />
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
-          Free Age Calculator Online
-        </h1>
-        <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          Calculate your exact age with our chronological age calculator. Find age differences, days to your next birthday, and more in seconds.
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Age Calculator</h1>
+        <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+          Calculate your exact age and days until your next birthday
         </p>
       </div>
 
       {/* Main Calculator Card */}
-      <Card className="border-0 shadow-lg bg-white dark:bg-gray-800">
-        <CardContent className="p-6 sm:p-8">
-          <div className="space-y-6">
+      <Card className="glass-card shadow-xl">
+        <CardContent className="p-4 sm:p-6 md:p-8">
+          <div className="space-y-6 sm:space-y-8">
             {/* Date Input */}
-            <div className="space-y-3">
-              <Label htmlFor="dob" className="text-base sm:text-lg font-semibold text-gray-700 dark:text-gray-200">
-                Enter Your Date of Birth
-              </Label>
-              <Input
-                id="dob"
-                type="date"
-                value={dob}
-                onChange={handleDobChange}
-                className="h-12 sm:h-14 text-base sm:text-lg border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:border-purple-500 dark:focus:border-purple-400 focus:ring-0 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                max={todayDateString}
-              />
+            <div className="space-y-3 sm:space-y-6">
+              <div className="text-center space-y-1.5 sm:space-y-2">
+                <h3 className="text-base sm:text-lg font-semibold gradient-text">
+                  Select Your Date of Birth
+                </h3>
+                <p className="text-muted-foreground text-xs sm:text-sm">
+                  Choose your birth date below
+                </p>
+              </div>
+
+              <div className="flex justify-center">
+                <div className="w-full max-w-md">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Pick your birth date"
+                      value={dob}
+                      onChange={(newValue) => setDob(newValue)}
+                      minDate={dayjs('1900-01-01')}
+                      maxDate={dayjs()}
+                      disableFuture
+                      format="MMMM D, YYYY"
+                      reduceAnimations
+                      slotProps={{
+                        textField: {
+                          fullWidth: true,
+                          variant: 'outlined',
+                          size: 'medium',
+                          className: cn(
+                            "w-full [&_.MuiInputBase-root]:h-12 sm:[&_.MuiInputBase-root]:h-14",
+                            "[&_.MuiInputBase-input]:text-base sm:[&_.MuiInputBase-input]:text-lg"
+                          )
+                        },
+                      }}
+                    />
+                  </LocalizationProvider>
+                  <div className="mt-2 text-xs sm:text-sm text-muted-foreground">
+                    {dob ? `Selected: ${format(dob.toDate(), "MMMM d, yyyy")}` : "No date selected"}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Error Display */}
             {ageResult && ageResult.error && (
-              <div className="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 rounded-xl">
-                <p className="text-red-600 dark:text-red-300 font-medium">{ageResult.error}</p>
+              <div className="p-3 sm:p-4 bg-red-50 border border-red-200 rounded-xl">
+                <p className="text-red-600 text-sm sm:text-base font-medium">{ageResult.error}</p>
               </div>
             )}
 
             {/* Reset Button */}
-            <div className="flex justify-center">
-              <Button 
-                onClick={handleReset} 
-                variant="outline" 
-                className="h-11 sm:h-12 px-6 sm:px-8 text-base sm:text-lg border-2 border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                Reset
-              </Button>
-            </div>
+            {dob && (
+              <div className="flex justify-center">
+                <Button
+                  onClick={handleReset}
+                  variant="glass"
+                  className="h-11 sm:h-12 px-6 sm:px-8 text-base sm:text-lg w-full sm:w-auto"
+                >
+                  Reset Date
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
 
       {/* Results */}
       {ageResult && !ageResult.error && (
-        <div className="space-y-6 animate-fade-in">
+        <div className="space-y-4 sm:space-y-6 animate-fade-in">
           {/* Main Age Display */}
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/50 dark:to-pink-900/50">
-            <CardContent className="p-6 sm:p-8 text-center">
-              <div className="space-y-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
-                  Your Exact Age
-                </h2>
-                
-                {/* Age Summary */}
-                <div className="text-4xl sm:text-5xl font-bold text-purple-600 dark:text-purple-300">
+          <Card className="glass-card shadow-xl bg-gradient-to-br from-primary/5 to-accent/5">
+            <CardContent className="p-5 sm:p-8 text-center">
+              <div className="space-y-4 sm:space-y-6">
+                <h2 className="text-xl sm:text-2xl font-bold gradient-text">Your Age</h2>
+
+                <div className="text-5xl sm:text-6xl font-bold gradient-text">
                   {ageResult.years}
                 </div>
-                <div className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">
+                <div className="text-base sm:text-xl text-muted-foreground">
                   years old
                 </div>
-                
-                {/* Detailed Breakdown */}
-                <div className="pt-4 sm:pt-6 border-t border-purple-200 dark:border-purple-700">
+
+                <div className="pt-5 sm:pt-6 border-t border-border/30">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-                    <div className="text-center">
-                      <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{ageResult.years}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">Years</div>
+                    <div className="text-center space-y-1.5 sm:space-y-2">
+                      <div className="text-2xl sm:text-3xl font-bold text-foreground">{ageResult.years}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground font-medium">Years</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{ageResult.months}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">Months</div>
+                    <div className="text-center space-y-1.5 sm:space-y-2">
+                      <div className="text-2xl sm:text-3xl font-bold text-foreground">{ageResult.months}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground font-medium">Months</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{ageResult.days}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">Days</div>
+                    <div className="text-center space-y-1.5 sm:space-y-2">
+                      <div className="text-2xl sm:text-3xl font-bold text-foreground">{ageResult.days}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground font-medium">Days</div>
                     </div>
                   </div>
                 </div>
               </div>
             </CardContent>
           </Card>
-          
-          {/* Next Birthday Card */}
-          <Card className="border-0 shadow-lg bg-white dark:bg-gray-800">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center justify-center space-x-3">
-                <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-pink-500 dark:text-pink-300" />
-                <div className="text-center">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">Next Birthday</h3>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    <span className="font-bold text-pink-600 dark:text-pink-300">{ageResult.daysToNextBirthday}</span> days to go
-                  </p>
+
+          {/* Next Birthday Card with animations & emojis */}
+          <motion.div
+            initial={{ y: 8, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 14 }}
+          >
+            <Card className="relative overflow-hidden glass-card shadow-lg hover:shadow-xl transition-shadow">
+              <CardContent className="p-4 sm:p-6">
+                {/* Confetti layer (shown only on birthday) */}
+                <AnimatePresence>
+                  {isBirthdayToday && (
+                    <motion.div
+                      className="pointer-events-none absolute inset-0"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      {Array.from({ length: 18 }).map((_, i) => {
+                        const delay = Math.random() * 0.6;
+                        const x = Math.random() * 100;   // vw%
+                        const duration = 2.2 + Math.random() * 1.5;
+                        const emoji = EMOJIS[i % EMOJIS.length];
+                        return (
+                          <motion.span
+                            key={i}
+                            className="absolute text-xl sm:text-2xl"
+                            style={{ left: `${x}%`, top: `-10%` }}
+                            initial={{ y: -20, rotate: 0, opacity: 0 }}
+                            animate={{
+                              y: "120%",
+                              rotate: 360,
+                              opacity: [0, 1, 1, 0],
+                            }}
+                            transition={{
+                              delay,
+                              duration,
+                              repeat: Infinity,
+                              repeatDelay: 1.2,
+                              ease: "easeOut",
+                            }}
+                          >
+                            {emoji}
+                          </motion.span>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="flex items-center justify-center gap-3 sm:gap-4 text-center">
+                  <motion.div
+                    className={cn(
+                      "p-3 sm:p-3.5 rounded-full bg-gradient-to-br from-primary/20 to-accent/20"
+                    )}
+                    animate={isBirthdayToday ? { scale: [1, 1.1, 1] } : { scale: 1 }}
+                    transition={{ repeat: isBirthdayToday ? Infinity : 0, duration: 1.2 }}
+                  >
+                    <Gift className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+                  </motion.div>
+                  <div className="text-center">
+                    <h3 className="text-base sm:text-lg font-semibold gradient-text">
+                      {isBirthdayToday ? "It’s Your Birthday! 🥳" : "Next Birthday"}
+                    </h3>
+                    <p className="text-muted-foreground text-sm sm:text-base">
+                      {isBirthdayToday ? (
+                        <span className="font-semibold">
+                          Wishing you a fantastic year ahead 🎉🎂🎈
+                        </span>
+                      ) : (
+                        <>
+                          <span className="font-bold text-primary">
+                            {ageResult.daysToNextBirthday}
+                          </span>{" "}
+                          days to go{" "}
+                          <span aria-hidden>✨</span>
+                        </>
+                      )}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+
+                {/* Subtle hover emoji trail when not birthday */}
+                {!isBirthdayToday && (
+                  <motion.div
+                    className="mt-3 flex justify-center gap-2 text-lg"
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <span>🎈</span><span>🎉</span><span>🎂</span>
+                  </motion.div>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       )}
     </div>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Share2, Star, Users, Shield, Clock, Zap, Home, ChevronRight } from 'lucide-react';
 import { generateToolSchemas, type SchemaConfig } from '@/utils/schemaUtils';
+import { Link } from 'react-router-dom';
 
 interface EnhancedToolPageLayoutProps {
   title: string;
@@ -67,7 +68,7 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`
     };
-    
+
     window.open(urls[platform as keyof typeof urls], '_blank', 'width=600,height=400');
   };
 
@@ -78,20 +79,20 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
         <meta name="description" content={description} />
         {keywords && <meta name="keywords" content={keywords} />}
         {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-        
+
         {/* Schema Markup */}
         {schemas.map((schema, index) => (
           <script key={index} type="application/ld+json">
             {JSON.stringify(schema)}
           </script>
         ))}
-        
+
         {/* Open Graph */}
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl || shareUrl} />
-        
+
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
@@ -117,16 +118,16 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             {title}
           </h1>
-          
+
           {/* Short Introduction */}
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-4">
             {shortIntro}
           </p>
-          
+
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-6">
             {description}
           </p>
-          
+
           {/* Rating and User Count */}
           <div className="flex items-center justify-center gap-6 mb-8">
             <div className="flex items-center gap-2">
@@ -305,17 +306,20 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
             <CardContent>
               <div className="grid md:grid-cols-3 gap-4">
                 {relatedTools.map((tool, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow">
-                    <CardContent className="p-4">
-                      <h4 className="font-semibold mb-2">{tool.name}</h4>
-                      <p className="text-sm text-muted-foreground mb-3">{tool.description}</p>
-                      <Button asChild size="sm" className="w-full">
-                        <a href={tool.href}>Try Now</a>
+                  <Card key={index} className="hover:shadow-lg transition-shadow h-full">
+                    <CardContent className="p-4 flex flex-col justify-between h-full">
+                      <div className="mb-4">
+                        <h4 className="font-semibold mb-2">{tool.name}</h4>
+                        <p className="text-sm text-muted-foreground">{tool.description}</p>
+                      </div>
+                      <Button asChild size="sm" className="w-full mt-auto">
+                        <Link to={tool.href}>Try Now</Link>
                       </Button>
                     </CardContent>
                   </Card>
                 ))}
               </div>
+
             </CardContent>
           </Card>
         </section>
@@ -333,25 +337,25 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
           </CardHeader>
           <CardContent>
             <div className="flex gap-4">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => handleShare('twitter')}
                 className="flex items-center gap-2"
               >
                 🐦 Twitter
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => handleShare('linkedin')}
                 className="flex items-center gap-2"
               >
                 💼 LinkedIn
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => handleShare('facebook')}
                 className="flex items-center gap-2"
               >

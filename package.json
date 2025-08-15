@@ -12,7 +12,11 @@
     "generate-sitemap": "node sitemap-generator.js"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^3.9.0",
+    "@mui/material": "^7.3.1",
+    "@mui/x-date-pickers": "^8.10.0",
     "@prerenderer/renderer-puppeteer": "^1.2.4",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
@@ -48,8 +52,10 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "embla-carousel-react": "^8.3.0",
     "file-saver": "^2.0.5",
+    "framer-motion": "^12.23.12",
     "input-otp": "^1.2.4",
     "jsbarcode": "^3.12.1",
     "jspdf": "^3.0.1",
