@@ -130,6 +130,7 @@ import UrlShortenerPage from '@/pages/tools/UrlShortenerPage';
 import UsernameGeneratorPage from '@/pages/tools/UsernameGeneratorPage';
 import WeatherForecastPage from '@/pages/tools/WeatherForecastPage';
 import YesNoGeneratorPage from '@/pages/tools/YesNoGeneratorPage';
+import InvoiceGeneratorPage from '@/pages/tools/InvoiceGeneratorPage';
 
 
 // Theme Management
@@ -287,6 +288,9 @@ function App() {
               <Route path="/username-generator" element={<UsernameGeneratorPage />} />
               <Route path="/weather-forecast" element={<WeatherForecastPage />} />
               <Route path="/yes-no-generator" element={<YesNoGeneratorPage />} />
+
+              {/* Business Tools Routes */}
+              <Route path="/invoice-generator" element={<InvoiceGeneratorPage />} />
 
             </Routes>
           </MainLayout>

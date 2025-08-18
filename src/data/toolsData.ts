@@ -7,7 +7,7 @@ import {
   Calendar as CalendarSchedule, Type, Smartphone, Keyboard, Trophy, Gamepad2, 
   Users, Image as ImageIcon, Zap, Star, Crop, RotateCcw, Camera, FileImage, 
   FileArchive, Download, Video, Copy, Paintbrush, Sparkles, Dices, MessageSquare, 
-  FileCode2, Edit, UserPlus, Link, CloudSun
+  FileCode2, Edit, UserPlus, Link, CloudSun, Receipt
 } from "lucide-react";
 
 
@@ -983,6 +983,18 @@ export const allTools: Tool[] = [
     path: '/weather-forecast', 
     href: '/weather-forecast', 
     icon: CloudSun 
+  },
+
+  // Business Tools
+  { 
+    id: 'invoice-generator', 
+    name: 'Invoice Generator', 
+    category: 'Business Tools', 
+    description: 'Create professional invoices with auto-save features. Generate PDF and image exports with client and product management.', 
+    keywords: 'invoice generator, create invoice, invoice maker, business invoice, PDF invoice, invoice template, professional invoice', 
+    path: '/invoice-generator', 
+    href: '/invoice-generator', 
+    icon: Receipt 
   },
 
   // Redirect (Utility Tools)
