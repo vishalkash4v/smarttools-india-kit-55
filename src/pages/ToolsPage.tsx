@@ -98,63 +98,143 @@ const ToolsPage = () => {
   };
 
   return (
-    <div className="w-full px-2 sm:px-4 py-4 sm:py-8">
-      <div className="mb-6 sm:mb-8 text-center">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">All Tools</h1>
-        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
-          Explore a variety of free online tools for various tasks.
+    <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 max-w-7xl">
+      {/* Hero Section */}
+      <div className="mb-8 sm:mb-12 text-center">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 gradient-text">
+          Professional Online Tools
+        </h1>
+        <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
+          Discover {allTools.length}+ powerful, free online tools designed to boost your productivity. 
+          From calculators to converters, we've got everything you need.
         </p>
+        
+        {/* Stats */}
+        <div className="flex flex-wrap justify-center gap-6 sm:gap-8 mt-6 sm:mt-8 text-center">
+          <div className="glass-card px-4 py-2 rounded-xl">
+            <div className="text-xl sm:text-2xl font-bold text-primary">{allTools.length}+</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Tools Available</div>
+          </div>
+          <div className="glass-card px-4 py-2 rounded-xl">
+            <div className="text-xl sm:text-2xl font-bold text-primary">100%</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Free to Use</div>
+          </div>
+          <div className="glass-card px-4 py-2 rounded-xl">
+            <div className="text-xl sm:text-2xl font-bold text-primary">No</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Registration</div>
+          </div>
+        </div>
       </div>
       
-      <div className="mb-4 sm:mb-6 max-w-2xl mx-auto">
-        <Input
-          type="search"
-          placeholder="Search tools by name, description, or keywords..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="w-full h-12 text-base"
-        />
+      {/* Search Section */}
+      <div className="mb-8 sm:mb-10 max-w-2xl mx-auto">
+        <div className="relative">
+          <Input
+            type="search"
+            placeholder="Search from 80+ tools by name, category, or keywords..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="w-full h-12 sm:h-14 text-base pl-4 pr-12 glass-card border-primary/20 focus:border-primary/40"
+          />
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <div className="h-6 w-6 text-muted-foreground">
+              🔍
+            </div>
+          </div>
+        </div>
+        {searchTerm && (
+          <p className="text-sm text-muted-foreground mt-2 text-center">
+            Found {filteredTools.length} tool{filteredTools.length !== 1 ? 's' : ''} matching "{searchTerm}"
+          </p>
+        )}
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-        {filteredTools.map((tool) => (
-          <Card key={tool.id} className="w-full flex flex-col hover:shadow-lg transition-all duration-200 hover:scale-105">
+      {/* Tools Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+        {filteredTools.map((tool, index) => (
+          <Card 
+            key={tool.id} 
+            className="group relative glass-card hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col h-full border-primary/10 hover:border-primary/30"
+            style={{
+              animationDelay: `${index * 50}ms`,
+              animation: 'fadeInUp 0.6s ease-out forwards'
+            }}
+          >
+            {/* Category Badge */}
+            <div className="absolute -top-2 -right-2 z-10">
+              <div className={`px-2 py-1 text-xs font-medium rounded-full ${getBackgroundColor(tool.category)} ${getIconColor(tool.category)} shadow-sm`}>
+                {tool.category.split(' ')[0]}
+              </div>
+            </div>
+            
             <CardHeader className="pb-3 sm:pb-4">
-              <div className="flex items-center gap-2 sm:gap-3 mb-2">
-                <div className={`p-2 sm:p-3 rounded-xl ${getBackgroundColor(tool.category)} shrink-0`}>
+              <div className="flex items-start gap-3 mb-2">
+                <div className={`p-3 rounded-xl ${getBackgroundColor(tool.category)} shrink-0 group-hover:scale-110 transition-transform duration-300`}>
                   {React.createElement(tool.icon, { 
-                    className: `h-6 w-6 sm:h-8 sm:w-8 ${getIconColor(tool.category)}` 
+                    className: `h-6 w-6 sm:h-7 sm:w-7 ${getIconColor(tool.category)}` 
                   })}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <CardTitle className="text-sm sm:text-lg leading-tight line-clamp-2">{tool.name}</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1 truncate">{tool.category}</p>
+                  <CardTitle className="text-sm sm:text-base lg:text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+                    {tool.name}
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {tool.category}
+                  </p>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="flex-grow pt-0 pb-3 sm:pb-4 flex flex-col">
-              <CardDescription className="text-xs sm:text-sm leading-relaxed line-clamp-3 mb-3 sm:mb-4 flex-grow">
+            
+            <CardContent className="flex-grow pt-0 pb-4 flex flex-col">
+              <CardDescription className="text-xs sm:text-sm leading-relaxed line-clamp-3 mb-4 flex-grow opacity-80">
                 {tool.description}
               </CardDescription>
+              
               <Button 
                 onClick={() => navigate(tool.path)} 
-                className="w-full text-xs sm:text-sm px-2 py-2 h-auto min-h-[36px] whitespace-normal text-center"
-                variant="outline"
+                className="w-full text-sm px-3 py-2 h-10 bg-gradient-to-r from-primary to-primary-hover border-0 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                variant="default"
               >
-                <span className="break-words">Use Tool</span>
+                <span className="font-medium">Use Tool →</span>
               </Button>
             </CardContent>
           </Card>
         ))}
       </div>
 
+      {/* No Results State */}
       {filteredTools.length === 0 && (
-        <div className="text-center py-8 sm:py-12">
-          <p className="text-muted-foreground text-sm sm:text-base">
-            No tools found matching your search criteria.
+        <div className="text-center py-16 sm:py-20">
+          <div className="text-6xl mb-6">🔍</div>
+          <h3 className="text-xl sm:text-2xl font-semibold mb-3">No tools found</h3>
+          <p className="text-muted-foreground text-sm sm:text-base mb-6">
+            We couldn't find any tools matching "<strong>{searchTerm}</strong>"
           </p>
+          <Button 
+            onClick={() => setSearchTerm('')}
+            variant="outline"
+            className="glass-card"
+          >
+            View All Tools
+          </Button>
         </div>
       )}
+      
+      {/* Call to Action */}
+      <div className="mt-16 sm:mt-20 text-center glass-card p-8 sm:p-12 rounded-2xl">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4 gradient-text">
+          Need a Specific Tool?
+        </h2>
+        <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+          Can't find what you're looking for? We're constantly adding new tools to help make your work easier and more efficient.
+        </p>
+        <Button 
+          onClick={() => navigate('/contact')}
+          className="bg-gradient-to-r from-primary to-primary-hover hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl px-8 py-3 text-lg"
+        >
+          Request a Tool
+        </Button>
+      </div>
     </div>
   );
 };

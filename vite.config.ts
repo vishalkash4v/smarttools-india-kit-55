@@ -89,16 +89,39 @@ export default defineConfig(({ mode }) => ({
         "/image-resizer",
         "/auto-image-resizer",
         "/add-name-date-photo",
-        "/qr-scanner"
+        "/qr-scanner",
+        "/invoice-generator"
       ],
-      exclude: ["/404"]
+      exclude: ["/404"],
+      // Generate robots.txt
+      generateRobotsTxt: true,
     }),
     mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
   build: {
     rollupOptions: {
-      input: { main: path.resolve(__dirname, "index.html") }
-    }
+      input: { main: path.resolve(__dirname, "index.html") },
+      output: {
+        // Code splitting for better performance
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['@radix-ui/react-accordion', '@radix-ui/react-dialog', '@radix-ui/react-popover'],
+          charts: ['recharts', 'chart.js'],
+          utils: ['lodash', 'date-fns', 'clsx']
+        }
+      }
+    },
+    // Optimize bundle size
+    minify: 'esbuild',
+    sourcemap: false,
+    // Reduce chunk size warnings
+    chunkSizeWarningLimit: 1600,
+  },
+  // Performance optimizations
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom'],
+    exclude: ['chart.js']
   }
 }));

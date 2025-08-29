@@ -7,21 +7,31 @@
     <title>FYN Tools.com - Free Online Tools & Calculators</title>
     <meta name="description" content="Discover 100+ free online tools and calculators for productivity, design, development, and everyday use. No registration required - instant results!" />
     
-    <!-- Google Fonts Preconnect and Preload -->
+    <!-- Optimized Google Fonts Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Preload the fonts -->
- <link
-  rel="preload"
-  href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&family=Indie+Flower&family=Shadows+Into+Light&display=swap"
-  as="style"
-  crossorigin="anonymous"
-/>
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&family=Indie+Flower&family=Shadows+Into+Light&display=swap"
-  crossorigin="anonymous"
-/>
+    
+    <!-- Critical CSS inlined for faster render -->
+    <style>
+      /* Critical CSS for initial render */
+      body { font-family: system-ui, -apple-system, sans-serif; margin: 0; }
+      .loading-skeleton { background: #f3f4f6; height: 20px; margin: 8px 0; border-radius: 4px; }
+    </style>
+    
+    <!-- Optimized font loading with font-display: swap -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&family=Indie+Flower&family=Shadows+Into+Light&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&family=Indie+Flower&family=Shadows+Into+Light&display=swap">
+    </noscript>
+    
+    <!-- Resource hints for performance -->
+    <link rel="dns-prefetch" href="//ipapi.co">
+    <link rel="preload" as="fetch" href="https://ipapi.co/json/" crossorigin>
     <!-- SEO and Social Media Meta Tags -->
     <meta property="og:title" content="FYN Tools Worldwide - Free Online Tools & Calculators" />
     <meta property="og:description" content="Discover 100+ free online tools and calculators for productivity, design, development, and everyday use. No registration required!" />
@@ -58,14 +68,31 @@
     }
     </script>
 
-    <!-- Defer Non-Essential CSS -->
-    <link rel="stylesheet" href="/assets/main-CVL8_yJi.css" media="print" onload="this.media='all'">
-
+    <!-- Performance optimizations -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#7c3aed">
+    
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Loading placeholder to prevent layout shifts -->
+    <div id="root">
+      <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f8fafc;">
+        <div style="text-align: center;">
+          <div style="width: 40px; height: 40px; border: 4px solid #e5e7eb; border-top: 4px solid #7c3aed; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+          <p style="color: #6b7280; font-size: 14px;">Loading FynTools...</p>
+        </div>
+      </div>
+    </div>
 
-    <!-- Defer the JavaScript -->
-    <script type="module" src="/src/main.tsx" defer></script>
+    <!-- Optimized JavaScript loading -->
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Add keyframes for loading spinner -->
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
   </body>
 </html>

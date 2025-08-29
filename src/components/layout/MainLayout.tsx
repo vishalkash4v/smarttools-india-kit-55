@@ -18,11 +18,18 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     <CurrencyProvider>
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-background max-w-[100vw] overflow-x-hidden">
-          {/* Only show sidebar on desktop */}
-          {!isMobile && <AppSidebar />}
+          {/* Reserve space for sidebar to prevent layout shift */}
+          {!isMobile && (
+            <div className="w-60 shrink-0">
+              <AppSidebar />
+            </div>
+          )}
           <div className="flex-1 flex flex-col min-w-0 w-full">
-            <Header />
-            <main className="flex-1 w-full">
+            {/* Reserve space for header to prevent layout shift */}
+            <div className="h-16 shrink-0">
+              <Header />
+            </div>
+            <main className="flex-1 w-full min-h-0">
               {children}
             </main>
             <Footer />

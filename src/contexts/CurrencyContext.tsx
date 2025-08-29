@@ -58,22 +58,44 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Set loading to false immediately to prevent layout shifts
+    setLoading(false);
+    
+    // Defer currency API call to not block initial render
     const fetchCurrencyFromIP = async () => {
       try {
-        const response = await fetch('https://ipapi.co/json/');
+        // Add a small delay to prioritize critical rendering path
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
+        const response = await fetch('https://ipapi.co/json/', {
+          signal: controller.signal,
+          headers: {
+            'Accept': 'application/json',
+          }
+        });
+        
+        clearTimeout(timeoutId);
+        
         if (response.ok) {
           const data = await response.json();
           setCurrency(data.currency || 'USD');
           setCountry(data.country_code || 'US');
         }
       } catch (error) {
-        console.log('Failed to fetch currency from IP, using default USD');
-      } finally {
-        setLoading(false);
+        // Silently fail and use default USD - this is not critical for UX
+        console.log('Using default currency (USD)');
       }
     };
 
-    fetchCurrencyFromIP();
+    // Use requestIdleCallback if available, otherwise setTimeout
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(fetchCurrencyFromIP);
+    } else {
+      setTimeout(fetchCurrencyFromIP, 0);
+    }
   }, []);
 
   const currencySymbol = getCurrencySymbol(currency);
