@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,72 +42,60 @@ const TableToJsonConverter = () => {
   const [options, setOptions] = useState({
     includeHeader: true,
     prettify: true,
-    ignoreEmptyRows: true
+    ignoreEmptyRows: true,
   });
 
   const parseHtmlTable = (html: string) => {
-    try {
-      // Create a temporary DOM element to parse HTML
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      const table = doc.querySelector('table');
+    // Parse HTML and extract table data
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const table = doc.querySelector('table');
 
-      if (!table) {
-        throw new Error('No table found in the HTML');
-      }
-
-      const rows = Array.from(table.querySelectorAll('tr'));
-      if (rows.length === 0) {
-        throw new Error('No rows found in the table');
-      }
-
-      let headerRow: string[] = [];
-      let dataRows: string[][] = [];
-
-      // Check if there's a thead section
-      const thead = table.querySelector('thead');
-      const tbody = table.querySelector('tbody');
-
-      if (thead && options.includeHeader) {
-        const headerCells = Array.from(thead.querySelectorAll('th, td'));
-        headerRow = headerCells.map(cell => cell.textContent?.trim() || '');
-      } else if (options.includeHeader) {
-        // Use first row as header if no thead
-        const firstRowCells = Array.from(rows[0].querySelectorAll('th, td'));
-        headerRow = firstRowCells.map(cell => cell.textContent?.trim() || '');
-        rows.shift(); // Remove first row from data rows
-      }
-
-      // Process data rows
-      const rowsToProcess = tbody ? Array.from(tbody.querySelectorAll('tr')) : rows;
-      dataRows = rowsToProcess.map(row => {
-        const cells = Array.from(row.querySelectorAll('td, th'));
-        return cells.map(cell => cell.textContent?.trim() || '');
-      });
-
-      // Filter out empty rows if option is enabled
-      if (options.ignoreEmptyRows) {
-        dataRows = dataRows.filter(row => row.some(cell => cell !== ''));
-      }
-
-      // Convert to JSON
-      let result;
-      if (headerRow.length > 0 && options.includeHeader) {
-        result = dataRows.map(row => {
-          const obj: { [key: string]: string } = {};
-          headerRow.forEach((header, index) => {
-            obj[header] = row[index] || '';
-          });
-          return obj;
-        });
-      } else {
-        result = dataRows;
-      }
-
-      return result;
-    } catch (error) {
-      throw error;
+    if (!table) {
+      throw new Error('No table found in the HTML');
     }
+
+    const rows = Array.from(table.querySelectorAll('tr'));
+    if (rows.length === 0) {
+      throw new Error('No rows found in the table');
+    }
+
+    let headerRow: string[] = [];
+    let dataRows: string[][] = [];
+
+    const thead = table.querySelector('thead');
+    const tbody = table.querySelector('tbody');
+
+    if (thead && options.includeHeader) {
+      const headerCells = Array.from(thead.querySelectorAll('th, td'));
+      headerRow = headerCells.map((cell) => cell.textContent?.trim() || '');
+    } else if (options.includeHeader) {
+      // Use first row as header if there is no thead
+      const firstRowCells = Array.from(rows[0].querySelectorAll('th, td'));
+      headerRow = firstRowCells.map((cell) => cell.textContent?.trim() || '');
+    }
+
+    const rowsToProcess = tbody ? Array.from(tbody.querySelectorAll('tr')) : rows.slice(options.includeHeader ? 1 : 0);
+    dataRows = rowsToProcess.map((row) => {
+      const cells = Array.from(row.querySelectorAll('td, th'));
+      return cells.map((cell) => cell.textContent?.trim() || '');
+    });
+
+    if (options.ignoreEmptyRows) {
+      dataRows = dataRows.filter((row) => row.some((cell) => cell !== ''));
+    }
+
+    if (headerRow.length > 0 && options.includeHeader) {
+      return dataRows.map((row) => {
+        const obj: { [key: string]: string } = {};
+        headerRow.forEach((header, index) => {
+          obj[header] = row[index] ?? '';
+        });
+        return obj;
+      });
+    }
+
+    return dataRows;
   };
 
   const handleConvert = () => {
@@ -123,15 +110,12 @@ const TableToJsonConverter = () => {
 
     try {
       const data = parseHtmlTable(htmlTable);
-      const json = options.prettify 
-        ? JSON.stringify(data, null, 2)
-        : JSON.stringify(data);
-      
+      const json = options.prettify ? JSON.stringify(data, null, 2) : JSON.stringify(data);
       setJsonOutput(json);
-      
+
       toast({
         title: 'Table Converted Successfully',
-        description: `Converted ${data.length} rows to JSON format.`,
+        description: `Converted ${Array.isArray(data) ? data.length : 0} rows to JSON format.`,
       });
     } catch (error) {
       toast({
@@ -207,30 +191,43 @@ const TableToJsonConverter = () => {
                 <Checkbox
                   id="includeHeader"
                   checked={options.includeHeader}
-                  onCheckedChange={(checked) => setOptions(prev => ({ ...prev, includeHeader: !!checked }))}
+                  onCheckedChange={(checked) =>
+                    setOptions((prev) => ({ ...prev, includeHeader: !!checked }))
+                  }
                 />
-                <Label htmlFor="includeHeader" className="text-sm">Use first row as header</Label>
+                <Label htmlFor="includeHeader" className="text-sm">
+                  Use first row as header
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="prettify"
                   checked={options.prettify}
-                  onCheckedChange={(checked) => setOptions(prev => ({ ...prev, prettify: !!checked }))}
+                  onCheckedChange={(checked) =>
+                    setOptions((prev) => ({ ...prev, prettify: !!checked }))
+                  }
                 />
-                <Label htmlFor="prettify" className="text-sm">Prettify JSON output</Label>
+                <Label htmlFor="prettify" className="text-sm">
+                  Prettify JSON output
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="ignoreEmptyRows"
                   checked={options.ignoreEmptyRows}
-                  onCheckedChange={(checked) => setOptions(prev => ({ ...prev, ignoreEmptyRows: !!checked }))}
+                  onCheckedChange={(checked) =>
+                    setOptions((prev) => ({ ...prev, ignoreEmptyRows: !!checked }))
+                  }
                 />
-                <Label htmlFor="ignoreEmptyRows" className="text-sm">Ignore empty rows</Label>
+                <Label htmlFor="ignoreEmptyRows" className="text-sm">
+                  Ignore empty rows
+                </Label>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* HTML input */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <Label htmlFor="html-table">HTML Table</Label>
@@ -241,10 +238,16 @@ const TableToJsonConverter = () => {
               </div>
               <Textarea
                 id="html-table"
+                spellCheck={false}
                 placeholder="Paste your HTML table here..."
                 value={htmlTable}
                 onChange={(e) => setHtmlTable(e.target.value)}
-                className="min-h-[400px] font-mono text-sm"
+                className="
+                  min-h-[400px] font-mono text-sm
+                  bg-white text-zinc-900 border-zinc-200
+                  dark:bg-zinc-900 dark:text-zinc-50 dark:border-zinc-800
+                  dark:placeholder:text-zinc-400
+                "
               />
               <div className="flex gap-2">
                 <Button onClick={handleConvert} className="gap-2">
@@ -254,6 +257,7 @@ const TableToJsonConverter = () => {
               </div>
             </div>
 
+            {/* JSON output */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <Label htmlFor="json-output">JSON Output</Label>
@@ -270,17 +274,25 @@ const TableToJsonConverter = () => {
               </div>
               <Textarea
                 id="json-output"
+                spellCheck={false}
                 placeholder="JSON output will appear here..."
                 value={jsonOutput}
                 readOnly
-                className="min-h-[400px] font-mono text-sm bg-gray-50"
+                className="
+                  min-h[400px] font-mono text-sm
+                  bg-zinc-50 text-zinc-900 border-zinc-200
+                  dark:bg-zinc-900 dark:text-zinc-50 dark:border-zinc-800
+                  dark:placeholder:text-zinc-400
+                "
               />
             </div>
           </div>
 
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h3 className="font-semibold text-blue-900 mb-2">Supported HTML Table Features:</h3>
-            <ul className="text-sm text-blue-800 space-y-1">
+          <div className="bg-blue-50 dark:bg-blue-950/40 p-4 rounded-lg border border-blue-200 dark:border-blue-900">
+            <h3 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">
+              Supported HTML Table Features:
+            </h3>
+            <ul className="text-sm text-blue-800 dark:text-blue-300 space-y-1">
               <li>• Tables with &lt;thead&gt; and &lt;tbody&gt; sections</li>
               <li>• Tables with &lt;th&gt; header cells and &lt;td&gt; data cells</li>
               <li>• Option to use first row as column headers</li>

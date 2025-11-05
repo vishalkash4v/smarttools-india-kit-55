@@ -252,8 +252,8 @@ export const allTools: Tool[] = [
     category: 'Image Tools', 
     description: 'Apply pixelation effects to specific areas of your images with customizable strength and size.',
     keywords: 'pixelate image, blur faces, privacy tool, image censoring',
-    path: '/tools/pixelate-tool',
-    href: '/tools/pixelate-tool',
+    path: '/pixelate-tool',
+    href: '/pixelate-tool',
     icon: ImageIcon
   },
   { 
@@ -262,8 +262,8 @@ export const allTools: Tool[] = [
     category: 'Image Tools', 
     description: 'Add name, date, signature, and fingerprint to photos. Perfect for passport photos and applications.',
     keywords: 'photo annotation, add name to photo, passport photo editor, photo signature',
-    path: '/tools/photo-annotation-tool',
-    href: '/tools/photo-annotation-tool',
+    path: '/photo-annotation-tool',
+    href: '/photo-annotation-tool',
     icon: PenTool
   },
   { 
@@ -272,8 +272,8 @@ export const allTools: Tool[] = [
     category: 'Image Tools', 
     description: 'Remove background from photos automatically. Create transparent backgrounds instantly.',
     keywords: 'background remover, remove background, transparent background, photo editor',
-    path: '/tools/background-remover',
-    href: '/tools/background-remover',
+    path: '/background-remover',
+    href: '/background-remover',
     icon: Eraser
   },
   { 
@@ -282,19 +282,9 @@ export const allTools: Tool[] = [
     category: 'Image Tools', 
     description: 'Manually resize image dimensions and file size. Perfect for documents and web images.',
     keywords: 'image resizer, resize photos, change image size, scale images',
-    path: '/tools/image-resizer',
-    href: '/tools/image-resizer',
+    path: '/image-resizer',
+    href: '/image-resizer',
     icon: ImageIcon
-  },
-  { 
-    id: 'auto-image-resizer', 
-    name: 'Auto Image Resizer', 
-    category: 'Image Tools', 
-    description: 'Automatically resize images to optimal dimensions and file sizes for various use cases.',
-    keywords: 'auto resize, smart resize, batch resize, optimize images',
-    path: '/tools/auto-image-resizer',
-    href: '/tools/auto-image-resizer',
-    icon: Zap
   },
   { 
     id: 'add-name-date-photo', 
@@ -302,8 +292,8 @@ export const allTools: Tool[] = [
     category: 'Image Tools', 
     description: 'Add name and date on passport photographs for online application forms.',
     keywords: 'add name to photo, passport photo, photo with name, photo editor',
-    path: '/tools/add-name-date-photo',
-    href: '/tools/add-name-date-photo',
+    path: '/add-name-date-photo',
+    href: '/add-name-date-photo',
     icon: CalendarDays
   },
   { 
@@ -312,8 +302,8 @@ export const allTools: Tool[] = [
     category: 'Image Tools', 
     description: 'Scan QR codes using camera or upload image to decode QR codes.',
     keywords: 'qr scanner, scan qr code, qr reader, decode qr',
-    path: '/tools/qr-scanner',
-    href: '/tools/qr-scanner',
+    path: '/qr-scanner',
+    href: '/qr-scanner',
     icon: QrCode
   },
 

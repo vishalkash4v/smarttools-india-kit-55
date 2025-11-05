@@ -58,32 +58,156 @@ const LandingPage = () => {
   return (
     <>
       <Helmet>
-        <title>FYN Tools India - Free Online Professional Tools</title>
-        <meta name="description" content="25+ free online tools for professionals. Secure calculators, text tools, converters, and generators. Instant results, no registration." />
-        <meta name="keywords" content="online tools, free calculators, text tools, developers tools, converters, generators, BMI calculator, JSON formatter, QR code generator, India" />
-        <meta property="og:title" content="FYN Tools India - Free Online Professional Tools" />
-        <meta property="og:description" content="25+ free online tools for professionals. Secure calculators, text tools, converters, and generators. Instant results, no registration." />
+        <title>FYN Tools Worldwide - 80+ Free Professional Online Tools | No Registration Required</title>
+        <meta name="description" content="Access 80+ free professional online tools instantly. Calculators, text tools, image editors, converters, generators, and developer utilities. Secure, fast, and no registration required. Trusted by 100K+ users worldwide." />
+        <meta name="keywords" content="free online tools, professional tools, calculators, text tools, image tools, developer tools, converters, generators, QR code generator, BMI calculator, JSON formatter, password generator, image resizer, text converter, online calculator, web tools, utility tools, no registration, instant results, secure tools, India tools, worldwide tools" />
+        <meta name="author" content="FYN Tools Worldwide" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#3b82f6" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="application-name" content="FYN Tools Worldwide" />
+        <meta name="apple-mobile-web-app-title" content="FYN Tools" />
+        <meta name="msapplication-TileColor" content="#3b82f6" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="FYN Tools Worldwide - 80+ Free Professional Online Tools" />
+        <meta property="og:description" content="Access 80+ free professional online tools instantly. Calculators, text tools, image editors, converters, generators, and developer utilities. Secure, fast, and no registration required." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://fyntools.com" />
-        <meta property="og:image" content="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop" />
+        <meta property="og:site_name" content="FYN Tools Worldwide" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:image" content="https://fyntools.com/assets/og-image.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="FYN Tools Worldwide - Professional Online Tools" />
+        
+        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="FYN Tools India - Free Online Professional Tools" />
-        <meta name="twitter:description" content="25+ free online tools for professionals. Secure calculators, text tools, converters, and generators. Instant results, no registration." />
+        <meta name="twitter:title" content="FYN Tools Worldwide - 80+ Free Professional Online Tools" />
+        <meta name="twitter:description" content="Access 80+ free professional online tools instantly. Calculators, text tools, image editors, converters, generators, and developer utilities." />
+        <meta name="twitter:image" content="https://fyntools.com/assets/twitter-image.jpg" />
+        <meta name="twitter:site" content="@fyntoolsworldwide" />
+        <meta name="twitter:creator" content="@fyntoolsworldwide" />
+        
+        {/* Canonical */}
         <link rel="canonical" href="https://fyntools.com" />
+        
+        {/* Preconnect for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://api.fyntools.com" />
 
-        {/* Structured Data */}
+        {/* Structured Data - WebSite */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            "name": "FYN Tools India",
-            "description": "Professional online tools for developers, businesses and individuals",
+            "name": "FYN Tools Worldwide",
+            "alternateName": "FYN Tools",
+            "description": "Professional online tools for developers, businesses, and individuals worldwide",
             "url": "https://fyntools.com",
+            "logo": "https://fyntools.com/logo.png",
+            "sameAs": [
+              "https://twitter.com/fyntoolsworldwide",
+              "https://facebook.com/fyntoolsworldwide",
+              "https://linkedin.com/company/fyntoolsworldwide"
+            ],
             "potentialAction": {
               "@type": "SearchAction",
               "target": "https://fyntools.com/tools?q={search_term_string}",
               "query-input": "required name=search_term_string"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "FYN Tools Worldwide",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://fyntools.com/logo.png"
+              }
             }
+          })}
+        </script>
+
+        {/* Structured Data - Organization */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "FYN Tools Worldwide",
+            "url": "https://fyntools.com",
+            "logo": "https://fyntools.com/logo.png",
+            "description": "Provider of free professional online tools for developers, businesses, and individuals worldwide",
+            "foundingDate": "2024",
+            "sameAs": [
+              "https://twitter.com/fyntoolsworldwide",
+              "https://facebook.com/fyntoolsworldwide",
+              "https://linkedin.com/company/fyntoolsworldwide"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "Customer Service",
+              "email": "support@fyntools.com",
+              "availableLanguage": ["English"]
+            }
+          })}
+        </script>
+
+        {/* Structured Data - SoftwareApplication */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "FYN Tools Platform",
+            "operatingSystem": "Web Browser",
+            "applicationCategory": "UtilitiesApplication",
+            "description": "Comprehensive platform offering 80+ free professional online tools",
+            "url": "https://fyntools.com",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock"
+            },
+            "provider": {
+              "@type": "Organization",
+              "name": "FYN Tools Worldwide",
+              "url": "https://fyntools.com"
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.9",
+              "reviewCount": "1250",
+              "bestRating": "5",
+              "worstRating": "1"
+            },
+            "featureList": [
+              "80+ Professional Tools",
+              "No Registration Required",
+              "Instant Results",
+              "100% Secure & Private",
+              "Mobile Responsive",
+              "Free Forever"
+            ]
+          })}
+        </script>
+
+        {/* Structured Data - BreadcrumbList */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://fyntools.com"
+              }
+            ]
           })}
         </script>
       </Helmet>

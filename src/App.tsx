@@ -42,7 +42,6 @@ import PixelateToolPage from '@/pages/tools/PixelateToolPage';
 import PhotoAnnotationToolPage from '@/pages/tools/PhotoAnnotationToolPage';
 import BackgroundRemoverPage from '@/pages/tools/BackgroundRemoverPage';
 import ImageResizerPage from '@/pages/tools/ImageResizerPage';
-import AutoImageResizerPage from '@/pages/tools/AutoImageResizerPage';
 import AddNameDatePhotoPage from '@/pages/tools/AddNameDatePhotoPage';
 import QRScannerPage from '@/pages/tools/QRScannerPage';
 
@@ -192,14 +191,11 @@ function App() {
               <Route path="/pdf-text-extractor" element={<PdfTextExtractorPage />} />
               <Route path="/placeholder-image-generator" element={<PlaceholderImageGeneratorPage />} />
               <Route path="/pixelate-tool" element={<PixelateToolPage />} />
-              <Route path="/tools/pixelate-tool" element={<PixelateToolPage />} />
               <Route path="/photo-annotation-tool" element={<PhotoAnnotationToolPage />} />
-              <Route path="/tools/photo-annotation-tool" element={<PhotoAnnotationToolPage />} />
-              <Route path="/tools/background-remover" element={<BackgroundRemoverPage />} />
-              <Route path="/tools/image-resizer" element={<ImageResizerPage />} />
-              <Route path="/tools/auto-image-resizer" element={<AutoImageResizerPage />} />
-              <Route path="/tools/add-name-date-photo" element={<AddNameDatePhotoPage />} />
-              <Route path="/tools/qr-scanner" element={<QRScannerPage />} />
+              <Route path="/background-remover" element={<BackgroundRemoverPage />} />
+              <Route path="/image-resizer" element={<ImageResizerPage />} />
+              <Route path="/add-name-date-photo" element={<AddNameDatePhotoPage />} />
+              <Route path="/qr-scanner" element={<QRScannerPage />} />
 
               {/* Typing Tools Routes */}
               <Route path="/typing-tutor" element={<TypingTutorPage />} />
@@ -260,7 +256,6 @@ function App() {
 
               <Route path="/box-shadow-generator" element={<BoxShadowGeneratorPage />} />
               <Route path="/add-name-date-photo" element={<AddNameDatePhotoPage />} />
-              <Route path="/auto-image-resizer" element={<AutoImageResizerPage />} />
             
               <Route path="/border-radius-generator" element={<BorderRadiusGeneratorPage />} />
               <Route path="/business-idea-generator" element={<BusinessIdeaGeneratorPage />} />

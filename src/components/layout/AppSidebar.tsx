@@ -105,8 +105,7 @@ export function AppSidebar() {
       title: "Image & File Tools",
       items: [
         { title: "Image Compressor", url: "/image-compressor", icon: ImageIcon },
-        { title: "Image Resizer", url: "/tools/image-resizer", icon: ImageIcon },
-        { title: "Auto Image Resizer", url: "/auto-image-resizer", icon: ImageIcon },
+        { title: "Image Resizer", url: "/image-resizer", icon: ImageIcon },
         { title: "Image Upscaler", url: "/image-upscaler", icon: Zap },
         { title: "Image Cropper", url: "/image-cropper", icon: Crop },
         { title: "Image Format Converter", url: "/image-format-converter", icon: RotateCcw },
@@ -116,10 +115,10 @@ export function AppSidebar() {
         { title: "Placeholder Image Generator", url: "/placeholder-image-generator", icon: ImageIcon },
         { title: "Logo to Favicon", url: "/logo-to-favicon", icon: Star },
         { title: "Pixelate Tool", url: "/pixelate-tool", icon: ImageIcon },
-        { title: "Background Remover", url: "/tools/background-remover", icon: Eraser },
+        { title: "Background Remover", url: "/background-remover", icon: Eraser },
         { title: "Add Name Date Photo", url: "/add-name-date-photo", icon: Camera },
         { title: "Photo Annotation Tool", url: "/photo-annotation-tool", icon: PenTool },
-        { title: "QR Scanner", url: "/tools/qr-scanner", icon: QrCode },
+        { title: "QR Scanner", url: "/qr-scanner", icon: QrCode },
       ],
     },
     {

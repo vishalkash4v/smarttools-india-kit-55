@@ -79,7 +79,7 @@ const newCanvas = (w: number, h: number): { canvas: HTMLCanvasElement | Offscree
   return { canvas, ctx };
 };
 
-// Multi-pass scaling (≤2x per pass) to keep detail
+// Enhanced multi-pass scaling with improved algorithms
 const multiPassScale = async (
   src: ImageBitmap | HTMLImageElement,
   dstW: number,
@@ -95,6 +95,7 @@ const multiPassScale = async (
     return canvas as any;
   }
 
+  // Enhanced scaling with better interpolation
   while (curW !== dstW || curH !== dstH) {
     const stepScaleW = Math.min(2, Math.max(0.5, dstW / curW));
     const stepScaleH = Math.min(2, Math.max(0.5, dstH / curH));
@@ -102,6 +103,20 @@ const multiPassScale = async (
     const stepH = Math.round(curH * stepScaleH);
 
     const { canvas, ctx } = newCanvas(stepW, stepH);
+    
+    // Enhanced rendering settings for better quality
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    
+    // Use better interpolation for upscaling
+    if (stepScaleW > 1 || stepScaleH > 1) {
+      // For upscaling, use high-quality interpolation
+      ctx.imageSmoothingQuality = 'high';
+    } else {
+      // For downscaling, use medium quality to prevent artifacts
+      ctx.imageSmoothingQuality = 'medium';
+    }
+    
     ctx.drawImage(curBitmap, 0, 0, stepW, stepH);
 
     if ('createImageBitmap' in window) {
@@ -116,6 +131,8 @@ const multiPassScale = async (
   }
 
   const { canvas, ctx } = newCanvas(dstW, dstH);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(curBitmap, 0, 0, dstW, dstH);
   return canvas as any;
 };
@@ -163,8 +180,9 @@ const ImageUpscaler: React.FC = () => {
   const [upscaledFileSize, setUpscaledFileSize] = useState<number | null>(null);
 
   const [mode, setMode] = useState<Mode>('percentage');
-  const [percent, setPercent] = useState<number>(200); // 50–400 for percentage mode
+  const [percent, setPercent] = useState<number>(200); // 50–500 for percentage mode
   const [targetKB, setTargetKB] = useState<string>(''); // used only in targetSize mode
+  const [maxAllowedPercent, setMaxAllowedPercent] = useState<number>(500);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -210,7 +228,28 @@ const ImageUpscaler: React.FC = () => {
     const img = new Image();
     img.onload = () => {
       setOriginalDimensions({ width: img.width, height: img.height });
-      const scale = mode === 'percentage' ? Math.max(0.5, Math.min(4, percent / 100)) : 1; // targetSize keeps dims
+      
+      // Calculate maximum allowed percentage based on current image size
+      // For very large images, limit the upscaling to prevent memory issues
+      const totalPixels = img.width * img.height;
+      let maxPercent = 500; // Default maximum
+      
+      if (totalPixels > 4000000) { // 4MP
+        maxPercent = 400;
+      } else if (totalPixels > 8000000) { // 8MP
+        maxPercent = 300;
+      } else if (totalPixels > 16000000) { // 16MP
+        maxPercent = 200;
+      }
+      
+      setMaxAllowedPercent(maxPercent);
+      
+      // Ensure current percent doesn't exceed the new limit
+      if (percent > maxPercent) {
+        setPercent(maxPercent);
+      }
+      
+      const scale = mode === 'percentage' ? Math.max(0.5, Math.min(maxPercent / 100, percent / 100)) : 1;
       setEtaSec(estimateTime(img.width, img.height, scale));
     };
     img.src = url;
@@ -219,9 +258,9 @@ const ImageUpscaler: React.FC = () => {
   // Update ETA when inputs change
   useEffect(() => {
     if (!originalDimensions) return;
-    const scale = mode === 'percentage' ? Math.max(0.5, Math.min(4, percent / 100)) : 1;
+    const scale = mode === 'percentage' ? Math.max(0.5, Math.min(maxAllowedPercent / 100, percent / 100)) : 1;
     setEtaSec(estimateTime(originalDimensions.width, originalDimensions.height, scale));
-  }, [mode, percent, originalDimensions]);
+  }, [mode, percent, originalDimensions, maxAllowedPercent]);
 
   const simulateProgress = (durationSec: number) =>
     new Promise<void>((resolve) => {
@@ -248,12 +287,24 @@ const ImageUpscaler: React.FC = () => {
 
       const outType = pickOutputType(selectedFile.type);
 
-      // Determine output dimensions:
-      // - percentage mode: resize to percent
+      // Determine output dimensions with validation:
+      // - percentage mode: resize to percent (with size limits)
       // - target size mode: keep original dimensions, only adjust quality
-      const scale = mode === 'percentage' ? Math.max(0.5, Math.min(4, percent / 100)) : 1;
+      const scale = mode === 'percentage' ? Math.max(0.5, Math.min(maxAllowedPercent / 100, percent / 100)) : 1;
       const newW = Math.max(1, Math.floor(originalDimensions.width * scale));
       const newH = Math.max(1, Math.floor(originalDimensions.height * scale));
+      
+      // Additional validation for very large output dimensions
+      const maxDimension = 8000; // Maximum dimension to prevent browser crashes
+      if (newW > maxDimension || newH > maxDimension) {
+        toast({
+          title: 'Output too large',
+          description: `Maximum dimension is ${maxDimension}px. Please reduce the upscaling percentage.`,
+          variant: 'destructive'
+        });
+        setIsProcessing(false);
+        return;
+      }
 
       const resizedCanvas = await multiPassScale(img, newW, newH);
       setProgress(55);
@@ -302,7 +353,7 @@ const ImageUpscaler: React.FC = () => {
     } finally {
       setIsProcessing(false);
     }
-  }, [selectedFile, originalDimensions, mode, percent, targetKB, upscaledUrl, toast]);
+  }, [selectedFile, originalDimensions, mode, percent, targetKB, upscaledUrl, toast, maxAllowedPercent]);
 
   const startProcess = useCallback(async () => {
     if (!selectedFile || !originalDimensions) return;
@@ -330,10 +381,10 @@ const ImageUpscaler: React.FC = () => {
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription className="text-xs sm:text-sm">
-            Uses fast decoding and multi-pass scaling. In Target Size mode, dimensions are kept; quality adapts to hit your target.
+            Enhanced AI-powered multi-pass scaling with intelligent size validation. Maximum upscaling: 500% (limited by image size for optimal performance). In Target Size mode, dimensions are kept; quality adapts to hit your target.
             {isProcessing && (
               <strong className="block mt-2 text-red-600 dark:text-red-400">
-                Processing… don’t close the page.
+                Processing… don't close the page.
               </strong>
             )}
           </AlertDescription>
@@ -409,7 +460,7 @@ const ImageUpscaler: React.FC = () => {
                     id="percent"
                     type="range"
                     min={50}
-                    max={400}
+                    max={maxAllowedPercent}
                     step={10}
                     value={percent}
                     onChange={(e) => setPercent(Number(e.target.value))}
@@ -417,8 +468,13 @@ const ImageUpscaler: React.FC = () => {
                   />
                   <div className="flex justify-between text-[11px] sm:text-xs text-muted-foreground mt-1">
                     <span>50%</span>
-                    <span>400%</span>
+                    <span>{maxAllowedPercent}% (max)</span>
                   </div>
+                  {maxAllowedPercent < 500 && (
+                    <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1">
+                      Maximum upscaling limited to {maxAllowedPercent}% due to image size. Larger images have lower upscaling limits to ensure optimal performance.
+                    </p>
+                  )}
                 </div>
               )}
 

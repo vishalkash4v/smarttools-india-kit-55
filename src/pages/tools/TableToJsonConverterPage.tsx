@@ -10,7 +10,7 @@ const TableToJsonConverterPage = () => {
     <PageWrapper
       title="Table to JSON Converter"
       description="Convert HTML tables, CSV data, and spreadsheet data to JSON format instantly. Professional data transformation tool for developers and data analysts."
-      keywords="table to JSON converter, CSV to JSON, HTML table converter, data transformation, JSON generator, spreadsheet converter"
+      keywords="table to JSON converter,table to json, CSV to JSON, HTML table converter, data transformation, JSON generator, spreadsheet converter"
       pageTitle="Table to JSON Converter"
       toolCategory="Data Converter"
       canonicalUrl="https://fyntools.com/table-to-json-converter"

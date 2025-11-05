@@ -107,14 +107,15 @@ const HashtagGenerator = () => {
         <CardContent className="space-y-4">
           <div>
             <Label htmlFor="keyword">Keyword or Topic</Label>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Input
                 id="keyword"
                 placeholder="e.g., travel, food, fitness, business"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
+                className="flex-1"
               />
-              <Button onClick={generateHashtags}>
+              <Button onClick={generateHashtags} className="w-full sm:w-auto">
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Generate
               </Button>

@@ -1,3 +1,5 @@
+User-agent: *
+Allow: /
 
 User-agent: Googlebot
 Allow: /
@@ -5,13 +7,44 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
-User-agent: Twitterbot
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
 Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+User-agent: Twitterbot
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+Disallow: /dist/
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /.vscode/
+Disallow: /scripts/
+
 Sitemap: https://fyntools.com/sitemap.xml
+Sitemap: https://fyntools.com/sitemap-tools.xml
+
+Crawl-delay: 1

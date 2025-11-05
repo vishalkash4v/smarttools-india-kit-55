@@ -23,7 +23,7 @@ interface EnhancedToolPageLayoutProps {
   userCount?: string;
   children?: React.ReactNode;
   canonicalUrl?: string;
-  keywords?: string;
+  keywords?: string[] | string;
   testimonials?: { name: string; rating: number; text: string; title?: string }[];
 }
 
@@ -52,7 +52,13 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
     toolName: title,
     toolUrl: canonicalUrl || shareUrl,
     description: description,
+    shortIntro: shortIntro,
+    category: category,
+    keywords: keywords,
     faqs: faqs,
+    features: features,
+    howToUse: howToUse,
+    relatedTools: relatedTools,
     breadcrumbs: [
       { name: "Home", url: "/" },
       { name: title, url: canonicalUrl || shareUrl }
@@ -77,8 +83,15 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
       <Helmet>
         <title>{title} - Free Online Tool | FYN Tools Worldwide</title>
         <meta name="description" content={description} />
-        {keywords && <meta name="keywords" content={keywords} />}
+        {keywords && <meta name="keywords" content={Array.isArray(keywords) ? keywords.join(", ") : keywords} />}
         {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="author" content="FYN Tools Worldwide" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#3b82f6" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
         {/* Schema Markup */}
         {schemas.map((schema, index) => (
@@ -92,11 +105,30 @@ const EnhancedToolPageLayout: React.FC<EnhancedToolPageLayoutProps> = ({
         <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl || shareUrl} />
+        <meta property="og:site_name" content="FYN Tools Worldwide" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:image" content="https://fyntools.com/assets/tool-screenshots/image-resizer.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={`${title} - Free Online Tool`} />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content="https://fyntools.com/assets/tool-screenshots/image-resizer.jpg" />
+        <meta name="twitter:site" content="@fyntoolsworldwide" />
+        <meta name="twitter:creator" content="@fyntoolsworldwide" />
+
+        {/* Additional Meta Tags */}
+        <meta name="application-name" content="FYN Tools Worldwide" />
+        <meta name="apple-mobile-web-app-title" content="FYN Tools" />
+        <meta name="msapplication-TileColor" content="#3b82f6" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        
+        {/* Preconnect to external domains for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Helmet>
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
